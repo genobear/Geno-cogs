@@ -4,6 +4,7 @@ from redbot.core import commands
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from tabulate import tabulate
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -32,7 +33,9 @@ class bdb(commands.Cog):
         if arg in IDColumn:
             for a in sheetDetails:
                 if a[1] == arg:
-                    response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
+                    #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
+                    response = (tabulate([["Username:","UserID:","Servers Found on:","Joined at:","Known Names:","First seen:"],
+                            [a[0],a[1],a[2],a[3],a[5],a[6]]]))
         else:
             response = "User not in database"
         await ctx.send("%s" % response)
