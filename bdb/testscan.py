@@ -21,6 +21,7 @@ discordID = input("Enter discord ID : ") #This would be the !scan userID command
 if discordID in IDColumn:
     for a in sheetDetails:
         if a[1] == discordID:
+            print(a)
             print("User " + str(a[0]) + " is in these discords :\n" + a[2])
 else:
     print("User not in database")
