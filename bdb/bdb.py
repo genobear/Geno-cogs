@@ -35,7 +35,7 @@ class bdb(commands.Cog):
                 if a[1] == arg:
                     #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
                     response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Names:"],
-                            [a[2],a[3],a[5]]],headers='firstrow',tablefmt='jira')) + "```"
+                            [a[2],a[3],a[5]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
             response = "User not in database"
         await ctx.send("%s" % response)
