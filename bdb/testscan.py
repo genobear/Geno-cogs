@@ -1,5 +1,6 @@
 import os
 import gspread
+from tabulate import tabulate
 from oauth2client.service_account import ServiceAccountCredentials
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,7 +22,8 @@ discordID = input("Enter discord ID : ") #This would be the !scan userID command
 if discordID in IDColumn:
     for a in sheetDetails:
         if a[1] == discordID:
-            print(a)
-            print("User " + str(a[0]) + " is in these discords :\n" + a[2])
+            print(tabulate([["Username:","UserID:","Servers Found on:","Joined at:","Known Names:","First seen:"],
+                            [a[0],a[1],a[2],a[3],a[5],a[6]]]))
+            #print("User " + str(a[0]) + " is in these discords :\n" + a[2])
 else:
     print("User not in database")
