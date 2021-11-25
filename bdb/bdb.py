@@ -43,4 +43,4 @@ class bdb(commands.Cog):
     @commands.command()
     async def invasion(ctx):
         """Time for Invasion?"""
-        await ctx.send(file=discord.File("so_we_now_have_invasion.mp3"))
+        await ctx.send(file=discord.File(r"so_we_now_have_invasion.mp3"))
