@@ -45,3 +45,10 @@ class bdb(commands.Cog):
     async def invasion(self, ctx):
         """Time for Invasion?"""
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/so_we_now_have_invasion.mp3"))
+        
+    @commands.command()
+    async def reboot(self, ctx):
+        "Reboot the OS running the bot. Use with caution"
+        await ctx.send("Rebooting the server...")
+        os.system('systemctl reboot -i')
+        
