@@ -1,4 +1,5 @@
 from redbot.core import commands
+import discord
 
 #requirements for googlsheet integration
 import os
@@ -39,3 +40,7 @@ class bdb(commands.Cog):
         else:
             response = "User not in database"
         await ctx.send("%s" % response)
+    
+    async def invasion(ctx):
+        """Time for Invasion?"""
+        await ctx.send(file=discord.File("so_we_now_have_invasion.mp3"))
