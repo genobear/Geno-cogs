@@ -50,5 +50,5 @@ class bdb(commands.Cog):
     async def reboot(self, ctx):
         "Reboot the OS running the bot. Use with caution"
         await ctx.send("Rebooting the server...")
-        os.system('systemctl reboot -i')
+        os.system("sudo reboot")
         
