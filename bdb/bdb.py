@@ -44,4 +44,4 @@ class bdb(commands.Cog):
     @commands.command(pass_context = True)
     async def invasion(self, ctx):
         """Time for Invasion?"""
-        await ctx.send(file=discord.File("so_we_now_have_invasion.mp3"))
+        await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/so_we_now_have_invasion.mp3"))
