@@ -40,7 +40,7 @@ class bdb(commands.Cog):
         else:
             response = "User not in database"
         await ctx.send("%s" % response)
-    @commands.command()
+    @commands.command(pass_context = True)
     async def invasion(ctx):
         """Time for Invasion?"""
         await ctx.send(file=discord.File(r"so_we_now_have_invasion.mp3"))
