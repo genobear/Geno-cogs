@@ -46,6 +46,16 @@ class bdb(commands.Cog):
         """Time for Invasion?"""
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/so_we_now_have_invasion.mp3"))
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/YeahBro.mp3"))
+
+    @commands.command()
+    async def grav(self, ctx):
+        """Grav well in 2 minutes"""
+        await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/2minGrav.mp3"))
+    
+    @commands.command()
+    async def yeahbro(self, ctx):
+        """Grav well in 2 minutes"""
+        await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/YeahBro.mp3"))
         
     @commands.command()
     async def reboot(self, ctx):
