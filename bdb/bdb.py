@@ -64,7 +64,7 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def beans(self, ctx):
-        """Yes Daddy"""
+        """Beans on Toast"""
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/beansOnToast.mp3"))
         
     @commands.command()
