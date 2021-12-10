@@ -58,6 +58,11 @@ class bdb(commands.Cog):
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/YeahBro.mp3"))
         
     @commands.command()
+    async def yesdaddy(self, ctx):
+        """Yes Daddy"""
+        await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/Yes_Daddy.mp3"))
+        
+    @commands.command()
     async def reboot(self, ctx):
         "Reboot the OS running the bot. Use with caution"
         await ctx.send("Rebooting the server...")
