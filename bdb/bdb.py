@@ -66,7 +66,12 @@ class bdb(commands.Cog):
     async def beans(self, ctx):
         """Beans on Toast"""
         await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/beansOnToast.mp3"))
-        
+
+    @commands.command()
+    async def weights(self, ctx):
+        """Armour Weights"""
+        await ctx.send(file=discord.File("/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/weights.png"))
+
     @commands.command()
     async def reboot(self, ctx):
         "Reboot the OS running the bot. Use with caution"
