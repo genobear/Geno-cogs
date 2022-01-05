@@ -21,10 +21,6 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 
 client = gspread.authorize(creds)
 
 #ATTENDANCE/ACTIVITY SHEET
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-#CSVFile = os.path.join(ROOT_DIR, 'CSV Files/')
-#FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
-
 scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
 client2 = gspread.authorize(creds2)
@@ -98,7 +94,7 @@ class bdb(commands.Cog):
         os.system("sudo reboot")
         
     @commands.command()
-    async def attendance(self, ctx, channel_from: discord.VoiceChannel, activity):
+    async def attendance(self, ctx, channel_from: discord.VoiceChannel):
         "Get a list of users in a vocie channel"
 
         member_names = [] #(list)
@@ -147,7 +143,7 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         await ctx.send("Memberlist Uploaded")
     
-        
+    #doesnt work    
     @commands.command()
     async def allmembers(self, ctx, role: discord.Role):
         """Get list of members that has provided role"""
@@ -155,8 +151,5 @@ class bdb(commands.Cog):
         memberslist = []
         for member in role.members:
             memberslist.append(member.display_name)
-        if not memberslist:
-            await ctx.send(chat.error("There is no members in this role"))
-            return
         #response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
         await ctx.send(memberslist)
