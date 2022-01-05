@@ -19,7 +19,13 @@ scope = ["https://spreadsheets.google.com/feeds",
 creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client.json'), scope)
 client = gspread.authorize(creds)
 
+def sendLog(msg):
+    webhook.send(msg)
 
+def next_available_row(sheet):
+    str_list = list(filter(None, sheet.col_values(2)))
+    return int(len(str_list) + 1)
+    
 class bdb(commands.Cog):
     """My custom cog"""
 
