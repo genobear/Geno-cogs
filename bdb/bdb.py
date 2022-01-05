@@ -83,7 +83,7 @@ class bdb(commands.Cog):
         "Get a list of users in a vocie channel"
         channel = ctx.guild.get_channel(arg) #gets the channel you want to get the list from
 
-        members = channel.members #finds members connected to the channel
+        members = channel.voice_states.keys() #finds members connected to the channel
 
         memids = [] #(list)
         for member in members:
