@@ -81,12 +81,9 @@ class bdb(commands.Cog):
     @commands.command()
     async def attendance(self, ctx, channel_from: discord.VoiceChannel):
         "Get a list of users in a vocie channel"
-       #channel = ctx.guild.get_channel(channel_from) #gets the channel you want to get the list from
 
-        #members = channel.voice_states.keys() #finds members connected to the channel
-
-        memids = [] #(list)
+        member_names = [] #(list)
         for member in channel_from.members:
-            memids.append([member.display_name])
+            member_names.append(member.display_name)
 
-        await ctx.send(memids)
+        await ctx.send(member_names)
