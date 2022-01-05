@@ -81,7 +81,7 @@ class bdb(commands.Cog):
         os.system("sudo reboot")
         
     @commands.command()
-    async def attendance(self, ctx, channel_from: discord.VoiceChannel):
+    async def attendance(self, ctx, channel_from: discord.VoiceChannel, activity):
         "Get a list of users in a vocie channel"
 
         member_names = [] #(list)
@@ -93,7 +93,10 @@ class bdb(commands.Cog):
     @commands.command()
     async def allmembers(self, ctx, *, role: discord.Role):
         """Get list of members that has provided role"""
-        memberslist = [(m.display_name, str(m)) for m in sorted(role.members, key=lambda m: m.joined_at)]
+        #memberslist = [(m.display_name, str(m)) for m in sorted(role.members, key=lambda m: m.joined_at)]
+        memberslist = []
+        for member in role.members:
+            memberslist.append(member.display_name)
         if not memberslist:
             await ctx.send(chat.error("There is no members in this role"))
             return
