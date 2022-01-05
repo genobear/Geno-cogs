@@ -277,19 +277,19 @@ class bdb(commands.Cog):
         listOfMembers = [[]]
         listofroles = []
         for member in target_voice_channel.members:
-                listOfMembers.append(member.display_name)
-                #listOfMembers[x].append
-                for role in member.roles:
-                    listofroles.append(role.name)
-                listOfMembers[x].append(listofroles)
-                listofroles.clear()
-                x = x + 1
-                await ctx.send(listOfMembers)
+            listOfMembers.append(member.display_name)
+            #listOfMembers[x].append
+            for role in member.roles:
+                listofroles.append(role.name)
+            listOfMembers[x].append(listofroles)
+            listofroles.clear()
+            x = x + 1
+            await ctx.send(listOfMembers)
 
-                await ctx.send("listOfMembers:")
-                await ctx.send(listOfMembers)
-                await ctx.send("listofroles:")
-                await ctx.send(listofroles)
+            await ctx.send("listOfMembers:")
+            await ctx.send(listOfMembers)
+            await ctx.send("listofroles:")
+            await ctx.send(listofroles)
                 
                 
 
