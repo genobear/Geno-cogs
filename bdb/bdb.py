@@ -7,6 +7,10 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from tabulate import tabulate
 
+from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager
+from .utils import _
+from redbot.core.utils import chat_formatting as chat
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 scope = ["https://spreadsheets.google.com/feeds",
@@ -87,3 +91,23 @@ class bdb(commands.Cog):
             member_names.append(member.display_name)
 
         await ctx.send(member_names)
+        
+        @commands.command()
+        @commands.guild_only()
+        async def allmembers(self, ctx, *, role: discord.Role):
+            """Get list of members that has provided role"""
+            memberslist = [(m.display_name, str(m)) for m in sorted(role.members, key=lambda m: m.joined_at)]
+            if not memberslist:
+                await ctx.send(chat.error(_("There is no members in this role")))
+                return
+            await BaseMenu(
+                PagePager(
+                    list(
+                        chat.pagify(
+                            tabulate.tabulate(
+                                memberslist, tablefmt="orgtbl", headers=[_("ID"), _("Name")]
+                            )
+                        )
+                    )
+                )
+            ).start(ctx)
