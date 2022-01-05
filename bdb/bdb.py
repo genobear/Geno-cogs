@@ -79,14 +79,14 @@ class bdb(commands.Cog):
         os.system("sudo reboot")
         
     @commands.command()
-    async def attendance(self, ctx, arg):
+    async def attendance(self, ctx, channel_from: discord.VoiceChannel):
         "Get a list of users in a vocie channel"
-        channel = ctx.guild.get_channel(arg) #gets the channel you want to get the list from
+       #channel = ctx.guild.get_channel(channel_from) #gets the channel you want to get the list from
 
-        members = channel.voice_states.keys() #finds members connected to the channel
+        #members = channel.voice_states.keys() #finds members connected to the channel
 
         memids = [] #(list)
-        for member in members:
+        for member in channel_from.members:
             memids.append(member.id)
 
         await ctx.send(memids)
