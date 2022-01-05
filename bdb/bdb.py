@@ -194,7 +194,9 @@ class bdb(commands.Cog):
         update = []
         usersOnSheet = worksheet.col_values(3)
         usersOnSheet1 = usersOnSheet[3:]
-        print(usersOnSheet1)
+        
+        await ctx.send(usersOnSheet1)
+
         x = next_row
         j = 0
         allDetails = worksheet.get_all_values()
@@ -247,6 +249,7 @@ class bdb(commands.Cog):
                 j = 0
 
         worksheet.batch_update(update)
+        await ctx.send(listOfMembers)
         await ctx.send("Activity updated for" + area)
        
     @commands.command()
