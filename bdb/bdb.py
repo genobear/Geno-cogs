@@ -101,4 +101,4 @@ class bdb(commands.Cog):
             await ctx.send(chat.error("There is no members in this role"))
             return
         #response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
-        ctx.send(memberslist)
+        await ctx.send(memberslist)
