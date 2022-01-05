@@ -79,9 +79,9 @@ class bdb(commands.Cog):
         os.system("sudo reboot")
         
     @commands.command()
-    async def attendance(self, ctx):
+    async def attendance(self, ctx, arg):
         "Get a list of users in a vocie channel"
-        channel = discord.VoiceChannel(868989631520202863) #gets the channel you want to get the list from
+        channel = discord.get_channel(arg) #gets the channel you want to get the list from
 
         members = channel.members #finds members connected to the channel
 
