@@ -188,6 +188,9 @@ class bdb(commands.Cog):
         Use the <area> name to set the sheet name."""
 
         listOfMembers = []
+        #Gather member list from target voice channel
+        for member in target_voice_channel.members:
+            listOfMembers.append(member.display_name)
 
         worksheet = client2.open("BDB Push Attendance").worksheet(area)
         next_row = next_available_row(worksheet)
