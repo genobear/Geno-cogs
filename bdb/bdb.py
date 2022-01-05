@@ -208,18 +208,35 @@ class bdb(commands.Cog):
                         j = j + 1
                     except Exception as e:
                         # sendLog("Problem with writing user details, contact Rootoo2")
-                        await ctx.send("error")
+                        print("error")
                 else:
                     yPosition = 1
                     a = 0
                     for user in usersOnSheet:
                         if user == member:
-                            memberName = allDetails[a][2]
-                            clockIn = allDetails[a][3]
-                            clockOut = str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S"))
-                            update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn,clockOut ]]})
-                            j = j + 1
-                            break
+                            if allDetails[a][4] == "":
+                                memberName = allDetails[a][2]
+                                clockIn = allDetails[a][3]
+                                clockOut = str(datetime.now().strftime("%H:%M:%S"))
+                                update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn,clockOut ]]})
+                                j = j + 1
+                                break
+                            else:
+                                memberName = allDetails[a][2]
+                                clockIn = allDetails[a][3]
+                                clockOut = allDetails[a][4]
+                                notes = allDetails[a][5]
+                                if notes == "Pushed a second time":
+                                    update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),
+                                                "values": [[memberName, clockIn, clockOut, "Pushed multiple times"]]})
+                                    j = j + 1
+                                    break
+                                else:
+                                    if notes == "Pushed multiple times":
+                                        break
+                                    update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn, clockOut, "Pushed a second time"]]})
+                                    j = j + 1
+                                    break
                         else:
                             a = a + 1
                             yPosition = yPosition + 1
