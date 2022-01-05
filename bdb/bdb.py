@@ -188,10 +188,15 @@ class bdb(commands.Cog):
         Use the <area> name to set the sheet name."""
 
         listOfMembers = []
+        listofroles = []
+
         #Gather member list from target voice channel
         for member in target_voice_channel.members:
             listOfMembers.append(member.display_name)
+            for role in member.roles:
+                listofroles.append(role.name)
 
+        await ctx.send("LIST OF ROLES:" + listofroles)
         worksheet = client2.open("BDB Push Attendance").worksheet(area)
         next_row = next_available_row(worksheet)
         update = []
@@ -263,3 +268,20 @@ class bdb(commands.Cog):
             memberslist.append(member.display_name)
         response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
         await ctx.send(response)
+
+    @commands.command()
+    async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
+        """Start attendance check from <target_voice_channel> to Google Sheet.
+        Use the <area> name to set the sheet name."""
+
+        listOfMembers = []
+        listofroles = []
+
+        #Gather member list from target voice channel
+        for member in target_voice_channel.members:
+            listOfMembers.append(member.display_name)
+            for role in member.roles:
+                listofroles.append(role.name)
+
+        await ctx.send("listOfMembers:"+listOfMembers)
+        await ctx.send("listofroles:"+listofroles)
