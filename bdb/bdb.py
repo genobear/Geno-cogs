@@ -11,6 +11,7 @@ from redbot.core.utils import chat_formatting as chat
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+#SCANNER GSHEET CREDS
 scope = ["https://spreadsheets.google.com/feeds",
          'https://www.googleapis.com/auth/spreadsheets',
          "https://www.googleapis.com/auth/drive.file",
@@ -19,13 +20,23 @@ scope = ["https://spreadsheets.google.com/feeds",
 creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client.json'), scope)
 client = gspread.authorize(creds)
 
+#ATTENDANCE/ACTIVITY SHEET
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+CSVFile = os.path.join(ROOT_DIR, 'CSV Files/')
+FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
+
+scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
+client2 = gspread.authorize(creds2)
+
+
 def sendLog(msg):
     webhook.send(msg)
 
 def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(2)))
     return int(len(str_list) + 1)
-    
+
 class bdb(commands.Cog):
     """My custom cog"""
 
@@ -95,6 +106,47 @@ class bdb(commands.Cog):
             member_names.append(member.display_name)
 
         await ctx.send(member_names)
+
+    @commands.command()
+    async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity)
+        """Upload attendance from <target_voice_channel> to Google Sheet.
+        You must first create the sheet with the <activity> name or date."""
+
+        area = activity #Must = data given
+        listOfMembers = []#Needs to be data gathered by bot
+        
+        #Gather member list from target voice channel
+        for member in target_voice_channel.members:
+            listOfMembers.append(member.display_name)
+        
+        #Add member list to google sheet
+        worksheet = client.open('BDB Push Attendance').worksheet(area)
+        #spreadsheet = client.open("BDB Push Attendance")
+        next_row = next_available_row(worksheet)
+        
+        update = []
+        x = next_row
+        j = 0
+        for member in listOfMembers:
+            if j < 1000:
+                try:
+                    update.append({'range': 'B' + str(x) + ':' + 'D' + str(x), "values": [
+                        [member]]})
+                    x = x + 1
+                    j = j + 1
+                except Exception as e:
+                    await ctx.send("Problem with writing user details, contact Rootoo2")
+                    return
+            else:
+                worksheet.batch_update(update)
+                update.clear()
+                j = 0
+
+        worksheet.batch_update(update)
+        #Respond in discord
+        await ctx.send(listOfMembers)
+        await ctx.send("Memberlist Uploaded")
+    
         
     @commands.command()
     async def allmembers(self, ctx, role: discord.Role):
