@@ -273,9 +273,24 @@ class bdb(commands.Cog):
     async def roletest(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
+        x = 0
+        listofmember = [[]]
+        for member in target_voice_channel.members:
+                listOfMembers.append(member.display_name)
+                listOfMembers[x].append
+                for role in member.roles:
+                    listofroles.append(role.name)
+                listOfMembers[x].append(listofroles)
+                listofroles.clear()
+                x = x + 1
+                await ctx.send(listofmember)
 
-        listOfMembers = []
-        listofroles = []
+                await ctx.send("listOfMembers:")
+                await ctx.send(listOfMembers)
+                await ctx.send("listofroles:")
+                await ctx.send(listofroles)
+                listOfMembers = []
+                listofroles = []
 
         #Gather member list from target voice channel
         for member in target_voice_channel.members:
