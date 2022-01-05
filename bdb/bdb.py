@@ -87,6 +87,6 @@ class bdb(commands.Cog):
 
         memids = [] #(list)
         for member in channel_from.members:
-            memids.append(member.nick)
+            memids.append(member.display_name)
 
         await ctx.send(memids)
