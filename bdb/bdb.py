@@ -81,7 +81,7 @@ class bdb(commands.Cog):
     @commands.command()
     async def attendance(self, ctx, arg):
         "Get a list of users in a vocie channel"
-        channel = client.get_channel(arg) #gets the channel you want to get the list from
+        channel = discord.VoiceChannel(arg) #gets the channel you want to get the list from
 
         members = channel.members #finds members connected to the channel
 
