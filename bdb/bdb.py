@@ -144,7 +144,7 @@ class bdb(commands.Cog):
     #    await ctx.send(listOfMembers)
     #    await ctx.send("Memberlist Uploaded")
 
-   
+    @commands.command()
     async def activitycheck(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name"""
@@ -181,7 +181,8 @@ class bdb(commands.Cog):
 
         worksheet.batch_update(update)
         await ctx.send("Activity check started for" + area)
-
+    
+    @commands.command()
     async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
