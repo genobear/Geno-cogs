@@ -6,6 +6,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from tabulate import tabulate
+from datetime import datetime
 
 from redbot.core.utils import chat_formatting as chat
 
@@ -103,53 +104,138 @@ class bdb(commands.Cog):
 
         await ctx.send(member_names)
 
-    @commands.command()
-    async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity):
-        """Upload attendance from <target_voice_channel> to Google Sheet.
-        You must first create the sheet with the <activity> name or date."""
+    #@commands.command()   # Not in use
+    # #async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity):
+    #     """Upload attendance from <target_voice_channel> to Google Sheet.
+    #     You must first create the sheet with the <activity> name or date."""
 
-        area = activity #Must = data given
-        listOfMembers = []#Needs to be data gathered by bot
+    #     area = activity #Must = data given
+    #     listOfMembers = []#Needs to be data gathered by bot
         
+    #     #Gather member list from target voice channel
+    #     for member in target_voice_channel.members:
+    #         listOfMembers.append(member.display_name)
+        
+    #     #Add member list to google sheet
+    #     worksheet = client.open('BDB Push Attendance').worksheet(area)
+    #     #spreadsheet = client.open("BDB Push Attendance")
+    #     next_row = next_available_row(worksheet)
+        
+    #     update = []
+    #     x = next_row
+    #     j = 0
+    #     for member in listOfMembers:
+    #         if j < 1000:
+    #             try:
+    #                 update.append({'range': 'B' + str(x) + ':' + 'D' + str(x), "values": [
+    #                     [member]]})
+    #                 x = x + 1
+    #                 j = j + 1
+    #             except Exception as e:
+    #                 await ctx.send("Problem with writing user details, contact Rootoo2")
+    #                 return
+    #         else:
+    #             worksheet.batch_update(update)
+    #             update.clear()
+    #             j = 0
+
+    #     worksheet.batch_update(update)
+        #Respond in discord
+    #    await ctx.send(listOfMembers)
+    #    await ctx.send("Memberlist Uploaded")
+
+   
+    async def activitycheck(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
+        """Start attendance check from <target_voice_channel> to Google Sheet.
+        Use the <area> name to set the sheet name"""
+        
+        listOfMembers = []
+
         #Gather member list from target voice channel
         for member in target_voice_channel.members:
             listOfMembers.append(member.display_name)
         
-        #Add member list to google sheet
-        worksheet = client.open('BDB Push Attendance').worksheet(area)
-        #spreadsheet = client.open("BDB Push Attendance")
+        #add to google sheet
+        worksheet1 = client2.open("BDB Push Attendance").worksheet('Template')
+        worksheet1.duplicate(new_sheet_name=area)
+        worksheet = client2.open("BDB Push Attendance").worksheet(area)
+        worksheet.update('D2', str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S")))
+        worksheet.update('C1', area)
         next_row = next_available_row(worksheet)
-        
         update = []
         x = next_row
         j = 0
         for member in listOfMembers:
             if j < 1000:
                 try:
-                    update.append({'range': 'B' + str(x) + ':' + 'D' + str(x), "values": [
-                        [member]]})
+                    update.append({'range': 'C' + str(x) + ':' + 'F' + str(x), "values": [[member,str(datetime.now().strftime("%H:%M:%S")) ,]]})
                     x = x + 1
                     j = j + 1
                 except Exception as e:
-                    await ctx.send("Problem with writing user details, contact Rootoo2")
-                    return
+                    #sendLog("Problem with writing user details, contact Rootoo2")
+                    await ctx.send("error")
             else:
                 worksheet.batch_update(update)
                 update.clear()
                 j = 0
 
         worksheet.batch_update(update)
-        #Respond in discord
-        await ctx.send(listOfMembers)
-        await ctx.send("Memberlist Uploaded")
-    
-    #doesnt work    
+        await ctx.send("Activity check started for" + area)
+
+    async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
+        """Start attendance check from <target_voice_channel> to Google Sheet.
+        Use the <area> name to set the sheet name."""
+
+        listOfMembers = []
+
+        worksheet = client2.open("BDB Push Attendance").worksheet(area)
+        next_row = next_available_row(worksheet)
+        update = []
+        usersOnSheet = worksheet.col_values(3)
+        usersOnSheet1 = usersOnSheet[3:]
+        print(usersOnSheet1)
+        x = next_row
+        j = 0
+        allDetails = worksheet.get_all_values()
+        for member in listOfMembers:
+            if j < 1000:
+                if member not in usersOnSheet1:
+                    try:
+                        update.append({'range': 'C' + str(x) + ':' + 'F' + str(x),
+                                    "values": [[member, str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S")), ]]})
+                        x = x + 1
+                        j = j + 1
+                    except Exception as e:
+                        # sendLog("Problem with writing user details, contact Rootoo2")
+                        await ctx.send("error")
+                else:
+                    yPosition = 1
+                    a = 0
+                    for user in usersOnSheet:
+                        if user == member:
+                            memberName = allDetails[a][2]
+                            clockIn = allDetails[a][3]
+                            clockOut = str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S"))
+                            update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn,clockOut ]]})
+                            j = j + 1
+                            break
+                        else:
+                            a = a + 1
+                            yPosition = yPosition + 1
+
+            else:
+                worksheet.batch_update(update)
+                update.clear()
+                j = 0
+
+        worksheet.batch_update(update)
+        await ctx.send("Activity updated for" + area)
+       
     @commands.command()
-    async def allmembers(self, ctx, role: discord.Role):
+    async def role_members(self, ctx, role: discord.Role):
         """Get list of members that has provided role"""
-        #memberslist = [(m.display_name, str(m)) for m in sorted(role.members, key=lambda m: m.joined_at)]
         memberslist = []
         for member in role.members:
             memberslist.append(member.display_name)
-        #response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
-        await ctx.send(memberslist)
+        response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
+        await ctx.send(response)
