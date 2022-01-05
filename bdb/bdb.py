@@ -283,7 +283,7 @@ class bdb(commands.Cog):
             for role in member.roles:
                 listofroles.append(role.name)
 
-        await ctx.send("listOfMembers:"+listOfMembers)
+        await ctx.send("listOfMembers:")
         await ctx.send(listOfMembers)
-        await ctx.send("listofroles:"+listofroles)
+        await ctx.send("listofroles:")
         await ctx.send(listofroles)
