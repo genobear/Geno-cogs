@@ -100,14 +100,4 @@ class bdb(commands.Cog):
             if not memberslist:
                 await ctx.send(chat.error(_("There is no members in this role")))
                 return
-            await BaseMenu(
-                PagePager(
-                    list(
-                        chat.pagify(
-                            tabulate.tabulate(
-                                memberslist, tablefmt="orgtbl", headers=[_("ID"), _("Name")]
-                            )
-                        )
-                    )
-                )
-            ).start(ctx)
+            ctx.send(tabulate.tabulate(memberslist, tablefmt="orgtbl", headers=[_("DisplayName"), _("Name")]))
