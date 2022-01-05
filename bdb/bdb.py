@@ -31,7 +31,7 @@ def sendLog(msg):
     webhook.send(msg)
 
 def next_available_row(sheet):
-    str_list = list(filter(None, sheet.col_values(2)))
+    str_list = list(filter(None, sheet.col_values(3)))
     return int(len(str_list) + 1)
 
 class bdb(commands.Cog):
