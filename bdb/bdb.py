@@ -270,7 +270,7 @@ class bdb(commands.Cog):
         await ctx.send(response)
 
     @commands.command()
-    async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
+    async def roletest(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
 
