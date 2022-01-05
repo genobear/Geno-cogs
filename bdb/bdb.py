@@ -22,8 +22,8 @@ client = gspread.authorize(creds)
 
 #ATTENDANCE/ACTIVITY SHEET
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-CSVFile = os.path.join(ROOT_DIR, 'CSV Files/')
-FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
+#CSVFile = os.path.join(ROOT_DIR, 'CSV Files/')
+#FILEBROWSER_PATH = os.path.join(os.getenv('WINDIR'), 'explorer.exe')
 
 scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
