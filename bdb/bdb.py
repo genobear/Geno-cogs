@@ -97,4 +97,5 @@ class bdb(commands.Cog):
         if not memberslist:
             await ctx.send(chat.error("There is no members in this role"))
             return
-        ctx.send(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")]))
+        response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
+        ctx.send(response)
