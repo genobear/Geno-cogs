@@ -208,7 +208,7 @@ class bdb(commands.Cog):
                         j = j + 1
                     except Exception as e:
                         # sendLog("Problem with writing user details, contact Rootoo2")
-                        print("error")
+                        await ctx.send("error")
                 else:
                     yPosition = 1
                     a = 0
