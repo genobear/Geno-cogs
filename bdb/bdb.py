@@ -78,3 +78,16 @@ class bdb(commands.Cog):
         await ctx.send("Rebooting the server...")
         os.system("sudo reboot")
         
+    @commands.command()
+    async def attendance(self, ctx, arg):
+        "Get a list of users in a vocie channel"
+        channel = client.get_channel(arg) #gets the channel you want to get the list from
+
+        members = channel.members #finds members connected to the channel
+
+        memids = [] #(list)
+        for member in members:
+            memids.append(member.id)
+        await ctx.send(memids)
+        os.system("sudo reboot")
+        
