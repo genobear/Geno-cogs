@@ -89,5 +89,3 @@ class bdb(commands.Cog):
         for member in members:
             memids.append(member.id)
         await ctx.send(memids)
-        os.system("sudo reboot")
-        
