@@ -275,6 +275,7 @@ class bdb(commands.Cog):
         Use the <area> name to set the sheet name."""
         x = 0
         listOfMembers = [[]]
+        listofroles = []
         for member in target_voice_channel.members:
                 listOfMembers.append(member.display_name)
                 #listOfMembers[x].append
@@ -289,8 +290,8 @@ class bdb(commands.Cog):
                 await ctx.send(listOfMembers)
                 await ctx.send("listofroles:")
                 await ctx.send(listofroles)
-                listOfMembers = []
-                listofroles = []
+                
+                
 
         # #Gather member list from target voice channel
         # for member in target_voice_channel.members:
