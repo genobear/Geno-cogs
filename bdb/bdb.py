@@ -7,8 +7,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from tabulate import tabulate
 
-from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager
-from .utils import _
 from redbot.core.utils import chat_formatting as chat
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -98,6 +96,6 @@ class bdb(commands.Cog):
             """Get list of members that has provided role"""
             memberslist = [(m.display_name, str(m)) for m in sorted(role.members, key=lambda m: m.joined_at)]
             if not memberslist:
-                await ctx.send(chat.error(_("There is no members in this role")))
+                await ctx.send(chat.error("There is no members in this role"))
                 return
-            ctx.send(tabulate.tabulate(memberslist, tablefmt="orgtbl", headers=[_("DisplayName"), _("Name")]))
+            ctx.send(tabulate.tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")]))
