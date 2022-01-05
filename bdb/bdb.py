@@ -108,7 +108,7 @@ class bdb(commands.Cog):
         await ctx.send(member_names)
 
     @commands.command()
-    async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity)
+    async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity):
         """Upload attendance from <target_voice_channel> to Google Sheet.
         You must first create the sheet with the <activity> name or date."""
 
