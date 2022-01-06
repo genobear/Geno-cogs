@@ -233,7 +233,7 @@ class bdb(commands.Cog):
                 j = 0
 
         worksheet.batch_update(update)
-    
+        await ctx.send("Activity populated as: "+area)
     @commands.command()
     async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
@@ -325,9 +325,10 @@ class bdb(commands.Cog):
                         j = j + 1
                     except Exception as e:
                         # sendLog("Problem with writing user details, contact Rootoo2")
-                        print("error")
+                        await ctx.send("error")
             else:
                 worksheet.batch_update(update)
+                await ctx.send("Activity updated on:"+area)
                 update.clear()
                 j = 0 #
 
