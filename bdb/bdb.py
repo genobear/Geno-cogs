@@ -155,7 +155,7 @@ class bdb(commands.Cog):
                 Wep1 = ""
                 Wep2 = ""
                 memberName = str(member).replace(str(j)+":","")
-                allInGameRoles = ["DPS","Healer","TANK"]
+                allInGameRoles = ["DPS","HEALER","TANK"]
                 for positions in allInGameRoles:
                     if positions in userRoles:
                         inGameRole = positions
@@ -174,7 +174,7 @@ class bdb(commands.Cog):
                             Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
                             break
                     weaponCount = weaponCount + 1
-                allDiscordRoles = ["Consul", "Admin", "Officer", "Member", "Trial"]
+                allDiscordRoles = ["⚜️","Consul", "Admin", "Officer", "Member", "Trial"]
                 for status in allDiscordRoles:
                     if status in userRoles:
                         discordRole = status
