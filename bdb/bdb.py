@@ -104,46 +104,6 @@ class bdb(commands.Cog):
 
         await ctx.send(member_names)
 
-    #@commands.command()   # Not in use
-    # #async def upload_attendance(self, ctx, target_voice_channel: discord.VoiceChannel, activity):
-    #     """Upload attendance from <target_voice_channel> to Google Sheet.
-    #     You must first create the sheet with the <activity> name or date."""
-
-    #     area = activity #Must = data given
-    #     listOfMembers = []#Needs to be data gathered by bot
-        
-    #     #Gather member list from target voice channel
-    #     for member in target_voice_channel.members:
-    #         listOfMembers.append(member.display_name)
-        
-    #     #Add member list to google sheet
-    #     worksheet = client.open('BDB Push Attendance').worksheet(area)
-    #     #spreadsheet = client.open("BDB Push Attendance")
-    #     next_row = next_available_row(worksheet)
-        
-    #     update = []
-    #     x = next_row
-    #     j = 0
-    #     for member in listOfMembers:
-    #         if j < 1000:
-    #             try:
-    #                 update.append({'range': 'B' + str(x) + ':' + 'D' + str(x), "values": [
-    #                     [member]]})
-    #                 x = x + 1
-    #                 j = j + 1
-    #             except Exception as e:
-    #                 await ctx.send("Problem with writing user details, contact Rootoo2")
-    #                 return
-    #         else:
-    #             worksheet.batch_update(update)
-    #             update.clear()
-    #             j = 0
-
-    #     worksheet.batch_update(update)
-        #Respond in discord
-    #    await ctx.send(listOfMembers)
-    #    await ctx.send("Memberlist Uploaded")
-
     @commands.command()
     async def start_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
         """Start attendance check from <target_voice_channel> to Google Sheet.
