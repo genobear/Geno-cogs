@@ -149,30 +149,83 @@ class bdb(commands.Cog):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name"""
         
-        listOfMembers = []
-
         #Gather member list from target voice channel
+        x = 0
+        listOfMembers = []
+        listofroles = []
         for member in target_voice_channel.members:
-            listOfMembers.append(member.display_name)
-        
-        #add to google sheet
-        worksheet1 = client2.open("BDB Push Attendance").worksheet('Template')
+            listOfMembers.append(str(x) +": " + str(member.display_name))
+            for role in member.roles:
+                listofroles.append(str(x) + str(role.name))
+            x = x + 1
+        await ctx.send("listOfMembers:")
+        await ctx.send(listOfMembers)
+        await ctx.send("listofroles:")
+        await ctx.send(listofroles)
+
+        #GOOGLE SHEET MAGIC        
+        worksheet1 = client2.open("BDB Push Attendance").worksheet('Template 2')
         worksheet1.duplicate(new_sheet_name=area)
         worksheet = client2.open("BDB Push Attendance").worksheet(area)
-        worksheet.update('D2', str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S")))
-        worksheet.update('C1', area)
+        worksheet.update('G4', str(datetime.now().strftime("%H:%M:%S")))
+        worksheet.update('E4', str(datetime.now().strftime("%d-%m-%Y")))
+        worksheet.update('D2', area)
         next_row = next_available_row(worksheet)
         update = []
-        x = next_row
+        x = next_row + 1
         j = 0
         for member in listOfMembers:
+            userRoles = []
             if j < 1000:
+                if str(j) in str(member):
+                    scanning = False
+                    for roles in listofroles   :
+                        if scanning == False:
+                            if str(j) in roles:
+                                userRoles.append(str(roles).replace(str(j),""))
+                                scanning = not scanning
+                        else:
+                            if str(j + 1) in roles:
+                                scanning = not scanning
+                                break
+                            else:
+                                userRoles.append(str(roles).replace(str(j),""))
+                inGameRole = ""
+                discordRole = ""
+                Wep1 = ""
+                Wep2 = ""
+                memberName = str(member).replace(str(j)+":","")
+                allInGameRoles = ["DPS","Healer","Tank"]
+                for positions in allInGameRoles:
+                    if positions in userRoles:
+                        inGameRole = positions
+                        break
+                allInGameWeapons = ["⛏️ Great axe","❄️ Ice Gauntlet","🎯 Musket","🛡️ Sword + Shield","❤️ Life Staff",
+                "🤺 Rapier","🔱 Spear","🔥 Firestaff","🔨 War Hammer","🪓 Hatchet","⚔️ Sword & Shield(DPS)","🏹 Bow","🏰 Fort Support","🌌 Void Gauntlet"]
+                allInGameWeaponsCorrections = ["Greataxe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
+                                    "Rapier", "Spear", "Firestaff", "War Hammer", "Hatchet",
+                                    "Sword & Shield(DPS)", "Bow", "Fort Support", "Void Gauntlet"]
+                weaponCount = 0
+                for weapons in allInGameWeapons:
+                    if weapons in userRoles:
+                        if Wep1 == "":
+                            Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
+                        else:
+                            Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
+                            break
+                    weaponCount = weaponCount + 1
+                allDiscordRoles = ["Consul", "Admin", "Officer", "Member", "Trial"]
+                for status in allDiscordRoles:
+                    if status in userRoles:
+                        discordRole = status
+                        break
+
                 try:
-                    update.append({'range': 'C' + str(x) + ':' + 'F' + str(x), "values": [[member,str(datetime.now().strftime("%H:%M:%S")) ,]]})
+                    update.append({'range': 'D' + str(x) + ':' + 'K' + str(x), "values": [[inGameRole,Wep1,Wep2,discordRole,memberName,str(datetime.now().strftime("%H:%M:%S")) ,]]})
                     x = x + 1
                     j = j + 1
                 except Exception as e:
-                    #sendLog("Problem with writing user details, contact Rootoo2")
+
                     await ctx.send("error")
             else:
                 worksheet.batch_update(update)
@@ -180,7 +233,6 @@ class bdb(commands.Cog):
                 j = 0
 
         worksheet.batch_update(update)
-        await ctx.send("Activity check started for" + area)
     
     @commands.command()
     async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
@@ -191,74 +243,97 @@ class bdb(commands.Cog):
         listofroles = []
 
         #Gather member list from target voice channel
+        x = 0
+        listOfMembers = []
+        listofroles = []
         for member in target_voice_channel.members:
-            listOfMembers.append(member.display_name)
+            listOfMembers.append(str(x) +": " + str(member.display_name))
             for role in member.roles:
-                listofroles.append(role.name)
+                listofroles.append(str(x) + str(role.name))
+            x = x + 1
+        await ctx.send("listOfMembers:")
+        await ctx.send(listOfMembers)
+        await ctx.send("listofroles:")
+        await ctx.send(listofroles)
 
-        await ctx.send("LIST OF ROLES:" + listofroles)
+        #GOOGLE SHEET MAGIC
         worksheet = client2.open("BDB Push Attendance").worksheet(area)
         next_row = next_available_row(worksheet)
         update = []
-        usersOnSheet = worksheet.col_values(3)
-        usersOnSheet1 = usersOnSheet[3:]
-        
-        await ctx.send(usersOnSheet1)
-
-        x = next_row
+        usersOnSheet = worksheet.col_values(8)
+        usersOnSheet1 = usersOnSheet[7:]
+        x = next_row + 1
         j = 0
         allDetails = worksheet.get_all_values()
-        for member in listOfMembers:
+        listMemberCorrection = []
+
+        for person in listOfMembers:
+            corrected = str(person).split(":")
+            listMemberCorrection.append(corrected[1])
+        #NEED TO ADD ROLES TO THIS FOR
+        for member in listMemberCorrection:
+            userRoles = []
             if j < 1000:
                 if member not in usersOnSheet1:
+                    if str(j) in str(listOfMembers[j]):
+                        scanning = False
+                        for roles in listofroles:
+                            if scanning == False:
+                                if str(j) in roles:
+                                    userRoles.append(str(roles).replace(str(j), ""))
+                                    scanning = not scanning
+                            else:
+                                if str(j + 1) in roles:
+                                    scanning = not scanning
+                                    break
+                                else:
+                                    userRoles.append(str(roles).replace(str(j), ""))
+                    inGameRole = ""
+                    discordRole = ""
+                    Wep1 = ""
+                    Wep2 = ""
+                    memberName = str(member).replace(str(j) + ":", "")
+                    allInGameRoles = ["DPS", "Healer", "Tank"]
+                    for positions in allInGameRoles:
+                        if positions in userRoles:
+                            inGameRole = positions
+                            break
+                    allInGameWeapons = ["⛏️ Great axe","❄️ Ice Gauntlet","🎯 Musket","🛡️ Sword + Shield","❤️ Life Staff","🤺 Rapier",
+                    "🔱 Spear","🔥 Firestaff","🔨 War Hammer","🪓 Hatchet","⚔️ Sword & Shield(DPS)","🏹 Bow","🏰 Fort Support","🌌 Void Gauntlet"]
+                    allInGameWeaponsCorrections = ["Greataxe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
+                                    "Rapier", "Spear", "Firestaff", "War Hammer", "Hatchet",
+                                    "Sword & Shield(DPS)", "Bow", "Fort Support", "Void Gauntlet"]
+                    weaponCount = 0
+                    for weapons in allInGameWeapons:
+                        if weapons in userRoles:
+                            if Wep1 == "":
+                                Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
+                            else:
+                                Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
+                                break
+                        weaponCount = weaponCount + 1
+                    allDiscordRoles = ["Consul", "Admin", "Officer", "Member", "Trial"]
+                    for status in allDiscordRoles:
+                        if status in userRoles:
+                            discordRole = status
+                            break
+
                     try:
-                        update.append({'range': 'C' + str(x) + ':' + 'F' + str(x),
-                                    "values": [[member, str(datetime.now().strftime("%d-%m-%Y, %H:%M:%S")), ]]})
+                        update.append({'range': 'D' + str(x) + ':' + 'K' + str(x),
+                                        "values": [[inGameRole,Wep1,Wep2,discordRole,memberName, str(datetime.now().strftime("%H:%M:%S")), ]]})
                         x = x + 1
                         j = j + 1
                     except Exception as e:
                         # sendLog("Problem with writing user details, contact Rootoo2")
-                        await ctx.send("error")
-                else:
-                    yPosition = 1
-                    a = 0
-                    for user in usersOnSheet:
-                        if user == member:
-                            if allDetails[a][4] == "":
-                                memberName = allDetails[a][2]
-                                clockIn = allDetails[a][3]
-                                clockOut = str(datetime.now().strftime("%H:%M:%S"))
-                                update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn,clockOut ]]})
-                                j = j + 1
-                                break
-                            else:
-                                memberName = allDetails[a][2]
-                                clockIn = allDetails[a][3]
-                                clockOut = allDetails[a][4]
-                                notes = allDetails[a][5]
-                                if notes == "Pushed a second time":
-                                    update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),
-                                                "values": [[memberName, clockIn, clockOut, "Pushed multiple times"]]})
-                                    j = j + 1
-                                    break
-                                else:
-                                    if notes == "Pushed multiple times":
-                                        break
-                                    update.append({'range': 'C' + str(yPosition) + ':' + 'F' + str(yPosition),"values": [[memberName, clockIn, clockOut, "Pushed a second time"]]})
-                                    j = j + 1
-                                    break
-                        else:
-                            a = a + 1
-                            yPosition = yPosition + 1
-
+                        print("error")
             else:
                 worksheet.batch_update(update)
                 update.clear()
-                j = 0
+                j = 0 #
 
-        worksheet.batch_update(update)
-        await ctx.send(listOfMembers)
-        await ctx.send("Activity updated for" + area)
+        yPosition = 8
+        a = 7
+        j = 0
        
     @commands.command()
     async def role_members(self, ctx, role: discord.Role):
@@ -278,9 +353,8 @@ class bdb(commands.Cog):
         listofroles = []
         for member in target_voice_channel.members:
             listOfMembers.append(str(x) +": " + str(member.display_name))
-            listofroles.append(str(x) +": ")
             for role in member.roles:
-                listofroles.append(role.name)
+                listofroles.append(str(x) + str(role.name))
             x = x + 1
 
         await ctx.send("listOfMembers:")
