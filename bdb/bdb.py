@@ -229,11 +229,12 @@ class bdb(commands.Cog):
                     await ctx.send("error")
             else:
                 worksheet.batch_update(update)
+                await ctx.send("Activity populated as1: "+area)
                 update.clear()
                 j = 0
 
         worksheet.batch_update(update)
-        await ctx.send("Activity populated as: "+area)
+        await ctx.send("Activity populated as2: "+area)
     @commands.command()
     async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
@@ -328,7 +329,7 @@ class bdb(commands.Cog):
                         await ctx.send("error")
             else:
                 worksheet.batch_update(update)
-                await ctx.send("Activity updated on:"+area)
+                
                 update.clear()
                 j = 0 #
 
@@ -336,6 +337,46 @@ class bdb(commands.Cog):
         a = 7
         j = 0
        
+        for user in usersOnSheet1: #For users on sheet
+            if user not in listMemberCorrection: # if user is not in dicord channel
+                if allDetails[a][9] == "": # They dont have a clock out time
+                    memberName = allDetails[a][7]
+                    clockIn = allDetails[a][8]
+                    clockOut = str(datetime.now().strftime("%H:%M:%S"))
+                    update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
+                                "values": [[memberName, clockIn, clockOut]]}) #Clock them out
+                    j = j + 1
+                    a = a + 1
+                    yPosition = yPosition + 1
+                else:
+                    a = a + 1
+                    yPosition = yPosition + 1
+            else:
+                if allDetails[a][9] != "":
+                    memberName = allDetails[a][7]
+                    clockIn = allDetails[a][8]
+                    clockOut = allDetails[a][9]
+                    notes = allDetails[a][10]
+                    if notes == "Pushed a second time":
+                        update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
+                                    "values": [[memberName, clockIn, clockOut, "Pushed multiple times"]]})
+                        j = j + 1
+                        a = a + 1
+                        yPosition = yPosition + 1
+                    if notes == "":
+                        update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
+                                "values": [[memberName, clockIn, clockOut, "Pushed a second time"]]})
+                        j = j + 1
+                        a = a + 1
+                        yPosition = yPosition + 1
+                else:
+                    a = a + 1
+                    yPosition = yPosition + 1
+        #print(update)
+        worksheet.batch_update(update)
+        await ctx.send("Activity updated on:"+area)
+
+    #updateActivity()
     @commands.command()
     async def role_members(self, ctx, role: discord.Role):
         """Get list of members that has provided role"""
