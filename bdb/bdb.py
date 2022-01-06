@@ -118,10 +118,7 @@ class bdb(commands.Cog):
             for role in member.roles:
                 listofroles.append(str(x) + str(role.name))
             x = x + 1
-        await ctx.send("listOfMembers:")
-        await ctx.send(listOfMembers)
-        await ctx.send("listofroles:")
-        #await ctx.send(listofroles)
+
 
         #GOOGLE SHEET MAGIC        
         worksheet1 = client2.open("BDB Push Attendance").worksheet('Template 2')
@@ -210,10 +207,6 @@ class bdb(commands.Cog):
             for role in member.roles:
                 listofroles.append(str(x) + str(role.name))
             x = x + 1
-        await ctx.send("listOfMembers:")
-        await ctx.send(listOfMembers)
-        await ctx.send("listofroles:")
-        #await ctx.send(listofroles)
 
         #GOOGLE SHEET MAGIC
         worksheet = client2.open("BDB Push Attendance").worksheet(area)
