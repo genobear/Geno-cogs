@@ -230,28 +230,29 @@ class bdb(commands.Cog):
             corrected = str(person).split(":")
             listMemberCorrection.append(corrected[1])
         #NEED TO ADD ROLES TO THIS FOR
+        z = 0
         for member in listMemberCorrection:
             userRoles = []
             if j < 1000:
                 if member not in usersOnSheet1:
-                    if str(j) in str(listOfMembers[j]):
+                    if str(z) in str(listOfMembers[z]):
                         scanning = False
                         for roles in listofroles:
                             if scanning == False:
-                                if str(j) in roles:
-                                    userRoles.append(str(roles).replace(str(j), ""))
+                                if str(z) in roles:
+                                    userRoles.append(str(roles).replace(str(z), ""))
                                     scanning = not scanning
                             else:
-                                if str(j + 1) in roles:
+                                if str(z + 1) in roles:
                                     scanning = not scanning
                                     break
                                 else:
-                                    userRoles.append(str(roles).replace(str(j), ""))
+                                    userRoles.append(str(roles).replace(str(z), ""))
                     inGameRole = ""
                     discordRole = ""
                     Wep1 = ""
                     Wep2 = ""
-                    memberName = str(member).replace(str(j) + ":", "")
+                    memberName = str(member).replace(str(z) + ":", "")
                     allInGameRoles = ["DPS", "HEALER", "TANK"]
                     for positions in allInGameRoles:
                         if positions in userRoles:
@@ -282,12 +283,14 @@ class bdb(commands.Cog):
                                         "values": [[inGameRole,Wep1,Wep2,discordRole,memberName, str(datetime.now().strftime("%H:%M:%S")), ]]})
                         x = x + 1
                         j = j + 1
+                        z = z + 1
                     except Exception as e:
                         # sendLog("Problem with writing user details, contact Rootoo2")
                         await ctx.send("error")
+                else:
+                    z = z + 1
             else:
                 worksheet.batch_update(update)
-                
                 update.clear()
                 j = 0 #
 
