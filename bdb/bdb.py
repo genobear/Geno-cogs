@@ -191,7 +191,7 @@ class bdb(commands.Cog):
                 j = 0
 
         worksheet.batch_update(update)
-        await ctx.send("Activity populated as2: "+area)
+        await ctx.send("Activity populated as: "+area)
 
     @commands.command()
     async def update_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
@@ -330,4 +330,20 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         await ctx.send("Activity updated on:"+area)
 
+    @commands.command()
+    async def list_test(self, ctx, target_voice_channel: discord.VoiceChannel, area):
+        """Start attendance check from <target_voice_channel> to Google Sheet.
+        Use the <area> name to set the sheet name."""
 
+        #Gather member list from target voice channel
+        x = 0
+        listOfMembers = []
+        listofroles = []
+        for member in target_voice_channel.members:
+            listOfMembers.append(str(x) +": " + str(member.display_name))
+            for role in member.roles:
+                listofroles.append(str(x) + str(role.name))
+            x = x + 1
+
+        await ctx.send(listOfMembers)
+        await ctx.send(listofroles)
