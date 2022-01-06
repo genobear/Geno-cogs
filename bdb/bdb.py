@@ -195,13 +195,11 @@ class bdb(commands.Cog):
 
         worksheet.batch_update(update)
         await ctx.send("Activity populated as2: "+area)
+
     @commands.command()
     async def update_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
-
-        listOfMembers = []
-        listofroles = []
 
         #Gather member list from target voice channel
         x = 0
