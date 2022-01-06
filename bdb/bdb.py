@@ -274,15 +274,13 @@ class bdb(commands.Cog):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
         x = 0
-        listOfMembers = [[]]
+        listOfMembers = []
         listofroles = []
         for member in target_voice_channel.members:
-            listOfMembers.append(member.display_name)
-            #listOfMembers[x].append
+            listOfMembers.append(str(x) +": " + str(member.display_name))
+            listofroles.append(x)
             for role in member.roles:
                 listofroles.append(role.name)
-            listOfMembers[x].append(listofroles)
-            listofroles.clear()
             x = x + 1
             await ctx.send(listOfMembers)
 
