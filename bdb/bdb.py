@@ -155,7 +155,7 @@ class bdb(commands.Cog):
                 Wep1 = ""
                 Wep2 = ""
                 memberName = str(member).replace(str(j)+":","")
-                allInGameRoles = ["DPS","Healer","Tank"]
+                allInGameRoles = ["DPS","Healer","TANK"]
                 for positions in allInGameRoles:
                     if positions in userRoles:
                         inGameRole = positions
