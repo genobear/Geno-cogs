@@ -202,7 +202,7 @@ class bdb(commands.Cog):
                         break
                 allInGameWeapons = ["⛏️ Great axe","❄️ Ice Gauntlet","🎯 Musket","🛡️ Sword + Shield","❤️ Life Staff",
                 "🤺 Rapier","🔱 Spear","🔥 Firestaff","🔨 War Hammer","🪓 Hatchet","⚔️ Sword & Shield(DPS)","🏹 Bow","🏰 Fort Support","🌌 Void Gauntlet"]
-                allInGameWeaponsCorrections = ["Greataxe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
+                allInGameWeaponsCorrections = ["Great axe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
                                     "Rapier", "Spear", "Firestaff", "War Hammer", "Hatchet",
                                     "Sword & Shield(DPS)", "Bow", "Fort Support", "Void Gauntlet"]
                 weaponCount = 0
@@ -301,7 +301,7 @@ class bdb(commands.Cog):
                             break
                     allInGameWeapons = ["⛏️ Great axe","❄️ Ice Gauntlet","🎯 Musket","🛡️ Sword + Shield","❤️ Life Staff","🤺 Rapier",
                     "🔱 Spear","🔥 Firestaff","🔨 War Hammer","🪓 Hatchet","⚔️ Sword & Shield(DPS)","🏹 Bow","🏰 Fort Support","🌌 Void Gauntlet"]
-                    allInGameWeaponsCorrections = ["Greataxe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
+                    allInGameWeaponsCorrections = ["Great axe", "Ice Gauntlet", "Musket", "Sword + Shield", "Life Staff",
                                     "Rapier", "Spear", "Firestaff", "War Hammer", "Hatchet",
                                     "Sword & Shield(DPS)", "Bow", "Fort Support", "Void Gauntlet"]
                     weaponCount = 0
@@ -313,7 +313,7 @@ class bdb(commands.Cog):
                                 Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
                                 break
                         weaponCount = weaponCount + 1
-                    allDiscordRoles = ["Consul", "Admin", "Officer", "Member", "Trial"]
+                    allDiscordRoles = ["⚜️","Consul", "Admin", "Officer", "Member", "Trial"]
                     for status in allDiscordRoles:
                         if status in userRoles:
                             discordRole = status
