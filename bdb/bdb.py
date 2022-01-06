@@ -161,7 +161,7 @@ class bdb(commands.Cog):
         await ctx.send("listOfMembers:")
         await ctx.send(listOfMembers)
         await ctx.send("listofroles:")
-        await ctx.send(listofroles)
+        #await ctx.send(listofroles)
 
         #GOOGLE SHEET MAGIC        
         worksheet1 = client2.open("BDB Push Attendance").worksheet('Template 2')
