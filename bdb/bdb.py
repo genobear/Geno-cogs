@@ -145,7 +145,7 @@ class bdb(commands.Cog):
     #    await ctx.send("Memberlist Uploaded")
 
     @commands.command()
-    async def activitycheck(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
+    async def start_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name"""
         
@@ -236,7 +236,7 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         await ctx.send("Activity populated as2: "+area)
     @commands.command()
-    async def updateactivity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
+    async def update_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
         """Start attendance check from <target_voice_channel> to Google Sheet.
         Use the <area> name to set the sheet name."""
 
@@ -376,43 +376,4 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         await ctx.send("Activity updated on:"+area)
 
-    #updateActivity()
-    @commands.command()
-    async def role_members(self, ctx, role: discord.Role):
-        """Get list of members that has provided role"""
-        memberslist = []
-        for member in role.members:
-            memberslist.append(member.display_name)
-        response = '```' +(tabulate(memberslist, tablefmt="orgtbl", headers=[("DisplayName"), ("Name")])) + '```'
-        await ctx.send(response)
 
-    @commands.command()
-    async def roletest(self, ctx, target_voice_channel: discord.VoiceChannel, area):
-        """Start attendance check from <target_voice_channel> to Google Sheet.
-        Use the <area> name to set the sheet name."""
-        x = 0
-        listOfMembers = []
-        listofroles = []
-        for member in target_voice_channel.members:
-            listOfMembers.append(str(x) +": " + str(member.display_name))
-            for role in member.roles:
-                listofroles.append(str(x) + str(role.name))
-            x = x + 1
-
-        await ctx.send("listOfMembers:")
-        await ctx.send(listOfMembers)
-        await ctx.send("listofroles:")
-        await ctx.send(listofroles)
-                
-                
-
-        # #Gather member list from target voice channel
-        # for member in target_voice_channel.members:
-        #     listOfMembers.append(member.display_name)
-        #     for role in member.roles:
-        #         listofroles.append(role.name)
-
-        # await ctx.send("listOfMembers:")
-        # await ctx.send(listOfMembers)
-        # await ctx.send("listofroles:")
-        # await ctx.send(listofroles)
