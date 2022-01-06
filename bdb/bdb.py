@@ -278,7 +278,7 @@ class bdb(commands.Cog):
         listofroles = []
         for member in target_voice_channel.members:
             listOfMembers.append(str(x) +": " + str(member.display_name))
-            listofroles.append(x)
+            listofroles.append(str(x) +": ")
             for role in member.roles:
                 listofroles.append(role.name)
             x = x + 1
