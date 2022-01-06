@@ -107,7 +107,9 @@ class bdb(commands.Cog):
     @commands.command()
     async def start_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area): #populate google sheet with members in voice channel
         """Start attendance check from <target_voice_channel> to Google Sheet.
-        Use the <area> name to set the sheet name"""
+
+        Use the <area> name to set the sheet name.
+        The name is case sensitve, and you must surround and spaces in quotation marks"""
         
         #Gather member list from target voice channel
         x = 0
@@ -195,8 +197,10 @@ class bdb(commands.Cog):
 
     @commands.command()
     async def update_activity(self, ctx, target_voice_channel: discord.VoiceChannel, area):
-        """Start attendance check from <target_voice_channel> to Google Sheet.
-        Use the <area> name to set the sheet name."""
+        """Update attendance from <target_voice_channel> to an existing Google Sheet.
+
+        Use the <area> name to set the sheet name.
+        The name is case sensitve, and you must surround and spaces in quotation marks"""
 
         #Gather member list from target voice channel
         x = 0
