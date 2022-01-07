@@ -639,8 +639,7 @@ class bdb(commands.Cog):
                 j = 0  #
         worksheet.batch_update(update)
         self.looper.cancel()
-        if self.looper().is_being_cancelled:
-            await ctx.send("Activity Looper Stopped")
+        await ctx.send("Activity Looper Stopped")
         
     @tasks.loop(seconds=600.0)
     async def looper(self,area,target_voice_channel: discord.VoiceChannel):
