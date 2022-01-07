@@ -577,7 +577,8 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         sendLog("populate")
         populate(area, listOfMembers, roleList)
-        self.looper.start()
+        self.looper.start(self,area,listOfMembers,roleList)
+        sendLog("after looper start")
         
     @tasks.loop(seconds=10.0)
     async def looper(self,area,listOfMembers,roleList):
