@@ -581,7 +581,7 @@ class bdb(commands.Cog):
         sendLog("after looper start")
         
     @tasks.loop(seconds=10.0)
-    async def looper(self,area,listOfMembers,roleList):
+    async def looper(area,listOfMembers,roleList):
     #def loop(area, listOfMembers, roleList):
         status = "Open"
         while status == "Open":
