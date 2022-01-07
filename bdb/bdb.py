@@ -562,6 +562,17 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def start_activity(self,ctx,target_voice_channel: discord.VoiceChannel, area):
+        """Start attendance check from <target_voice_channel> to Google Sheet.
+
+        Use the <area> name to set the sheet name.
+        The name is case sensitve, and you must surround and spaces in quotation marks
+        
+        Activity will be automatically updated every 10 minutes. 
+        
+        Use ?end_activity to end the activity
+        
+        Only 1 activity can be tracked at a time
+        Please use ?update_activity to track a different voice channel/activity"""
         
         #Gather member list from target voice channel
         x = 0
@@ -582,6 +593,7 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def update_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area ):
+        """Use if you want to start updating from a different voice channel or a different activity"""
         self.looper.cancel()
         self.looper.start(area,target_voice_channel)
         await ctx.send("Started automatically updating activity: " + area + "for voice channeL: " + target_voice_channel)
@@ -589,6 +601,7 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def end_activity(self,ctx,area):
+        """sEnd attendance check from <targ_v"""
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
         allDetails = worksheet.get_all_values()
