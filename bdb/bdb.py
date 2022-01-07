@@ -378,6 +378,7 @@ class bdb(commands.Cog):
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
             x = x + 1
+        await self.send(area,listOfMembers,roleList)
         await self.populate(area, listOfMembers, roleList)
         await self.loop(self, area, listOfMembers, roleList)
         
