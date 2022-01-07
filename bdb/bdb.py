@@ -66,6 +66,7 @@ def loop(area, listOfMembers, roleList):
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
+            sendLog("Inside loop If statement")
             updateActivity(area, listOfMembers, roleList)
             sendLog("Activity updated on: "+ area)
         else:
