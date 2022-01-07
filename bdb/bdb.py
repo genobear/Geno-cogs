@@ -62,6 +62,7 @@ def next_available_row(sheet):
 def loop(area, listOfMembers, roleList):
     status = "Open"
     while status == "Open":
+        sendLog("Inside loop")
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
