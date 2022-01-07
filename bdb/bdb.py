@@ -598,7 +598,7 @@ class bdb(commands.Cog):
         This will cancel any on going updates.
         
         Activity will be automatically updated every 10 minutes."""
-        await self.looper.cancel()
+        self.looper.cancel()
         await self.looper.start(area,target_voice_channel)
         await ctx.send("Started automatically updating activity: " + area + "for voice channeL: " + str(target_voice_channel))
     
