@@ -668,9 +668,6 @@ class bdb(commands.Cog):
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
             
-    @looper.after_loop
-    async def on_looper_cancel(self):
-        if self.looper.is_being_cancelled and l
 
 
 
