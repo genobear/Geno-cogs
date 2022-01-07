@@ -312,11 +312,11 @@ class bdb(commands.Cog):
     @commands.command()
     async def memberlist(self, ctx, role: discord.Role):
         "Get a list of users in a vocie channel"
-
+        
         member_names = [] #(list)
         for member in role.members:
-            member_names.append(member.display_name)
-
+            member_names.append(str(x) + ": " + str(member.display_name)
+            
         await ctx.send(member_names)
 
 
