@@ -1,7 +1,7 @@
-from decouple import config
+from dotenv import load_dotenv
+import os 
 
-url1 = config('webhookurl',default='')
-url2 = config('logWebHookurl',default='')
+load_dotenv()
+print(os.environ.get('webhookurl'))
+print(os.environ.get('logWebHookurl'))
 
-print(url1)
-print(url2)
