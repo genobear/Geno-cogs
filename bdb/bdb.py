@@ -1,4 +1,4 @@
-from redbot.core import commands
+from redbot.core import tasks, commands
 import discord
 from discord import Webhook, RequestsWebhookAdapter
 
@@ -576,10 +576,23 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         sendLog("populate")
         populate(area, listOfMembers, roleList)
-        sendLog("start thread")
-        thread = Thread(target=loop, args=(area, listOfMembers, roleList),daemon=True) #put variables in args
-        thread.start()
-        thread.join()
-        sendLog("thread started")
+        self.loop.start()
+        
+    @tasks.loop()
+    async def loop(self,area,listOfMembers,roleList):
+    #def loop(area, listOfMembers, roleList):
+        status = "Open"
+        while status == "Open":
+            sendLog("Inside loop")
+            worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+            status = worksheet.acell('K2').value
+            if status == "Open":
+                sendLog("Inside loop If statement")
+                updateActivity(area, listOfMembers, roleList)
+                sendLog("Activity updated on: "+ area)
+            else:
+                sendLog(area+": Closed from google sheet")
+                break
+            time.sleep(60)
 
 
