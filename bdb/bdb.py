@@ -181,23 +181,6 @@ def updateActivity(area, listOfMembers, roleList):
     worksheet.batch_update(update)
     
 
-@tasks.loop(seconds=10.0)
-async def looper(self,area,listOfMembers,roleList):
-#def loop(area, listOfMembers, roleList):
-    status = "Open"
-    while status == "Open":
-        sendLog("Inside loop")
-        sendLog("Area: "+area)
-        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
-        status = worksheet.acell('K2').value
-        if status == "Open":
-            sendLog("Inside loop If statement")
-            updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated on: "+ area)
-        else:
-            sendLog(area+": Closed from google sheet")
-            break
-
 def populate(area, listOfMembers, roleList):
     worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
     worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
@@ -594,8 +577,38 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         sendLog("populate")
         populate(area, listOfMembers, roleList)
-        self.looper.start(area,listOfMembers,roleList)
+        self.looper.start(area,target_voice_channel)
         sendLog("after looper start")
         
+    @commands.command()
+    async def Stop(self,ctx):
+        self.looper.cancel()
+        
+    @tasks.loop(seconds=30.0)
+    async def looper(self,area,target_voice_channel: discord.VoiceChannel):
+        #Gather member list from target voice channel
+        x = 0
+        listOfMembers = []
+        roleList = []
+        for member in target_voice_channel.members:
+            listOfMembers.append(str(x) +": " + str(member.display_name))
+            for role in member.roles:
+                roleList.append(str(x) + str(role.name))
+            x = x + 1
+        #def loop(area, listOfMembers, roleList):
+        status = "Open"
+        #while status == "Open":
+        sendLog("Inside looper")
+        sendLog("Area: "+area)
+        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+        status = worksheet.acell('K2').value
+        if status == "Open":
+            sendLog("Inside loop If statement")
+            updateActivity(area, listOfMembers, roleList)
+            sendLog("Activity updated on: "+ area)
+        else:
+            sendLog(area+": Closed from google sheet")
+            self.looper.cancel()
+
 
 
