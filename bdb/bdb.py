@@ -577,10 +577,10 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         sendLog("populate")
         populate(area, listOfMembers, roleList)
-        self.loop.start()
+        self.looper.start()
         
-    @tasks.loop()
-    async def loop(self,area,listOfMembers,roleList):
+    @tasks.loop(seconds=10.0)
+    async def looper(self,area,listOfMembers,roleList):
     #def loop(area, listOfMembers, roleList):
         status = "Open"
         while status == "Open":
