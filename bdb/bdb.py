@@ -38,7 +38,7 @@ webhook = Webhook.from_url(
     adapter=RequestsWebhookAdapter())
 logWebHook = Webhook.from_url("https://discord.com/api/webhooks/881593296168812544/FitcJOcRG8iIAul_ML8PXYz9jIN3T7O5b9M7S3E8X3t2S-M_E0H04OpjA1Bgbs5Sm3c4", adapter=RequestsWebhookAdapter())
 
-async def sendLog(msg):
+def sendLog(msg):
     rooWebHook.send(msg)
     logWebHook.send(msg)
     webhook.send(msg)
@@ -572,9 +572,12 @@ class bdb(commands.Cog):
         await ctx.send(area)
         await ctx.send(roleList)
         await ctx.send(listOfMembers)
+        sendLog("populate")
         populate(area, listOfMembers, roleList)
+        sendLog("start thread")
         thread = Thread(target=loop, args=(area, listOfMembers, roleList)) #put variables in args
         thread.start()
         thread.join()
+        sendLog("thread started")
 
 
