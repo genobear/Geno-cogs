@@ -543,7 +543,7 @@ class bdb(commands.Cog):
         await ctx.send(area)
         await ctx.send(roleList)
         await ctx.send(listOfMembers)
-        await populate(area, listOfMembers, roleList)
+        populate(area, listOfMembers, roleList)
         await self.loop(self, area, listOfMembers, roleList)
         
     #internal function for google sheet. Finds next available row
