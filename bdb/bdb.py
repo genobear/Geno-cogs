@@ -606,13 +606,13 @@ class bdb(commands.Cog):
         """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
         Must provide relevant <target_voice_channel> and <area>"""
         self.looper.start(area,target_voice_channel)
-        await ctx.send("Updating started on" + area +"using Voice Channel" + str(target_voice_channel))
+        await ctx.send("Updating started: " + area +" using Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
         
     
         
     @commands.command()
     async def end_activity(self,ctx,area):
-        """End attendance check from <targ_v"""
+        """End attendance check on <area>"""
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
         allDetails = worksheet.get_all_values()
