@@ -378,7 +378,7 @@ class bdb(commands.Cog):
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
             x = x + 1
-        await self.populate(self, ctx, area, listOfMembers, roleList)
+        await self.populate(ctx, area, listOfMembers, roleList)
         await self.loop(area, listOfMembers)
         
     #internal function for google sheet. Finds next available row
