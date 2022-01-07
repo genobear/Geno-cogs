@@ -315,16 +315,20 @@ class bdb(commands.Cog):
         x = 0
         roleList = []
         member_names = [] #(list)
-        filename = str(role)
+        filename = str(role) + "members"
+        filename2 = str(role) + "roles"
         for member in role.members:
             member_names.append(str(x) + ": " + str(member.display_name))
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
-                x = x + 1
+            x = x + 1
         textfile = open(f"{filename}.txt", "w")
         textfile.write(str(member_names))
         textfile.close()
-        await ctx.send(file=discord.File(f"{filename}.txt"))
+        textfile = open(f"{filename2}.txt", "w")
+        textfile.write(str(member_names))
+        textfile.close()        
+        await ctx.send(file=discord.File(f"{filename2}.txt"))
         #await ctx.send(member_names)
 
 
