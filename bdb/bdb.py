@@ -36,12 +36,12 @@ rooWebHook = Webhook.from_url(
     "https://discord.com/api/webhooks/881474354150539354/AGBcwDltuKJjlbr8LtuL-v5sLeAp6caJgLE_ENJ22cYfCuMPYS68yLXReU57IG6gQUZg",
     adapter=RequestsWebhookAdapter())
 webhook = Webhook.from_url(
-    "https://discord.com/api/webhooks/929082374430539786/CeqNcqg0bOL2xefaw4ZfFIu_u4RqAolmM7YF4W9HVi9FvsPdKiwFMa0bIMcraYnfEW2z",
+    "https://discord.com/api/webhooks/929107733137997905/dHf4Izpt8yc7Y0AVxiqpRxKj3vvnU_IG3ZeBvUSRrz01TGnWOdsiPufyg2rY1e7oUjNM",
     adapter=RequestsWebhookAdapter())
-logWebHook = Webhook.from_url("https://discord.com/api/webhooks/849724987496857650/cyYzDddHF9ReH93iL9pGGi5VFVKFkHDGmEjj60vHsTDCwxx4GB7x-aUgmkTHjo2RMCLO", adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url("https://discord.com/api/webhooks/929109404022874152/XQt1tU4XZgg6Ig3M_WMB_aBTZ954sSEUxQw5StsLFVg_a7FiMQjSGPMnIE2tBF9pBO4k", adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
-    logWebHook.send(msg)
+    #logWebHook.send(msg)
     webhook.send(msg)
 
 def sendLog_debug(msg):
@@ -394,7 +394,7 @@ class bdb(commands.Cog):
         
         Useful if you want to move the activity to a different voice channel
         
-        After stop_updating is ran you can then ?start_updating"""
+        After pause_updating is ran you can then ?resume_updating"""
         self.looper.cancel()
         sendLog("Activity updates paused")
         await ctx.send("Stopped any actvitiy updates.")
@@ -408,8 +408,8 @@ class bdb(commands.Cog):
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
     
         self.looper.start(area,target_voice_channel)
-        sendLog("Activity resumed: " + area + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
-        await ctx.send("Updating resumed: " + area +" using Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
+        sendLog("Activity resumed: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+        await ctx.send("Updating resumed: " + area +" Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
         
     
         
@@ -454,7 +454,7 @@ class bdb(commands.Cog):
         sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         await ctx.send("Activity ended: " + str(worksheet.url))
         
-    @tasks.loop(seconds=600.0)
+    @tasks.loop(seconds=300.0)
     async def looper(self,area,target_voice_channel: discord.VoiceChannel):
         #Gather member list from target voice channel
         x = 0
