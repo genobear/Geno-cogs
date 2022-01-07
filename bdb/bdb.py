@@ -1,5 +1,6 @@
 from redbot.core import commands
 import discord
+from discord import Webhook, RequestsWebhookAdapter
 
 #requirements for googlsheet integration
 import os
@@ -26,6 +27,19 @@ client = gspread.authorize(creds)
 scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
 client2 = gspread.authorize(creds2)
+
+#webhooks for logs
+rooWebHook = Webhook.from_url(
+    "https://discord.com/api/webhooks/881474354150539354/AGBcwDltuKJjlbr8LtuL-v5sLeAp6caJgLE_ENJ22cYfCuMPYS68yLXReU57IG6gQUZg",
+    adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(
+    "https://discord.com/api/webhooks/880536784197537892/GUJ3aBOsW9XYEXj7qux-3i9BQYjEiblGdkh8tb10cMwmfyc9_3CnoiQ3b-JBPykiRMi_",
+    adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url("https://discord.com/api/webhooks/881593296168812544/FitcJOcRG8iIAul_ML8PXYz9jIN3T7O5b9M7S3E8X3t2S-M_E0H04OpjA1Bgbs5Sm3c4", adapter=RequestsWebhookAdapter())
+
+def sendLog(msg):
+    rooWebHook.send(msg)
+    logWebHook.send(msg)
 
 def get_lists(target_voice_channel: discord.VoiceChannel):
     #Gather member list from target voice channel
@@ -558,5 +572,5 @@ class bdb(commands.Cog):
             worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
             status = worksheet.acell('K2').value
             updateActivity(area, listOfMembers, roleList)
-            await ctx.send("Activity "+ area +" Auto Updated")
+            sendLog("Activity "+ area +" Auto Updated")
             time.sleep(600)
