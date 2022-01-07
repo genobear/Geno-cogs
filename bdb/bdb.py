@@ -318,7 +318,7 @@ class bdb(commands.Cog):
             member_names.append(str(x) + ": " + str(member.display_name))
             x = x + 1
         textfile = open("a_file.txt", "w")
-        textfile. write(member_names)
+        textfile. write(str(member_names))
         textfile.close()
         await ctx.send(member_names)
 
