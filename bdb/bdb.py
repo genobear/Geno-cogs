@@ -37,9 +37,10 @@ webhook = Webhook.from_url(
     adapter=RequestsWebhookAdapter())
 logWebHook = Webhook.from_url("https://discord.com/api/webhooks/881593296168812544/FitcJOcRG8iIAul_ML8PXYz9jIN3T7O5b9M7S3E8X3t2S-M_E0H04OpjA1Bgbs5Sm3c4", adapter=RequestsWebhookAdapter())
 
-def sendLog(msg):
+async def sendLog(msg):
     rooWebHook.send(msg)
     logWebHook.send(msg)
+    webhook.send(msg)
 
 def get_lists(target_voice_channel: discord.VoiceChannel):
     #Gather member list from target voice channel
@@ -573,4 +574,4 @@ class bdb(commands.Cog):
             status = worksheet.acell('K2').value
             updateActivity(area, listOfMembers, roleList)
             sendLog("Activity "+ area +" Auto Updated")
-            time.sleep(600)
+            await time.sleep(600)
