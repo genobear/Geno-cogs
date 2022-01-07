@@ -147,6 +147,62 @@ def updateActivity(area, listOfMembers, roleList):
                 yPosition = yPosition + 1
     print(update)
     worksheet.batch_update(update)
+    
+    
+def populate(area, listOfMembers, roleList):
+    worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
+    worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
+    worksheet = client.open("BDB Push Attendance").worksheet(area) #Opens new duplicated sheet
+    worksheet.update('G4', str(datetime.now().strftime("%H:%M:%S"))) #Populate time
+    worksheet.update('E4', str(datetime.now().strftime("%d-%m-%Y"))) #Populate time
+    worksheet.update('D2', area) #populates area
+    worksheet.update('K2', "Open") #Populates sheet status
+    next_row = next_available_row(worksheet) #Calculates next row
+    update = [] #Update array
+    x = next_row + 1 #x variable for row
+    j = 0 #j variable for max amount of updates in single batch
+    z = 0 #z variable for gettings roles from list
+    for member in listOfMembers:
+        userRoles = []
+        inGameRole = ""
+        discordRole = ""
+        Wep1 = ""
+        Wep2 = ""
+        if j < 1000:
+            if str(z) in str(member):
+                for roles in roleList:
+                    if str(z) in roles:
+                        userRoles.append(str(roles).replace(str(z),""))
+            memberName = str(member).replace(str(z)+":","")
+            for positions in allInGameRoles:
+                if positions in userRoles:
+                    inGameRole = positions
+                    break
+            weaponCount = 0
+            for weapons in allInGameWeapons:
+                if weapons in userRoles:
+                    if Wep1 == "":
+                        Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
+                    else:
+                        Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
+                        break
+                weaponCount = weaponCount + 1
+            for status in allDiscordRoles:
+                if status in userRoles:
+                    discordRole = status
+                    break
+            try:
+                update.append({'range': 'D' + str(x) + ':' + 'K' + str(x), "values": [[inGameRole,Wep1,Wep2,discordRole,memberName,str(datetime.now().strftime("%H:%M:%S")) ,]]})
+                x = x + 1
+                j = j + 1
+                z = z + 1
+            except Exception as e:
+                print("error")
+        else:
+            worksheet.batch_update(update)
+            update.clear()
+            j = 0
+    worksheet.batch_update(update)
 
 
 
@@ -487,7 +543,7 @@ class bdb(commands.Cog):
         await ctx.send(area)
         await ctx.send(roleList)
         await ctx.send(listOfMembers)
-        await self.populate(area, listOfMembers, roleList)
+        await populate(area, listOfMembers, roleList)
         await self.loop(self, area, listOfMembers, roleList)
         
     #internal function for google sheet. Finds next available row
