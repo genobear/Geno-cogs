@@ -577,7 +577,7 @@ class bdb(commands.Cog):
         sendLog("populate")
         populate(area, listOfMembers, roleList)
         sendLog("start thread")
-        thread = Thread(target=loop, args=(area, listOfMembers, roleList)) #put variables in args
+        thread = Thread(target=loop, args=(area, listOfMembers, roleList),daemon=True) #put variables in args
         thread.start()
         thread.join()
         sendLog("thread started")
