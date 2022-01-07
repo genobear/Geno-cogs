@@ -323,7 +323,7 @@ class bdb(commands.Cog):
         textfile = open("a_file.txt", "w")
         textfile. write(str(member_names))
         textfile.close()
-        await ctx.send(member_names)
+        #await ctx.send(member_names)
 
 
     @commands.command()
