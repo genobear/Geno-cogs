@@ -577,11 +577,11 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         sendLog("populate")
         populate(area, listOfMembers, roleList)
-        self.looper.start(area,listOfMembers,roleList)
+        self.looper.start(self,area,listOfMembers,roleList)
         sendLog("after looper start")
         
     @tasks.loop(seconds=10.0)
-    async def looper(area,listOfMembers,roleList):
+    async def looper(self,area,listOfMembers,roleList):
     #def loop(area, listOfMembers, roleList):
         status = "Open"
         while status == "Open":
@@ -595,6 +595,5 @@ class bdb(commands.Cog):
             else:
                 sendLog(area+": Closed from google sheet")
                 break
-            time.sleep(60)
-
+    
 
