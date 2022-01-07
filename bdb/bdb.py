@@ -310,11 +310,11 @@ class bdb(commands.Cog):
         os.system("sudo reboot")
         
     @commands.command()
-    async def attendance(self, ctx, channel_from: discord.VoiceChannel):
+    async def memberlist(self, ctx, role: discord.Role):
         "Get a list of users in a vocie channel"
 
         member_names = [] #(list)
-        for member in channel_from.members:
+        for member in role.members:
             member_names.append(member.display_name)
 
         await ctx.send(member_names)
@@ -447,7 +447,7 @@ class bdb(commands.Cog):
         if status == "Open":
             sendLog("Inside loop If statement")
             updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated on: "+ area)
+            sendLog("Activity updated on: " + area)
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
