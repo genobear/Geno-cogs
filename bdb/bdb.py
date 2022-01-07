@@ -239,6 +239,7 @@ def populate(area, listOfMembers, roleList):
             update.clear()
             j = 0
     worksheet.batch_update(update)
+    sendLog("Activity populated: " + area + ": https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
 
 
 
@@ -382,6 +383,7 @@ class bdb(commands.Cog):
         
         populate(area, listOfMembers, roleList)
         self.looper.start(area,target_voice_channel)
+        
         await ctx.send("Activity tracking started for: "+area)
         
     @commands.command()
@@ -456,7 +458,6 @@ class bdb(commands.Cog):
             x = x + 1
         #def loop(area, listOfMembers, roleList):
         status = "Open"
-        #while status == "Open":
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
