@@ -43,6 +43,9 @@ def sendLog(msg):
     logWebHook.send(msg)
     webhook.send(msg)
 
+def sheeturl(worksheet):
+    sheet_url = 
+
 def get_lists(target_voice_channel: discord.VoiceChannel):
     #Gather member list from target voice channel
     x = 0
@@ -455,7 +458,7 @@ class bdb(commands.Cog):
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated for: " + area + str(worksheet.url))
+            sendLog("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
