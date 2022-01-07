@@ -368,6 +368,7 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def Start(self,ctx,target_voice_channel: discord.VoiceChannel, area):
+        
         #Gather member list from target voice channel
         x = 0
         listOfMembers = []
@@ -377,7 +378,7 @@ class bdb(commands.Cog):
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
             x = x + 1
-        await self.populate(area, listOfMembers, roleList)
+        await self.populate(self, ctx, area, listOfMembers, roleList)
         await self.loop(area, listOfMembers)
         
     #internal function for google sheet. Finds next available row
@@ -588,5 +589,5 @@ class bdb(commands.Cog):
                 update.clear()
                 j = 0  #
         worksheet.batch_update(update)
-        print(update)
+        await ctx.send(update)
     
