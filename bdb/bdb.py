@@ -380,7 +380,7 @@ class bdb(commands.Cog):
         await ctx.send("Activity tracking started for: "+area)
         
     @commands.command()
-    async def pause_updating(self, ctx):
+    async def pause_activity(self, ctx):
         """Stop updating shortcut. This will not close the activity on sheets. 
         
         Useful if you want to move the activity to a different voice channel
@@ -390,7 +390,7 @@ class bdb(commands.Cog):
         await ctx.send("Stopped any actvitiy updates.")
         
     @commands.command()
-    async def resume_updating(self, ctx,target_voice_channel: discord.VoiceChannel, area):
+    async def resume_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area):
         """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
         Must provide relevant <target_voice_channel> and <area>"""
         self.looper.start(area,target_voice_channel)
@@ -455,7 +455,7 @@ class bdb(commands.Cog):
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated on: " + area + str(worksheet.url))
+            sendLog("Activity updated for: " + area + str(worksheet.url))
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
