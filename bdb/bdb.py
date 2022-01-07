@@ -410,7 +410,7 @@ class bdb(commands.Cog):
     @commands.command()
     async def end_activity(self,ctx,area):
         """End attendance check on <area>"""
-        spreadsheet = client.open('BDB Push Attendance')
+        spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
         allDetails = worksheet.get_all_values()
