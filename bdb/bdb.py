@@ -396,14 +396,20 @@ class bdb(commands.Cog):
         
         After stop_updating is ran you can then ?start_updating"""
         self.looper.cancel()
+        sendLog("Activity updates paused")
         await ctx.send("Stopped any actvitiy updates.")
         
     @commands.command()
     async def resume_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area):
         """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
         Must provide relevant <target_voice_channel> and <area>"""
+        #Get sheet data
+        spreadsheet = client2.open('BDB Push Attendance')
+        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+    
         self.looper.start(area,target_voice_channel)
-        await ctx.send("Updating started: " + area +" using Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
+        sendLog("Activity resumed: " + area + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+        await ctx.send("Updating resumed: " + area +" using Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
         
     
         
@@ -461,11 +467,12 @@ class bdb(commands.Cog):
             x = x + 1
         #def loop(area, listOfMembers, roleList):
         status = "Open"
+        spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity(area, listOfMembers, roleList)
-            sendLog_debug("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
+            sendLog_debug("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
