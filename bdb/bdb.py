@@ -369,7 +369,7 @@ class bdb(commands.Cog):
         sendLog("after looper start")
         
     @commands.command()
-    async def stop_updating(self, ctx):
+    async def pause_updating(self, ctx):
         """Stop updating shortcut. This will not close the activity on sheets. 
         
         Useful if you want to move the activity to a different voice channel
@@ -379,7 +379,7 @@ class bdb(commands.Cog):
         await ctx.send("Stopped any actvitiy updates.")
         
     @commands.command()
-    async def start_updating(self, ctx,target_voice_channel: discord.VoiceChannel, area):
+    async def resume_updating(self, ctx,target_voice_channel: discord.VoiceChannel, area):
         """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
         Must provide relevant <target_voice_channel> and <area>"""
         self.looper.start(area,target_voice_channel)
@@ -424,7 +424,7 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + "(Closed)")
-        await ctx.send("Activity Looper Stopped")
+        await ctx.send("Activity ended: " + str(worksheet.url))
         
     @tasks.loop(seconds=600.0)
     async def looper(self,area,target_voice_channel: discord.VoiceChannel):
