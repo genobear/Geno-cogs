@@ -592,15 +592,22 @@ class bdb(commands.Cog):
         sendLog("after looper start")
         
     @commands.command()
-    async def update_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area ):
-        """Use if you want to start updating from a different <target_voice_channel> or a different <area>.
+    async def stop_updating(self, ctx):
+        """Stop updating shortcut. This will not close the activity on sheets. 
         
-        This will cancel any on going updates.
+        Useful if you want to move the activity to a different voice channel
         
-        Activity will be automatically updated every 10 minutes."""
+        After stop_updating is ran you can then ?start_updating"""
         self.looper.cancel()
-        await self.looper.start(area,target_voice_channel)
-        await ctx.send("Started automatically updating activity: " + area + "for voice channeL: " + str(target_voice_channel))
+        await ctx.send("Stopped any actvitiy updates.")
+        
+    @commands.command()
+    async def start_updating(self, ctx,target_voice_channel: discord.VoiceChannel, area):
+        """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
+        Must provide relevant <target_voice_channel> and <area>"""
+        self.looper.start(area,target_voice_channel)
+        await ctx.send("Updating started on" + area +"using Voice Channel" + str(target_voice_channel))
+        
     
         
     @commands.command()
