@@ -571,7 +571,6 @@ class bdb(commands.Cog):
         await ctx.send(roleList)
         await ctx.send(listOfMembers)
         populate(area, listOfMembers, roleList)
-        await self.loop(self, area, listOfMembers, roleList)
         thread = Thread(target=loop, args=(area, listOfMembers, roleList)) #put variables in args
         thread.start()
         thread.join()
