@@ -392,7 +392,7 @@ class bdb(commands.Cog):
         while status == "Open":
             worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
             status = worksheet.acell('K2').value
-            await self.updateActivity(ctx, area, listOfMembers, roleList)
+            await self.updateActivity(self, ctx, area, listOfMembers, roleList)
             await ctx.send("Activity "+ area +" Auto Updated")
             time.sleep(600)
     
