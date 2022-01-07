@@ -1,3 +1,7 @@
-import secrets
+from decouple import config
 
-print(secrets.webhookurl)
+url1 = config('webhookurl',default='')
+url2 = config('logWebHookurl',default='')
+
+print(url1)
+print(url2)

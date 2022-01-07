@@ -115,3 +115,4 @@ dmypy.json
 bdb/client.json
 *.code-workspace
 bdb/secrets.py
+*.env
