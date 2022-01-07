@@ -180,7 +180,24 @@ def updateActivity(area, listOfMembers, roleList):
     print(update)
     worksheet.batch_update(update)
     
-    
+
+@tasks.loop(seconds=10.0)
+async def looper(self,area,listOfMembers,roleList):
+#def loop(area, listOfMembers, roleList):
+    status = "Open"
+    while status == "Open":
+        sendLog("Inside loop")
+        sendLog("Area: "+area)
+        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+        status = worksheet.acell('K2').value
+        if status == "Open":
+            sendLog("Inside loop If statement")
+            updateActivity(area, listOfMembers, roleList)
+            sendLog("Activity updated on: "+ area)
+        else:
+            sendLog(area+": Closed from google sheet")
+            break
+
 def populate(area, listOfMembers, roleList):
     worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
     worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
@@ -580,20 +597,5 @@ class bdb(commands.Cog):
         self.looper.start(area,listOfMembers,roleList)
         sendLog("after looper start")
         
-    @tasks.loop(seconds=10.0)
-    async def looper(self,area,listOfMembers,roleList):
-    #def loop(area, listOfMembers, roleList):
-        status = "Open"
-        while status == "Open":
-            sendLog("Inside loop")
-            worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
-            status = worksheet.acell('K2').value
-            if status == "Open":
-                sendLog("Inside loop If statement")
-                updateActivity(area, listOfMembers, roleList)
-                sendLog("Activity updated on: "+ area)
-            else:
-                sendLog(area+": Closed from google sheet")
-                break
-    
+
 
