@@ -315,14 +315,16 @@ class bdb(commands.Cog):
         x = 0
         roleList = []
         member_names = [] #(list)
+        filename = str(role)
         for member in role.members:
             member_names.append(str(x) + ": " + str(member.display_name))
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
                 x = x + 1
-        textfile = open("a_file.txt", "w")
-        textfile. write(str(member_names))
+        textfile = open(f"{filename}.txt", "w")
+        textfile.write(str(member_names))
         textfile.close()
+        await ctx.send(file=discord.File(f"/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/{filename}.txt"))
         #await ctx.send(member_names)
 
 
