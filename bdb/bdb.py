@@ -35,12 +35,11 @@ rooWebHook = Webhook.from_url(
     "https://discord.com/api/webhooks/881474354150539354/AGBcwDltuKJjlbr8LtuL-v5sLeAp6caJgLE_ENJ22cYfCuMPYS68yLXReU57IG6gQUZg",
     adapter=RequestsWebhookAdapter())
 webhook = Webhook.from_url(
-    "https://discord.com/api/webhooks/880536784197537892/GUJ3aBOsW9XYEXj7qux-3i9BQYjEiblGdkh8tb10cMwmfyc9_3CnoiQ3b-JBPykiRMi_",
+    "https://discord.com/api/webhooks/929082374430539786/CeqNcqg0bOL2xefaw4ZfFIu_u4RqAolmM7YF4W9HVi9FvsPdKiwFMa0bIMcraYnfEW2z",
     adapter=RequestsWebhookAdapter())
-logWebHook = Webhook.from_url("https://discord.com/api/webhooks/881593296168812544/FitcJOcRG8iIAul_ML8PXYz9jIN3T7O5b9M7S3E8X3t2S-M_E0H04OpjA1Bgbs5Sm3c4", adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url("https://discord.com/api/webhooks/849724987496857650/cyYzDddHF9ReH93iL9pGGi5VFVKFkHDGmEjj60vHsTDCwxx4GB7x-aUgmkTHjo2RMCLO", adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
-    rooWebHook.send(msg)
     logWebHook.send(msg)
     webhook.send(msg)
 
@@ -375,11 +374,10 @@ class bdb(commands.Cog):
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
             x = x + 1
-        await ctx.send("Activity tracking started for: "+area)
-        sendLog("populate")
+        
         populate(area, listOfMembers, roleList)
         self.looper.start(area,target_voice_channel)
-        sendLog("after looper start")
+        await ctx.send("Activity tracking started for: "+area)
         
     @commands.command()
     async def pause_updating(self, ctx):
@@ -453,14 +451,11 @@ class bdb(commands.Cog):
         #def loop(area, listOfMembers, roleList):
         status = "Open"
         #while status == "Open":
-        sendLog("Inside looper")
-        sendLog("Area: "+area)
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
-            sendLog("Inside loop If statement")
             updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated on: " + area)
+            sendLog("Activity updated on: " + area + str(worksheet.url))
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
