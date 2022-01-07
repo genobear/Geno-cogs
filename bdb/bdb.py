@@ -379,7 +379,7 @@ class bdb(commands.Cog):
                 roleList.append(str(x) + str(role.name))
             x = x + 1
         await self.populate(ctx, area, listOfMembers, roleList)
-        await self.loop(ctx, area, listOfMembers)
+        await self.loop(ctx, area, listOfMembers, roleList)
         
     #internal function for google sheet. Finds next available row
     async def next_available_row(sheet):
@@ -387,12 +387,12 @@ class bdb(commands.Cog):
         return int(len(str_list) + 1)
 
 
-    async def loop(self, ctx, area, listOfMembers):
+    async def loop(self, ctx, area, listOfMembers, roleList):
         status = "Open"
         while status == "Open":
             worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
             status = worksheet.acell('K2').value
-            await self.updateActivity(area, listOfMembers)
+            await self.updateActivity(ctx, area, listOfMembers, roleList)
             await ctx.send("Activity "+ area +" Auto Updated")
             time.sleep(600)
     
