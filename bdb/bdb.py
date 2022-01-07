@@ -43,8 +43,10 @@ def sendLog(msg):
     logWebHook.send(msg)
     webhook.send(msg)
 
-def sheeturl(worksheet):
-    sheet_url = 
+def sendLog_debug(msg):
+    logWebHook.send(msg)
+    #webhook.send(msg)
+
 
 def get_lists(target_voice_channel: discord.VoiceChannel):
     #Gather member list from target voice channel
@@ -438,6 +440,7 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + "(Closed)")
+        sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
         await ctx.send("Activity ended: " + str(worksheet.url))
         
     @tasks.loop(seconds=600.0)
@@ -458,7 +461,7 @@ class bdb(commands.Cog):
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
+            sendLog_debug("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
         else:
             sendLog(area+": Closed from google sheet")
             self.looper.cancel()
