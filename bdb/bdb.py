@@ -324,7 +324,7 @@ class bdb(commands.Cog):
         textfile = open(f"{filename}.txt", "w")
         textfile.write(str(member_names))
         textfile.close()
-        await ctx.send(file=discord.File(f"/home/genobear90/share/Red-DiscordBot/data/redenv/cogs/CogManager/cogs/bdb/{filename}.txt"))
+        await ctx.send(file=discord.File(f"{filename}.txt"))
         #await ctx.send(member_names)
 
 
