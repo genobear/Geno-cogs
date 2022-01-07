@@ -315,7 +315,7 @@ class bdb(commands.Cog):
         x = 0
         member_names = [] #(list)
         for member in role.members:
-            member_names.append(str(x)) + ": " + str(member.display_name)
+            member_names.append(str(x) + ": " + str(member.display_name))
             x = x + 1
         textfile = open("a_file.txt", "w")
         textfile. write(member_names)
