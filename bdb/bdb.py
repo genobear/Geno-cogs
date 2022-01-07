@@ -378,8 +378,8 @@ class bdb(commands.Cog):
             for role in member.roles:
                 roleList.append(str(x) + str(role.name))
             x = x + 1
-        await self.populate(ctx, area, listOfMembers, roleList)
-        await self.loop(ctx, area, listOfMembers, roleList)
+        await self.populate(area, listOfMembers, roleList)
+        await self.loop(self, area, listOfMembers, roleList)
         
     #internal function for google sheet. Finds next available row
     async def next_available_row(sheet):
@@ -392,11 +392,11 @@ class bdb(commands.Cog):
         while status == "Open":
             worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
             status = worksheet.acell('K2').value
-            await self.updateActivity(self, ctx, area, listOfMembers, roleList)
+            await self.updateActivity(area, listOfMembers, roleList)
             await ctx.send("Activity "+ area +" Auto Updated")
             time.sleep(600)
     
-    async def updateActivity(self, ctx, area, listOfMembers, roleList):
+    async def updateActivity(area, listOfMembers, roleList):
         worksheet = client.open("BDB Push Attendance").worksheet(area)
         next_row = next_available_row(worksheet)
         usersOnSheet = worksheet.col_values(8)
@@ -501,7 +501,7 @@ class bdb(commands.Cog):
         print(update)
         worksheet.batch_update(update)
             
-    async def populate(self, ctx, area, listOfMembers, roleList):
+    async def populate(area, listOfMembers, roleList):
         worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
         worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
         worksheet = client.open("BDB Push Attendance").worksheet(area) #Opens new duplicated sheet
