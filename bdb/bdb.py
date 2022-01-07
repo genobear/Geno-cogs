@@ -34,13 +34,8 @@ client2 = gspread.authorize(creds2)
 
 
 #webhooks for logs
-#rooWebHook = Webhook.from_url(
-    #"https://discord.com/api/webhooks/881474354150539354/AGBcwDltuKJjlbr8LtuL-v5sLeAp6caJgLE_ENJ22cYfCuMPYS68yLXReU57IG6gQUZg",
- #   adapter=RequestsWebhookAdapter())
-#webhook = Webhook.from_url(
-   #"https://discord.com/api/webhooks/929107733137997905/dHf4Izpt8yc7Y0AVxiqpRxKj3vvnU_IG3ZeBvUSRrz01TGnWOdsiPufyg2rY1e7oUjNM",
-#    adapter=RequestsWebhookAdapter())
-#logWebHook = Webhook.from_url("https://discord.com/api/webhooks/929109404022874152/XQt1tU4XZgg6Ig3M_WMB_aBTZ954sSEUxQw5StsLFVg_a7FiMQjSGPMnIE2tBF9pBO4k", adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(secrets.webhookurl,adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url(secrets.logWebHookurl, adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
     #logWebHook.send(msg)
