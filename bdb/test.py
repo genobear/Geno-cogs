@@ -1,3 +1,3 @@
 import secrets
 
-print(webhookurl)
+print(secrets.webhookurl)

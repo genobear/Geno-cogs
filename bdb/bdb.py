@@ -30,10 +30,11 @@ scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/au
 creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
 client2 = gspread.authorize(creds2)
 
-
+url1 = secrets.webhookurl
+url2 = secrets.logWebHookurl
 #webhooks for logs
-webhook = Webhook.from_url(secrets.webhookurl,adapter=RequestsWebhookAdapter())
-logWebHook = Webhook.from_url(secrets.logWebHookurl, adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(url1,adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url(url2, adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
     #logWebHook.send(msg)
