@@ -12,8 +12,8 @@ from datetime import datetime
 
 import time
 import secrets
-from secrets import webhook
-from secrets import logWebHook
+from secrets import *
+from secrets import *
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
