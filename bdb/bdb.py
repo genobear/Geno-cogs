@@ -313,10 +313,13 @@ class bdb(commands.Cog):
     async def memberlist(self, ctx, role: discord.Role):
         "Get a list of users in a vocie channel"
         x = 0
+        roleList = []
         member_names = [] #(list)
         for member in role.members:
             member_names.append(str(x) + ": " + str(member.display_name))
-            x = x + 1
+            for role in member.roles:
+                roleList.append(str(x) + str(role.name))
+                x = x + 1
         textfile = open("a_file.txt", "w")
         textfile. write(str(member_names))
         textfile.close()
