@@ -423,6 +423,7 @@ class bdb(commands.Cog):
                 j = 0  #
         worksheet.batch_update(update)
         self.looper.cancel()
+        worksheet.update_title(str(area) + "(Closed)")
         await ctx.send("Activity Looper Stopped")
         
     @tasks.loop(seconds=600.0)
