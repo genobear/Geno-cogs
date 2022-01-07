@@ -8,6 +8,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from tabulate import tabulate
 from datetime import datetime
+from threading import Thread
 import time
 
 
@@ -57,6 +58,17 @@ def get_lists(target_voice_channel: discord.VoiceChannel):
 def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(8)))
     return int(len(str_list) + 1)
+
+def loop(self, ctx, area, listOfMembers, roleList):
+    status = "Open"
+    while status == "Open":
+        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+        status = worksheet.acell('K2').value
+        if status == "Open":
+            updateActivity()
+        else:
+            break
+        time.sleep(60)
 
 def updateActivity(area, listOfMembers, roleList):
     worksheet = client.open("BDB Push Attendance").worksheet(area)
@@ -560,18 +572,8 @@ class bdb(commands.Cog):
         await ctx.send(listOfMembers)
         populate(area, listOfMembers, roleList)
         await self.loop(self, area, listOfMembers, roleList)
-        
-    #internal function for google sheet. Finds next available row
-    async def next_available_row(sheet):
-        str_list = list(filter(None, sheet.col_values(8)))
-        return int(len(str_list) + 1)
+        thread = Thread(target=loop, args=(area, listOfMembers, roleList)) #put variables in args
+        thread.start()
+        thread.join()
 
 
-    async def loop(self, ctx, area, listOfMembers, roleList):
-        status = "Open"
-        while status == "Open":
-            worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
-            status = worksheet.acell('K2').value
-            updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity "+ area +" Auto Updated")
-            await time.sleep(600)
