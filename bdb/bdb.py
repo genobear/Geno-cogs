@@ -1,4 +1,5 @@
-from redbot.core import tasks, commands
+from redbot.core import commands
+from discord.ext import tasks
 import discord
 from discord import Webhook, RequestsWebhookAdapter
 
