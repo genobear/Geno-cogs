@@ -59,14 +59,16 @@ def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(8)))
     return int(len(str_list) + 1)
 
-def loop(self, ctx, area, listOfMembers, roleList):
+def loop(area, listOfMembers, roleList):
     status = "Open"
     while status == "Open":
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity()
+            sendLog("Activity updated on: "+ area)
         else:
+            sendLog(area+": Closed from google sheet")
             break
         time.sleep(60)
 
