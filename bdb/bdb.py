@@ -30,6 +30,7 @@ scope2 = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/au
 creds2 = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope2)
 client2 = gspread.authorize(creds2)
 
+
 #webhooks for logs
 rooWebHook = Webhook.from_url(
     "https://discord.com/api/webhooks/881474354150539354/AGBcwDltuKJjlbr8LtuL-v5sLeAp6caJgLE_ENJ22cYfCuMPYS68yLXReU57IG6gQUZg",
@@ -186,6 +187,7 @@ def updateActivity(area, listOfMembers, roleList):
     
 
 def populate(area, listOfMembers, roleList):
+    spreadsheet = client.open('BDB Push Attendance')
     worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
     worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
     worksheet = client.open("BDB Push Attendance").worksheet(area) #Opens new duplicated sheet
@@ -239,7 +241,7 @@ def populate(area, listOfMembers, roleList):
             update.clear()
             j = 0
     worksheet.batch_update(update)
-    sendLog("Activity populated: " + area + ": https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
+    sendLog("Activity populated: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
 
 
@@ -408,6 +410,7 @@ class bdb(commands.Cog):
     @commands.command()
     async def end_activity(self,ctx,area):
         """End attendance check on <area>"""
+        spreadsheet = client.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
         allDetails = worksheet.get_all_values()
@@ -442,7 +445,7 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + "(Closed)")
-        sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(worksheet.spreadsheetId)+"/edit#gid="+str(worksheet.sheetId))
+        sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         await ctx.send("Activity ended: " + str(worksheet.url))
         
     @tasks.loop(seconds=600.0)
