@@ -114,3 +114,4 @@ dmypy.json
 .pyre/
 bdb/client.json
 *.code-workspace
+bdb/secrets.py

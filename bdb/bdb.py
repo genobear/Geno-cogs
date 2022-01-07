@@ -11,7 +11,7 @@ from tabulate import tabulate
 from datetime import datetime
 
 import time
-
+import secrets
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -42,10 +42,10 @@ logWebHook = Webhook.from_url("https://discord.com/api/webhooks/9291094040228741
 
 def sendLog(msg):
     #logWebHook.send(msg)
-    webhook.send(msg)
+    secrets.webhook.send(msg)
 
 def sendLog_debug(msg):
-    logWebHook.send(msg)
+    secrets.logWebHook.send(msg)
     #webhook.send(msg)
 
 
