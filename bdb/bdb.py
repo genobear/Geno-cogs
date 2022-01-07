@@ -561,7 +561,7 @@ class bdb(commands.Cog):
         
         
     @commands.command()
-    async def Start(self,ctx,target_voice_channel: discord.VoiceChannel, area):
+    async def start_activity(self,ctx,target_voice_channel: discord.VoiceChannel, area):
         
         #Gather member list from target voice channel
         x = 0
@@ -581,10 +581,50 @@ class bdb(commands.Cog):
         sendLog("after looper start")
         
     @commands.command()
-    async def Stop(self,ctx):
+    async def update_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area ):
         self.looper.cancel()
+        self.looper.start(area,target_voice_channel)
+        await ctx.send("Started automatically updating activity: " + area + "for voice channeL: " + target_voice_channel)
+    
         
-    @tasks.loop(seconds=30.0)
+    @commands.command()
+    async def end_activity(self,ctx,area):
+        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
+        worksheet.update('K2', "Closed")  # Populates sheet status
+        allDetails = worksheet.get_all_values()
+        usersOnSheet = worksheet.col_values(8)
+        usersOnSheet1 = usersOnSheet[7:]
+        update = []
+        a = 7
+        j = 0
+        yPosition = 8
+        for user in usersOnSheet1:
+            if j < 1000:
+                clockIn = str(allDetails[a][8])
+                clockOut = str(allDetails[a][9])
+                memberName = allDetails[a][7]
+    
+                if len(clockIn.splitlines()) == len(clockOut.splitlines()):
+                    a = a + 1
+                    yPosition = yPosition + 1
+    
+                else:
+                    if len(clockOut.splitlines()) < len(clockIn.splitlines()):
+                        clockOut = str(datetime.now().strftime("%H:%M:%S"))
+                        update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
+                                       "values": [[memberName, clockIn, clockOut]]})
+                        a = a + 1
+                        yPosition = yPosition + 1
+                        j = j + 1
+            else:
+                worksheet.batch_update(update)
+                update.clear()
+                j = 0  #
+        worksheet.batch_update(update)
+        self.looper.cancel()
+        ctx.send("Activity Looper Stopped")
+        
+    @tasks.loop(seconds=600.0)
     async def looper(self,area,target_voice_channel: discord.VoiceChannel):
         #Gather member list from target voice channel
         x = 0
