@@ -35,8 +35,8 @@ client2 = gspread.authorize(creds2)
 
 
 
-dotenv_path = os.path.join(ROOT_DIR(__file__), '.env')
-load_dotenv(dotenv_path)
+
+load_dotenv()
 url1 = os.environ.get('webhookurl')
 url2 = os.environ.get('logWebHookurl')
 #webhooks for logs
