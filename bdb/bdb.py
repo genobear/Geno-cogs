@@ -229,6 +229,24 @@ def populate(area, listOfMembers, roleList):
             update.clear()
             j = 0
     worksheet.batch_update(update)
+    body = {
+    "requests": [
+            {
+                "updateSheetProperties": {
+                    "properties": {
+                        "sheetId": worksheet.id,
+                        "tabColor": {
+                            "red": 0.0,
+                            "green": 0.0,
+                            "blue": 1.0
+                        }
+                    },
+                    "fields": "tabColor"
+                }
+            }
+        ]
+    }
+    spreadsheet.batch_update(body)
     sendLog("Activity populated: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
 
