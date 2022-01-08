@@ -67,20 +67,6 @@ def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(8)))
     return int(len(str_list) + 1)
 
-def loop(area, listOfMembers, roleList):
-    status = "Open"
-    while status == "Open":
-        sendLog("Inside loop")
-        worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
-        status = worksheet.acell('K2').value
-        if status == "Open":
-            sendLog("Inside loop If statement")
-            updateActivity(area, listOfMembers, roleList)
-            sendLog("Activity updated on: "+ area)
-        else:
-            sendLog(area+": Closed from google sheet")
-            break
-        time.sleep(60)
 
 def updateActivity(area, listOfMembers, roleList):
     worksheet = client.open("BDB Push Attendance").worksheet(area)
@@ -372,8 +358,7 @@ class bdb(commands.Cog):
         
         Use ?end_activity to end the activity
         
-        Only 1 activity can be tracked at a time
-        Please use ?update_activity to track a different voice channel/activity"""
+        Only 1 activity can be tracked at a time"""
         
         #Gather member list from target voice channel
         x = 0
@@ -396,15 +381,14 @@ class bdb(commands.Cog):
         
         Useful if you want to move the activity to a different voice channel
         
-        After pause_updating is ran you can then ?resume_updating"""
+        After pause_updating is ran you can then ?resume_activity"""
         self.looper.cancel()
         sendLog("Activity updates paused")
         await ctx.send("Stopped any actvitiy updates.")
         
     @commands.command()
     async def resume_activity(self, ctx,target_voice_channel: discord.VoiceChannel, area):
-        """Only useful to start updating an existing activity wich has been stopped with "?stop_updating" 
-        Must provide relevant <target_voice_channel> and <area>"""
+        """Only useful to start updating an existing activity wich has been stopped with "?pause_activity" """
         #Get sheet data
         spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
@@ -453,6 +437,24 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + "(Closed)")
+        body = {
+        "requests": [
+                {
+                    "updateSheetProperties": {
+                        "properties": {
+                            "sheetId": worksheet.id,
+                            "tabColor": {
+                                "red": 1.0,
+                                "green": 0.0,
+                                "blue": 0.0
+                            }
+                        },
+                        "fields": "tabColor"
+                    }
+                }
+            ]
+        }
+        spreadsheet.batch_update(body)
         sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         await ctx.send("Activity ended: " + str(worksheet.url))
         
