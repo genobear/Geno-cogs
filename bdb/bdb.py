@@ -44,7 +44,7 @@ webhook = Webhook.from_url(str(url1),adapter=RequestsWebhookAdapter())
 logWebHook = Webhook.from_url(str(url2), adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
-    #logWebHook.send(msg)
+    logWebHook.send(msg)
     webhook.send(msg)
 
 def sendLog_debug(msg):
