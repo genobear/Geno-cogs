@@ -40,8 +40,8 @@ load_dotenv()
 url1 = os.environ.get('webhookurl')
 url2 = os.environ.get('logWebHookurl')
 #webhooks for logs
-webhook = Webhook.from_url(url1,adapter=RequestsWebhookAdapter())
-logWebHook = Webhook.from_url(url2, adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(str(url1),adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url(str(url2), adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
     #logWebHook.send(msg)
