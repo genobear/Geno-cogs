@@ -11,7 +11,6 @@ from tabulate import tabulate
 from datetime import datetime
 
 import time
-import secrets
 from dotenv import load_dotenv
 
 
@@ -40,7 +39,7 @@ load_dotenv()
 url1 = os.environ.get('webhookurl')
 url2 = os.environ.get('logWebHookurl')
 #webhooks for logs
-webhook = Webhook.from_url(str(url1),adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(str(url1), adapter=RequestsWebhookAdapter())
 logWebHook = Webhook.from_url(str(url2), adapter=RequestsWebhookAdapter())
 
 def sendLog(msg):
@@ -475,9 +474,9 @@ class bdb(commands.Cog):
         status = worksheet.acell('K2').value
         if status == "Open":
             updateActivity(area, listOfMembers, roleList)
-            sendLog_debug("Activity updated for: " + area + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+            sendLog_debug(area +" updated: " +  "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         else:
-            sendLog(area+": Closed from google sheet")
+            sendLog(area + " closed from Google Sheet: " + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
             self.looper.cancel()
             
 
