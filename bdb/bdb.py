@@ -503,6 +503,8 @@ class bdb(commands.Cog):
     async def warstats(self, ctx, file_types=("jpeg","png")):
         if not ctx.message.attachments:
             await ctx.send("Try again with attachment")
-        attachment = ctx.message.attachments[0]
-        await ctx.send(attachment)
+        
+        attachments = ctx.message.attachments
+        for attachment in attachments:
+            await ctx.send(attachment)
 
