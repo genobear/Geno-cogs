@@ -499,6 +499,10 @@ class bdb(commands.Cog):
             sendLog(area + " closed from Google Sheet: " + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
             self.looper.cancel()
             
-
-
+    @commands.command
+    async def warstats(self, ctx, file_types=("jpeg","png")):
+        if not ctx.message.attachments:
+            await ctx.send("Try again with attachment")
+        attachment = ctx.message.attachments[0]
+        await ctx.send(file=discord.File(attachment))
 
