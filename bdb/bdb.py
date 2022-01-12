@@ -504,5 +504,5 @@ class bdb(commands.Cog):
         if not ctx.message.attachments:
             await ctx.send("Try again with attachment")
         attachment = ctx.message.attachments[0]
-        await ctx.send(file=discord.File(attachment))
+        await ctx.send(attachment)
 
