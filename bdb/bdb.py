@@ -81,7 +81,7 @@ def updateActivity(area, listOfMembers, roleList):
     update = []
     for person in listOfMembers:
         corrected = str(person).split(":")
-        listMemberCorrection.append(corrected[1])
+        listMemberCorrection.append(str(corrected[1])[1:])
     for member in listMemberCorrection:
         userRoles = []
         inGameRole = ""
@@ -94,7 +94,7 @@ def updateActivity(area, listOfMembers, roleList):
                     for roles in roleList:
                         if str(z) in roles:
                             userRoles.append(str(roles).replace(str(z), ""))
-                memberName = str(member).replace(str(z) + ":", "")
+                memberName = str(member).replace(str(z) + ": ","")
                 for positions in allInGameRoles:
                     if positions in userRoles:
                         inGameRole = positions
@@ -502,8 +502,7 @@ class bdb(commands.Cog):
     @commands.command()
     async def warstats(self, ctx, file_types=("jpeg","png")):
         if not ctx.message.attachments:
-            await ctx.send("Try again with attachment")
-        
+            await ctx.send("Try again with attachment")        
         attachments = ctx.message.attachments
         for attachment in attachments:
             await ctx.send(attachment)
