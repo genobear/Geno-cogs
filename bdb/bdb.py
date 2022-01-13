@@ -335,10 +335,10 @@ class bdb(commands.Cog):
         filename3 = str(role) + "membersID"
         
         for member in role.members:
-            member_names.append(str(x) + ": " + str(member.display_name))
-            listOfMembersID.append(str(x) + ": " + str(member.id))
+            member_names.append(str(x) + ":" + str(member.display_name))
+            listOfMembersID.append(str(x) + ":" + str(member.id))
             for role in member.roles:
-                roleList.append(str(x) + ": " + str(role.name))
+                roleList.append(str(x) + ":" + str(role.name))
             x = x + 1
 
         textfile = open(f"{filename}.txt", "w")
