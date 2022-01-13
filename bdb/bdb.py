@@ -328,12 +328,20 @@ class bdb(commands.Cog):
         x = 0
         roleList = []
         member_names = [] #(list)
+        listOfMembersID = []
+        
         filename = str(role) + "members"
         filename2 = str(role) + "roles"
+        filename3 = str(role) + "membersID"
+        
         for member in role.members:
             member_names.append(str(x) + ": " + str(member.display_name))
             for role in member.roles:
                 roleList.append(str(x) + ": " + str(role.name))
+            x = x + 1
+        x = 0
+        for memberid in role.members:
+            listOfMembersID.append(str(x) + ": " + str(member.id))
             x = x + 1
         textfile = open(f"{filename}.txt", "w")
         textfile.write(str(member_names))
@@ -343,6 +351,7 @@ class bdb(commands.Cog):
         textfile.close()
         await ctx.send(file=discord.File(f"{filename}.txt"))        
         await ctx.send(file=discord.File(f"{filename2}.txt"))
+        await ctx.send(file=discord.File(f"{filename3}.txt"))
         #await ctx.send(member_names)
 
 
@@ -353,6 +362,7 @@ class bdb(commands.Cog):
 
         #Gather member list from target voice channel
         x = 0
+        listOfMembersID = []
         listOfMembers = []
         listofroles = []
         for member in target_voice_channel.members:
@@ -360,8 +370,13 @@ class bdb(commands.Cog):
             for role in member.roles:
                 listofroles.append(str(x) + str(role.name))
             x = x + 1
+        x = 0    
+        for memberid in target_voice_channel.members:
+            listOfMembersID.append(str(x) + ": " + str(member.id))
+            x = x + 1
 
         await ctx.send(listOfMembers)
+        await ctx.send(listofroles)
         await ctx.send(listofroles)
         
         
