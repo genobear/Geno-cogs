@@ -199,7 +199,7 @@ def populate(area, listOfMembers, roleList):
                 for roles in roleList:
                     if str(z) in roles:
                         userRoles.append(str(roles).replace(str(z),""))
-            memberName = str(member).replace(str(z)+":","")
+            memberName = str(member).replace(str(z)+": ","")
             for positions in allInGameRoles:
                 if positions in userRoles:
                     inGameRole = positions
