@@ -336,13 +336,11 @@ class bdb(commands.Cog):
         
         for member in role.members:
             member_names.append(str(x) + ": " + str(member.display_name))
+            listOfMembersID.append(str(x) + ": " + str(member.id))
             for role in member.roles:
                 roleList.append(str(x) + ": " + str(role.name))
             x = x + 1
-        x = 0
-        for memberID in role.members:
-            listOfMembersID.append(str(x) + ": " + str(memberID.id))
-            x = x + 1
+
         textfile = open(f"{filename}.txt", "w")
         textfile.write(str(member_names))
         textfile.close()
