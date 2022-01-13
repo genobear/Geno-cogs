@@ -350,7 +350,7 @@ class bdb(commands.Cog):
         textfile.write(str(roleList))
         textfile.close()
         textfile = open(f"{filename3}.txt", "w")
-        textfile.write(str(roleList))
+        textfile.write(str(listOfMembersID))
         textfile.close()
         await ctx.send(file=discord.File(f"{filename}.txt"))        
         await ctx.send(file=discord.File(f"{filename2}.txt"))
