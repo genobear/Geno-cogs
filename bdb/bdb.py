@@ -340,7 +340,7 @@ class bdb(commands.Cog):
                 roleList.append(str(x) + ": " + str(role.name))
             x = x + 1
         x = 0
-        for memberid in role.members:
+        for member in role.members:
             listOfMembersID.append(str(x) + ": " + str(member.id))
             x = x + 1
         textfile = open(f"{filename}.txt", "w")
