@@ -470,7 +470,7 @@ class bdb(commands.Cog):
                 j = 0  #
         worksheet.batch_update(update)
         self.looper.cancel()
-        worksheet.update_title(str(area) + "(Closed)")
+        worksheet.update_title(str(area) + str(datetime.now().strftime("%d-%m-%Y")) + "(Closed)")
         body = {
         "requests": [
                 {
