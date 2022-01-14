@@ -350,7 +350,7 @@ class bdb(commands.Cog):
         textfile = open(f"{filename3}.txt", "w")
         textfile.write(str(listOfMembersID))
         textfile.close()
-        await ctx.send(file=discord.File(f"{filename}.txt"))        
+        await ctx.send(file=discord.File(f"{filename}.txt"))
         await ctx.send(file=discord.File(f"{filename2}.txt"))
         await ctx.send(file=discord.File(f"{filename3}.txt"))
         #await ctx.send(member_names)
@@ -522,4 +522,5 @@ class bdb(commands.Cog):
         attachments = ctx.message.attachments
         for attachment in attachments:
             await ctx.send(attachment)
+        await ctx.message.delete()
 
