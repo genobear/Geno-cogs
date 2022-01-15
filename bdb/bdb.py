@@ -280,13 +280,15 @@ def populate(area, listOfMembers, roleList):
                 "updateSheetProperties": {
                     "properties": {
                         "sheetId": worksheet.id,
+                        "hidden" : False,
                         "tabColor": {
                             "red": 0.0,
                             "green": 1.0,
                             "blue": 0.0
                         }
                     },
-                    "fields": "tabColor"
+                    "fields": "tabColor",
+                    "fields": "hidden"
                 }
             }
         ]
