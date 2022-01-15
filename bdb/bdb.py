@@ -5,6 +5,7 @@ from discord import Webhook, RequestsWebhookAdapter
 
 #requirements for googlsheet integration
 import os
+import glob
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -599,8 +600,11 @@ class bdb(commands.Cog):
 
                     filepath = bfolderpath + item['name']
                     downloadfiles(service, item['id'], item['name'], filepath)
-
-        for filename in os.listdir('/home/genobear90/Folder'):
-            await ctx.send(file=discord.File(f"/home/genobear90/Folder/{filename}"))
+        files = glob.glob('/home/genobear90/Folder/*')
+        #for filename in os.listdir('/home/genobear90/Folder'):
+        for filename in files:
+            await ctx.send(file=discord.File(filename))
+            await os.remove(filename)
+        
 
         await ctx.send("ok")
