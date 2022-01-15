@@ -574,6 +574,11 @@ class bdb(commands.Cog):
         service = build('drive', 'v3', credentials=creds)
         Folder_id = "'1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'"  # Enter The Downloadable folder ID From Shared Link
 
+        for filename in os.listdir('/home/genobear90/Folder'):
+        #for filename in files:
+            os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
+            os.rmdir('/home/genobear90/Folder/'+filename)
+
         results = service.files().list(
             pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
         items = results.get('files', [])
@@ -605,6 +610,7 @@ class bdb(commands.Cog):
         #for filename in files:
             await ctx.send(file=discord.File('/home/genobear90/Folder/'+filename+'/'+filename))
             os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
+            os.rmdir('/home/genobear90/Folder/'+filename)
         
         #os.removedirs('/home/genobear90/Folder/')
 
