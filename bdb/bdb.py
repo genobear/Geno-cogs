@@ -524,3 +524,17 @@ class bdb(commands.Cog):
             await ctx.send(attachment)
         await ctx.message.delete()
 
+    @commands.command()
+    async def tradepost(self, ctx)
+        folder_id = '1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'
+        query = f"parents = '{folder_id}"
+
+        response = client.files().list(q=query).execute()
+        files = response.get('files')
+        nextPageToken = response.get('nextPageToken')
+
+        while nextPageToken:
+            response = response = client.files().list(q=query, pageToken=nextPageToken).execute()
+            files.extend(response.get('files'))
+            nextPageToken =  response.get('nextPageToken')
+

@@ -116,3 +116,5 @@ bdb/client.json
 *.code-workspace
 bdb/secrets.py
 *.env
+bdb/client2.json
+bdb/drive test.py
