@@ -9,6 +9,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
@@ -569,9 +570,10 @@ class bdb(commands.Cog):
 
     @commands.command()
     async def tradepost(self, ctx):
+        service = build('drive', 'v3', credentials=creds)
         Folder_id = "'1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'"  # Enter The Downloadable folder ID From Shared Link
 
-        results = client.files().list(
+        results = service.files().list(
             pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
         items = results.get('files', [])
         if not items:
@@ -587,7 +589,7 @@ class bdb(commands.Cog):
                         os.mkdir(bfolderpath+item['name'])
 
                     folderpath = bfolderpath+item['name']
-                    listfolders(client, item['id'], folderpath)
+                    listfolders(service, item['id'], folderpath)
                 else:
                     if not os.path.isdir("Folder"):
                         os.mkdir("Folder")
@@ -596,5 +598,5 @@ class bdb(commands.Cog):
                         os.mkdir(bfolderpath + item['name'])
 
                     filepath = bfolderpath + item['name']
-                    downloadfiles(client, item['id'], item['name'], filepath)
+                    downloadfiles(service, item['id'], item['name'], filepath)
         await ctx.send("ok")
