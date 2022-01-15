@@ -599,4 +599,8 @@ class bdb(commands.Cog):
 
                     filepath = bfolderpath + item['name']
                     downloadfiles(service, item['id'], item['name'], filepath)
+
+        for filename in os.listdir('/Folder/'):
+            await ctx.send(filename)
+
         await ctx.send("ok")
