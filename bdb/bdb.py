@@ -7,11 +7,54 @@ from discord import Webhook, RequestsWebhookAdapter
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from oauth2client import client
+from oauth2client import tools
+from oauth2client.file import Storage
+from apiclient import discovery
+import logging
+import io
 from tabulate import tabulate
 from datetime import datetime
+from apiclient.http import MediaFileUpload, MediaIoBaseDownload
+from apiclient import errors
+from apiclient import http
 
 import time
 from dotenv import load_dotenv
+
+
+def listfolders(client, filid, des):
+    results = client.files().list(
+        pageSize=1000, q="\'" + filid + "\'" + " in parents",
+        fields="nextPageToken, files(id, name, mimeType)").execute()
+    # logging.debug(folder)
+    folder = results.get('files', [])
+    for item in folder:
+        if str(item['mimeType']) == str('application/vnd.google-apps.folder'):
+            if not os.path.isdir(des+"/"+item['name']):
+                os.mkdir(path=des+"/"+item['name'])
+            print(item['name'])
+            listfolders(client, item['id'], des+"/"+item['name'])  # LOOP un-till the files are found
+        else:
+            downloadfiles(client, item['id'], item['name'], des)
+            print(item['name'])
+    return folder
+
+
+# To Download Files
+def downloadfiles(client, dowid, name,dfilespath):
+    request = client.files().get_media(fileId=dowid)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
+    with io.open(dfilespath + "/" + name, 'wb') as f:
+        fh.seek(0)
+        f.write(fh.read())
 
 
 
@@ -525,16 +568,33 @@ class bdb(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
-    async def tradepost(self, ctx)
-        folder_id = '1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'
-        query = f"parents = '{folder_id}"
+    async def tradepost(self, ctx):
+        Folder_id = "'1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'"  # Enter The Downloadable folder ID From Shared Link
 
-        response = client.files().list(q=query).execute()
-        files = response.get('files')
-        nextPageToken = response.get('nextPageToken')
+        results = client.files().list(
+            pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
+        items = results.get('files', [])
+        if not items:
+            print('No files found.')
+        else:
+            print('Files:')
+            for item in items:
+                if item['mimeType'] == 'application/vnd.google-apps.folder':
+                    if not os.path.isdir("Folder"):
+                        os.mkdir("Folder")
+                    bfolderpath = os.getcwd()+"/Folder/"
+                    if not os.path.isdir(bfolderpath+item['name']):
+                        os.mkdir(bfolderpath+item['name'])
 
-        while nextPageToken:
-            response = response = client.files().list(q=query, pageToken=nextPageToken).execute()
-            files.extend(response.get('files'))
-            nextPageToken =  response.get('nextPageToken')
+                    folderpath = bfolderpath+item['name']
+                    listfolders(client, item['id'], folderpath)
+                else:
+                    if not os.path.isdir("Folder"):
+                        os.mkdir("Folder")
+                    bfolderpath = os.getcwd()+"/Folder/"
+                    if not os.path.isdir(bfolderpath + item['name']):
+                        os.mkdir(bfolderpath + item['name'])
 
+                    filepath = bfolderpath + item['name']
+                    downloadfiles(client, item['id'], item['name'], filepath)
+        await ctx.send("ok")
