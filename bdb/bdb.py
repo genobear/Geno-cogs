@@ -604,7 +604,7 @@ class bdb(commands.Cog):
         for filename in os.listdir('/home/genobear90/Folder'):
         #for filename in files:
             await ctx.send(file=discord.File('/home/genobear90/Folder/'+filename+'/'+filename))
-            await os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
+            os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
         
         #os.removedirs('/home/genobear90/Folder/')
 
