@@ -308,6 +308,9 @@ allInGameWeaponsCorrections = ["Great axe", "Ice Gauntlet", "Musket", "Sword + S
 allInGameRoles = ["DPS", "HEALER", "TANK"]
 allDiscordRoles = ["⚜️","Consul", "Admin", "Officer", "Member", "Trial"]
 
+hours = 0
+secs = 0
+
 
 class bdb(commands.Cog):
     """My custom cog"""
@@ -505,7 +508,7 @@ class bdb(commands.Cog):
     
                 else:
                     if len(clockOut.splitlines()) < len(clockIn.splitlines()):
-                        clockOut = str(datetime.now().strftime("%H:%M:%S"))
+                        clockOut = clockOut + "\n" + str(datetime.now().strftime("%H:%M:%S"))
                         update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
                                        "values": [[memberName, clockIn, clockOut]]})
                         a = a + 1
