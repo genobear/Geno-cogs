@@ -601,6 +601,6 @@ class bdb(commands.Cog):
                     downloadfiles(service, item['id'], item['name'], filepath)
 
         for filename in os.listdir('/home/genobear90/Folder'):
-            await ctx.send(filename)
+            await ctx.send(file=discord.File(f"/home/genobear90/Folder/{filename}"))
 
         await ctx.send("ok")
