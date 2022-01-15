@@ -606,5 +606,6 @@ class bdb(commands.Cog):
             await ctx.send(file=discord.File(filename))
             await os.remove(filename)
         
+        os.removedirs('/home/genobear90/Folder/')
 
         await ctx.send("ok")
