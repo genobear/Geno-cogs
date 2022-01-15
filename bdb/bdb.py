@@ -600,11 +600,11 @@ class bdb(commands.Cog):
 
                     filepath = bfolderpath + item['name']
                     downloadfiles(service, item['id'], item['name'], filepath)
-        files = glob.glob('/home/genobear90/Folder/*')
-        #for filename in os.listdir('/home/genobear90/Folder'):
-        for filename in files:
-            await ctx.send(file=discord.File(filename))
-            await os.remove(filename)
+        #files = glob.glob('/home/genobear90/Folder/*')
+        for filename in os.listdir('/home/genobear90/Folder'):
+        #for filename in files:
+            await ctx.send(file=discord.File(filename+'/'+filename))
+            await os.remove(filename+'/'+filename)
         
         #os.removedirs('/home/genobear90/Folder/')
 
