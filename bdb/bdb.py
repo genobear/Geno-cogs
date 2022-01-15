@@ -602,9 +602,9 @@ class bdb(commands.Cog):
                     downloadfiles(service, item['id'], item['name'], filepath)
         files = glob.glob('/home/genobear90/Folder/*')
         #for filename in os.listdir('/home/genobear90/Folder'):
-        for filename in files:
+        #for filename in files:
             #await ctx.send(file=discord.File(filename))
-            await os.remove(filename)
+            #await os.remove(filename)
         
         os.removedirs('/home/genobear90/Folder/')
 
