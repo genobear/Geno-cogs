@@ -12,7 +12,7 @@ from google.auth.transport.requests import Request
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
-from apiclient import discovery
+from googleapiclient import discovery
 import logging
 import io
 from tabulate import tabulate
