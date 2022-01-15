@@ -603,7 +603,7 @@ class bdb(commands.Cog):
         files = glob.glob('/home/genobear90/Folder/*')
         #for filename in os.listdir('/home/genobear90/Folder'):
         for filename in files:
-            await ctx.send(file=discord.File(filename))
+            #await ctx.send(file=discord.File(filename))
             await os.remove(filename)
         
         os.removedirs('/home/genobear90/Folder/')
