@@ -17,9 +17,9 @@ import logging
 import io
 from tabulate import tabulate
 from datetime import datetime
-from apiclient.http import MediaFileUpload, MediaIoBaseDownload
-from apiclient import errors
-from apiclient import http
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from googleapiclient import errors
+from googleapiclient import http
 
 import time
 from dotenv import load_dotenv
