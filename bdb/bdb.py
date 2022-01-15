@@ -578,7 +578,7 @@ class bdb(commands.Cog):
         #for filename in files:
             if os.path.exists('/home/genobear90/Folder/'+filename+'/'+filename):
                 os.remove('/home/genobear90/Folder/'+filename+'/'+filename)                
-                os.rmdir('/home/genobear90/Folder/'+filename)
+            os.rmdir('/home/genobear90/Folder/'+filename)
 
         results = service.files().list(
             pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
