@@ -620,4 +620,4 @@ class bdb(commands.Cog):
         
         #os.removedirs('/home/genobear90/Folder/')
 
-        await ctx.send("ok")
+        await ctx.send("Data maintained by LOUKAN")
