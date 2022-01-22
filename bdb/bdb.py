@@ -378,7 +378,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
                 if len(imgErrorCorrection) < 7:
-                    sendLog("Critical", "N/A", rowData, imgErrorCorrection, "Row Correction",
+                    sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                             "Some fucky shit in row correction")
                     return
                 return imgErrorCorrection
