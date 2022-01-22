@@ -578,6 +578,22 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
 hours = 0
 secs = 0
 
+#Get discord ID - Complete 
+def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
+    discordUsername = inGameName.replace(" ", "")
+    for letter in discordUsername:
+        if letter in string.punctuation:
+            discordUsername = discordUsername.replace(letter, "")
+    for a, name in enumerate(namesFromGlobalListData):
+        name = name.replace(" ", "")
+        for letter in name:
+            if letter in string.punctuation:
+                name = name.replace(letter, "")
+        if str(name).upper() == discordUsername.upper():
+            return discordIDs[a]
+        if str(name).upper() in discordUsername.upper():
+            return discordIDs[a]
+    return "Not in company"
 
 class bdb(commands.Cog):
     """My custom cog"""
@@ -644,22 +660,7 @@ class bdb(commands.Cog):
                 j = 0
         worksheet.batch_update(update)
 
-#Get discord ID - Complete 
-def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
-    discordUsername = inGameName.replace(" ", "")
-    for letter in discordUsername:
-        if letter in string.punctuation:
-            discordUsername = discordUsername.replace(letter, "")
-    for a, name in enumerate(namesFromGlobalListData):
-        name = name.replace(" ", "")
-        for letter in name:
-            if letter in string.punctuation:
-                name = name.replace(letter, "")
-        if str(name).upper() == discordUsername.upper():
-            return discordIDs[a]
-        if str(name).upper() in discordUsername.upper():
-            return discordIDs[a]
-    return "Not in company"
+
 
     @commands.command()
     async def scan(self, ctx, arg):
