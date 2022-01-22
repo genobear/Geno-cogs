@@ -808,7 +808,7 @@ class bdb(commands.Cog):
                         if clockOut != "":
                             clockOut = clockOut + "\n" +  str(datetime.now().strftime("%H:%M:%S"))
                         else:
-                            clockOut = str(datetime.now().strftime("%H:%M:%S"))
+                            clockOut = str(datetime.now().strftime("%H:%M:%S"))                        
                         totalTimeAttened = timeCalculation(clockIn, clockOut)
                         print(totalTimeAttened)
                         update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
@@ -981,9 +981,90 @@ class bdb(commands.Cog):
                  os.remove(f'{ROOT_DIR}/Images/'+filename)
                  await ctx.send(f"{filename} deleted")                
         
+    @commands.command()
+    async def zeroCorrectionList(item):
+        with open('zeroCorrectionList', 'rb') as fp:
+            itemlist = pickle.load(fp)
 
-    #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
-    #This can be discord command, get full member list, rolelist and id list and pass to getAllRoles
+        itemlist.append(item)
+
+        with open('zeroCorrectionList', 'wb') as fp:
+            pickle.dump(itemlist, fp)
+
+
+    @commands.command()
+    async def zeroCorrectionListShow(self, ctx):
+        with open('zeroCorrectionList', 'rb') as fp:
+            itemlist = pickle.load(fp)
+        await ctx.send("```"+itemlist+"```")
+
+    @commands.command()
+    async def zeroCorrectionListDelete(self, ctx, item):
+        with open('zeroCorrectionList', 'rb') as fp:
+            itemlist = pickle.load(fp)
+
+        itemlist.remove(item)
+
+        with open('zeroCorrectionList', 'wb') as fp:
+            pickle.dump(itemlist, fp)
+
+        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+                "Zero correction List updated by removing -" + str(item), "")
+        
+        sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
+        await ctx.send("Deleted")
+
+    @commands.command()
+    async def nameCorrectionList(self, ctx, incorrectName, correctName):
+        with open('incorrectName', 'rb') as fp:
+            incorrectNameList = pickle.load(fp)
+        with open('correctName', 'rb') as fp:
+            correctNameList = pickle.load(fp)
+
+        incorrectNameList.append(incorrectName)
+        correctNameList.append(correctName)
+
+        with open('incorrectName', 'wb') as fp:
+            pickle.dump(incorrectNameList, fp)
+
+        with open('correctName', 'wb') as fp:
+            pickle.dump(correctNameList, fp)
+
+        sendLog("Warning","Changing incorrect name List",incorrectNameList, "219","Zero correction List updated with -" + incorrectName,"")
+        sendLog("Warning", "Changing Correct name List", correctNameList, "219","Zero correction List updated with -" + correctName, "")
+        await ctx.send("Name Corrected")
+
+    @commands.command()
+    async def nameCorrectionListShow(self, ctx):
+        with open('incorrectName', 'rb') as fp:
+            itemlist = pickle.load(fp)
+        await ctx.send("```"+itemlist+"```")
+        with open('correctName', 'rb') as fp:
+            itemlist2 = pickle.load(fp)
+        await ctx.send("```"+itemlist2+"```")
+    #COMMANDS    
+    async def nameCorrectionListDelete(self, ctx, incorrectNameToRemove, correctNameToRemove):
+        with open('incorrectName', 'rb') as fp:
+            itemlist = pickle.load(fp)
+        with open('correctName', 'rb') as fp:
+            itemlist2 = pickle.load(fp)
+        itemlist.remove(incorrectNameToRemove)
+        itemlist2.remove(correctNameToRemove)
+        with open('incorrectName', 'wb') as fp:
+            pickle.dump(itemlist, fp)
+
+        with open('correctName', 'wb') as fp:
+            pickle.dump(itemlist2, fp)
+
+
+        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+                "Zero correction List updated by removing -" + str(incorrectNameToRemove), "")
+        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+                "Zero correction List updated by removing -" + str(correctNameToRemove), "")
+        
+        await ctx.send("List Deleted")
+        #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
+        #This can be discord command, get full member list, rolelist and id list and pass to getAllRoles
     @commands.command()
     async def populateGlobalList(self, ctx, role: discord.Role):
         worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
