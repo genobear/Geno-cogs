@@ -190,7 +190,7 @@ def updateVersionNumber(globalSheet):
     newCurrentBuild = float(str(currentBuild).replace("V", "")) + 0.01
     globalSheet.update('B10', "V" + str(newCurrentBuild))
     globalSheet.update('B14', previousBuild)
-    
+
 def updateActivity(area, idList, users, roleList):
     worksheet = client.open("BDB Push Attendance").worksheet(area)
     next_row = next_available_row(worksheet)
@@ -335,7 +335,7 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
 
 def updateGlobalListOfMembers():
 
-    role = get(discord.roles, id=926088568265388033)
+    role = get(discord.Role, id=926088568265388033)
 
     x = 0    
     roleList = []
