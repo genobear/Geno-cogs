@@ -913,10 +913,6 @@ class bdb(commands.Cog):
             await attachment.save(filename)
             await ctx.send(filename + " saved")
             k=k+1
-        y = 0
-        n = 160
-        h = 1080
-        w = 1920
         #prepate local images for tesseract
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
             image = f"{ROOT_DIR}/Images/" + image
@@ -924,7 +920,6 @@ class bdb(commands.Cog):
             try:
                 image = cv2.imread(image,0)
                 #Edit for accuracy (Image read)
-                image = image[y:y+h, n:n+w]
                 thresh = cv2.threshold(image, 160, 255, cv2.THRESH_BINARY)[1]
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
