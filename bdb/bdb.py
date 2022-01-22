@@ -334,7 +334,7 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
         ]
     }
     spreadsheet.batch_update(body)
-    sendLog("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+    sendLog_debug("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
 #Corrects war stat row data - Complete
 def rowCorrection(rowData, nameOffImage, rowNumber):
@@ -752,7 +752,7 @@ class bdb(commands.Cog):
         
         After pause_updating is ran you can then ?resume_activity"""
         self.looper.cancel()
-        sendLog("Activity updates paused")
+        sendLog_debug("Activity updates paused")
         await ctx.send("Stopped any actvitiy updates.")
         
     @commands.command()
@@ -763,7 +763,7 @@ class bdb(commands.Cog):
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
     
         self.looper.start(area,target_voice_channel)
-        sendLog("Activity resumed: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+        sendLog_debug("Activity resumed: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         await ctx.send("Updating resumed: " + area +" Voice Channel: " + str(target_voice_channel) +'(' + str(target_voice_channel.id) +')')
         
     
@@ -844,7 +844,7 @@ class bdb(commands.Cog):
             ]
         }
         spreadsheet.batch_update(body)
-        sendLog("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+        sendLog_debug("Activity ended: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         await ctx.send("Activity ended: " + str(worksheet.url))
         
     @tasks.loop(seconds=300.0)
@@ -872,7 +872,7 @@ class bdb(commands.Cog):
             updateActivity(area, idList, users, roleList)
             sendLog_debug(area +" updated: " +  "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         else:
-            sendLog(area + " closed from Google Sheet: " + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+            sendLog_debug(area + " closed from Google Sheet: " + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
             self.looper.cancel()
             
     @commands.command()
