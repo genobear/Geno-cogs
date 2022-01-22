@@ -439,6 +439,10 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                         imgErrorCorrection[a] = "0"
                 # Cross refrence numbers
                 del imgErrorCorrection[0]
+                for c, word in enumerate(imgErrorCorrection):
+                    if word.isdecimal() == False:
+                        del imgErrorCorrection[c]
+                        sendLog("Warning","Deleting Row Data",word,"246","Row Data Correction","Ensure this was meant to be deleted")
                 for b, word in enumerate(imgErrorCorrection):
                     for letter in word:
                         if letter in string.punctuation:
@@ -446,10 +450,6 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                             sendLog("Check for consistency", "232", word, "Punctuation removal" ,"if this was a zero add value to zeroCorrectionList using function","")
                         if letter in zeroCorrectionList:
                             imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
-                for c, word in enumerate(imgErrorCorrection):
-                    if word.isdecimal() == False:
-                        del imgErrorCorrection[c]
-                        sendLog("Warning","Deleting Row Data",word,"246","Row Data Correction","Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
                 return imgErrorCorrection
