@@ -965,8 +965,17 @@ class bdb(commands.Cog):
 
         if not ctx.message.attachments:
             await ctx.send("Try again with images attached")        
-        leadboardImages = ctx.message.attachments
-        for image in leadboardImages:
+        attachments = ctx.message.attachments
+        #save attachments locally
+        for attachment in attachments:
+            x=0
+            filename = f"Images/Image_{x}"
+            attachment.save(filename)
+            await ctx.send(filename + "saved")
+
+        #prepate local images for tesseract
+        for image in sorted(os.listdir('/Images/')):
+        #for image in leadboardImages:
             issue = image
             try:
                 image = cv2.imread(image,0)
