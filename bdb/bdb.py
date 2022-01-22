@@ -972,7 +972,7 @@ class bdb(commands.Cog):
         #save attachments locally
         for attachment in attachments:
             k=0
-            filename = f"{ROOT_DIR}/Images/Image_{x}"
+            filename = f"{ROOT_DIR}/Images/Image_{k}"
             await attachment.save(filename)
             await ctx.send(filename + " saved")
             k=k+1
