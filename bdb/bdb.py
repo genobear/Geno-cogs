@@ -976,65 +976,66 @@ class bdb(commands.Cog):
 
         #prepate local images for tesseract
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
-        #for image in leadboardImages:
-            issue = image
-            try:
-                image = cv2.imread(image,0)
-                #Edit for accuracy (Image read)
-                thresh = cv2.threshold(image, 160, 255, cv2.THRESH_BINARY)[1]
-                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-                close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
-                result = 255 - close
-            except Exception as e:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
-                        "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
-            nameOffImage = list(filter(None, nameOffImage))
-            textOffImage = list(filter(None, textOffImage))
-            rowNumber = 0
-            for baseRow in textOffImage:
-                try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
-                    if row != None:
-                        discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
-                        name = row[0]
-                        score = row[1]
-                        kills = row[2]
-                        deaths = row[3]
-                        assissts = row[4]
-                        healing = row[5]
-                        damage = row[6]
-                        if discordID.isdecimal():
-                            updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
+            await ctx.send(file=discord.File(image))            
+        #     issue = image
+        #     try:
+        #         image = cv2.imread(image,0)
+        #         #Edit for accuracy (Image read)
+        #         thresh = cv2.threshold(image, 160, 255, cv2.THRESH_BINARY)[1]
+        #         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        #         close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+        #         result = 255 - close
+        #     except Exception as e:
+        #         exc_type, exc_obj, exc_tb = sys.exc_info()
+        #         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #         sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+        #                 "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
+        #     textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
+        #     nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+        #     nameOffImage = list(filter(None, nameOffImage))
+        #     textOffImage = list(filter(None, textOffImage))
+        #     rowNumber = 0
+        #     for baseRow in textOffImage:
+        #         try:
+        #             row = rowCorrection(baseRow, nameOffImage, rowNumber)
+        #             if row != None:
+        #                 discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+        #                 name = row[0]
+        #                 score = row[1]
+        #                 kills = row[2]
+        #                 deaths = row[3]
+        #                 assissts = row[4]
+        #                 healing = row[5]
+        #                 damage = row[6]
+        #                 if discordID.isdecimal():
+        #                     updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
 
-                        if j < 1000:
-                            update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
-                                        "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
-                            x = x + 1
-                            j = j + 1
-                            rowNumber = rowNumber + 1
+        #                 if j < 1000:
+        #                     update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+        #                                 "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
+        #                     x = x + 1
+        #                     j = j + 1
+        #                     rowNumber = rowNumber + 1
 
 
-                        else:
-                            dataFromGlobalList.batch_update(updateGlobalStats)
-                            worksheet.batch_update(update)
-                            update.clear()
-                            updateGlobalStats.clear()
-                            j = 0
-                except Exception as e:
-                    exc_type, exc_obj, exc_tb = sys.exc_info()
-                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
-        print(updateGlobalStats)
-        worksheet.batch_update(update)
-        worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
+        #                 else:
+        #                     dataFromGlobalList.batch_update(updateGlobalStats)
+        #                     worksheet.batch_update(update)
+        #                     update.clear()
+        #                     updateGlobalStats.clear()
+        #                     j = 0
+        #         except Exception as e:
+        #             exc_type, exc_obj, exc_tb = sys.exc_info()
+        #             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #             sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
+        # print(updateGlobalStats)
+        # worksheet.batch_update(update)
+        # worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
 
-        dataFromGlobalList.batch_update(updateGlobalStats)
-        updateVersionNumber(dataFromGlobalList)
+        # dataFromGlobalList.batch_update(updateGlobalStats)
+        # updateVersionNumber(dataFromGlobalList)
         await ctx.message.delete()
+        
 
     #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
     #This can be discord command, get full member list, rolelist and id list and pass to getAllRoles
