@@ -602,7 +602,8 @@ class bdb(commands.Cog):
         self.bot = bot
 
     async def updateGlobalListOfMembers(self, ctx):
-        role = discord.Guild.get_role(self, role_id=926088568265388033)
+        guild = ctx.guild
+        role = guild.get_role(self, role_id=926088568265388033)
 
         x = 0    
         roleList = []
