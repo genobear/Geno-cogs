@@ -336,25 +336,6 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
     spreadsheet.batch_update(body)
     sendLog("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
-
-#Get discord ID - Complete 
-def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
-    discordUsername = inGameName.replace(" ", "")
-    for letter in discordUsername:
-        if letter in string.punctuation:
-            discordUsername = discordUsername.replace(letter, "")
-    for a, name in enumerate(namesFromGlobalListData):
-        name = name.replace(" ", "")
-        for letter in name:
-            if letter in string.punctuation:
-                name = name.replace(letter, "")
-        if str(name).upper() == discordUsername.upper():
-            return discordIDs[a]
-        if str(name).upper() in discordUsername.upper():
-            return discordIDs[a]
-    sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function", "Person Not in company check name matches discord name")
-    return "Not in company"
-
 #Corrects war stat row data - Complete
 def rowCorrection(rowData, nameOffImage, rowNumber):
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
@@ -546,6 +527,7 @@ def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
             return discordIDs[a]
         if str(name).upper() in discordUsername.upper():
             return discordIDs[a]
+    sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
     return "Not in company"
 
 class bdb(commands.Cog):
