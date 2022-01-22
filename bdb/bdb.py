@@ -486,6 +486,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
             return imgErrorCorrection
     else:
         return None
+
 def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kills,deaths, assissts, healing, damage):#NOT A COMMAND
     if discordID.isdecimal():
         if discordID in discordIDFromGlobal:
@@ -970,11 +971,11 @@ class bdb(commands.Cog):
         attachments = ctx.message.attachments
         #save attachments locally
         for attachment in attachments:
-            x=0
+            k=0
             filename = f"{ROOT_DIR}/Images/Image_{x}"
             await attachment.save(filename)
             await ctx.send(filename + " saved")
-            x=x+1
+            k=k+1
 
         #prepate local images for tesseract
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
