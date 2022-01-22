@@ -969,12 +969,12 @@ class bdb(commands.Cog):
         #save attachments locally
         for attachment in attachments:
             x=0
-            filename = f"Images/Image_{x}"
+            filename = f"{ROOT_DIR}/Images/Image_{x}"
             attachment.save(filename)
-            await ctx.send(filename + "saved")
+            await ctx.send(filename + " saved")
 
         #prepate local images for tesseract
-        for image in sorted(os.listdir('/Images/')):
+        for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
         #for image in leadboardImages:
             issue = image
             try:
