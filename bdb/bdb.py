@@ -1046,6 +1046,10 @@ class bdb(commands.Cog):
         dataFromGlobalList.batch_update(updateGlobalStats)
         updateVersionNumber(dataFromGlobalList)
         await ctx.message.delete()
+        for filename in os.listdir(f'{ROOT_DIR}/Images'):
+             if os.path.exists(f'{ROOT_DIR}/Images'+filename):
+                 os.remove(f'{ROOT_DIR}/Images'+filename)
+                 await ctx.send(f"{filename} deleted")                
         
 
     #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
