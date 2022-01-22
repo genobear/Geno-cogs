@@ -1041,7 +1041,7 @@ class bdb(commands.Cog):
         await ctx.send("```"+itemlist+"```")
         with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
             itemlist2 = pickle.load(fp)
-        await ctx.send("```"+itemlist2+"```")
+        await ctx.send("```"+str(itemlist2)+"```")
     #COMMANDS    
     async def nameCorrectionListDelete(self, ctx, incorrectNameToRemove, correctNameToRemove):
         with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
