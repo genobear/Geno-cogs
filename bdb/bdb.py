@@ -982,7 +982,7 @@ class bdb(commands.Cog):
                  await ctx.send(f"{filename} deleted")                
         
     @commands.command()
-    async def zeroCorrectionList(item):
+    async def zeroCorrectionList(self, ctx, item):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             itemlist = pickle.load(fp)
 
@@ -990,7 +990,7 @@ class bdb(commands.Cog):
 
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'wb') as fp:
             pickle.dump(itemlist, fp)
-
+        await ctx.send(f"{item} added to list")
 
     @commands.command()
     async def zeroCorrectionListShow(self, ctx):
