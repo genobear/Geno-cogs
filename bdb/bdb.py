@@ -651,6 +651,10 @@ class bdb(commands.Cog):
         users = []
         roleList = []
         k = 0
+
+        filename = str(role) + "members"
+        filename2 = str(role) + "roles"
+        filename3 = str(role) + "membersID"
         for member in role.members:
             users.append(str(k) + ":" + str(member.display_name))
             idList.append(str(k) + ":" + str(member.id))
@@ -683,9 +687,19 @@ class bdb(commands.Cog):
                 j = 0
         worksheet.batch_update(update)
         await ctx.send("Global List Populated")
-        #await ctx.send(roleList)
-        await ctx.send(idList)
-        await ctx.send(users)
+        textfile = open(f"{filename}.txt", "w")
+        textfile.write(str(users))
+        textfile.close()
+        textfile = open(f"{filename2}.txt", "w")
+        textfile.write(str(roleList))
+        textfile.close()
+        textfile = open(f"{filename3}.txt", "w")
+        textfile.write(str(idList))
+        textfile.close()
+        await ctx.send(file=discord.File(f"{filename}.txt"))
+        await ctx.send(file=discord.File(f"{filename2}.txt"))
+        await ctx.send(file=discord.File(f"{filename3}.txt"))
+
 
     # @commands.command()
     # async def tradepost(self, ctx):
