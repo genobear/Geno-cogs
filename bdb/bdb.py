@@ -333,65 +333,65 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
     spreadsheet.batch_update(body)
     sendLog("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
-def updateGlobalListOfMembers(self):
+# def updateGlobalListOfMembers(self):
 
-    role = discord.Guild.get_role(self, role_id=926088568265388033)
+#     role = discord.Guild.get_role(self, role_id=926088568265388033)
 
-    x = 0    
-    roleList = []
-    idList = []
-    users = []
-    for member in role.members:
-        users.append(str(x) + ":" + str(member.display_name))
-        idList.append(str(x) + ":" + str(member.id))
-        for role in member.roles:
-            roleList.append(str(x) + ":" + str(role.name))
-        x = x + 1
+#     x = 0    
+#     roleList = []
+#     idList = []
+#     users = []
+#     for member in role.members:
+#         users.append(str(x) + ":" + str(member.display_name))
+#         idList.append(str(x) + ":" + str(member.id))
+#         for role in member.roles:
+#             roleList.append(str(x) + ":" + str(role.name))
+#         x = x + 1
 
-    worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
-    IDonSheet = worksheet.col_values(3)[7:]
-    allValues = worksheet.get_all_values()
-    update = []
-    j = 0
-    for ID in idList:
-        if j < 1000:
-            removeNumber = str(ID).split(":")
-            if str(removeNumber[1]) not in IDonSheet:
-                for a in 1000:
-                    if not allValues[a][3]:
-                        x = a
-                        break
-                #Add them to sheet
-                discordID = removeNumber[1]
-                roles = getAllRoles(removeNumber[0], users, roleList)
-                inGameRole = roles[0]
-                discordRole = roles[1]
-                Wep1 = roles[2]
-                Wep2 = roles[3]
-                discordName = roles[4]
+#     worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+#     IDonSheet = worksheet.col_values(3)[7:]
+#     allValues = worksheet.get_all_values()
+#     update = []
+#     j = 0
+#     for ID in idList:
+#         if j < 1000:
+#             removeNumber = str(ID).split(":")
+#             if str(removeNumber[1]) not in IDonSheet:
+#                 for a in 1000:
+#                     if not allValues[a][3]:
+#                         x = a
+#                         break
+#                 #Add them to sheet
+#                 discordID = removeNumber[1]
+#                 roles = getAllRoles(removeNumber[0], users, roleList)
+#                 inGameRole = roles[0]
+#                 discordRole = roles[1]
+#                 Wep1 = roles[2]
+#                 Wep2 = roles[3]
+#                 discordName = roles[4]
 
-                update.append({'range': 'C' + str(x) + ':' + 'H' + str(x), "values": [[discordID, inGameRole, Wep1, Wep2, discordRole,discordName]]})
-                j = j + 1
-            else:
-                placeToUpdate = 8
-                for ID_on_List in IDonSheet:
-                    if ID_on_List == str(removeNumber[1]):
-                        roles = getAllRoles(removeNumber[0], users, roleList)
-                        inGameRole = roles[0]
-                        discordRole = roles[1]
-                        Wep1 = roles[2]
-                        Wep2 = roles[3]
-                        discordName = roles[4]
-                        update.append({'range': 'D' + str(placeToUpdate) + ':' + 'H' + str(placeToUpdate),"values": [[inGameRole, Wep1, Wep2, discordRole, discordName]]})
-                        j = j + 1
-                        placeToUpdate = placeToUpdate + 1
-                    else:
-                        placeToUpdate = placeToUpdate + 1
-        else:
-            worksheet.batch_update(update)
-            update.clear()
-            j = 0
-    worksheet.batch_update(update)
+#                 update.append({'range': 'C' + str(x) + ':' + 'H' + str(x), "values": [[discordID, inGameRole, Wep1, Wep2, discordRole,discordName]]})
+#                 j = j + 1
+#             else:
+#                 placeToUpdate = 8
+#                 for ID_on_List in IDonSheet:
+#                     if ID_on_List == str(removeNumber[1]):
+#                         roles = getAllRoles(removeNumber[0], users, roleList)
+#                         inGameRole = roles[0]
+#                         discordRole = roles[1]
+#                         Wep1 = roles[2]
+#                         Wep2 = roles[3]
+#                         discordName = roles[4]
+#                         update.append({'range': 'D' + str(placeToUpdate) + ':' + 'H' + str(placeToUpdate),"values": [[inGameRole, Wep1, Wep2, discordRole, discordName]]})
+#                         j = j + 1
+#                         placeToUpdate = placeToUpdate + 1
+#                     else:
+#                         placeToUpdate = placeToUpdate + 1
+#         else:
+#             worksheet.batch_update(update)
+#             update.clear()
+#             j = 0
+#     worksheet.batch_update(update)
 
 #Get discord ID - Complete 
 def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
@@ -584,6 +584,82 @@ class bdb(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    async def updateGlobalListOfMembers(self):
+        role = discord.Guild.get_role(self, role_id=926088568265388033)
+
+        x = 0    
+        roleList = []
+        idList = []
+        users = []
+        for member in role.members:
+            users.append(str(x) + ":" + str(member.display_name))
+            idList.append(str(x) + ":" + str(member.id))
+            for role in member.roles:
+                roleList.append(str(x) + ":" + str(role.name))
+            x = x + 1
+
+        worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+        IDonSheet = worksheet.col_values(3)[7:]
+        allValues = worksheet.get_all_values()
+        update = []
+        j = 0
+        for ID in idList:
+            if j < 1000:
+                removeNumber = str(ID).split(":")
+                if str(removeNumber[1]) not in IDonSheet:
+                    for a in 1000:
+                        if not allValues[a][3]:
+                            x = a
+                            break
+                    #Add them to sheet
+                    discordID = removeNumber[1]
+                    roles = getAllRoles(removeNumber[0], users, roleList)
+                    inGameRole = roles[0]
+                    discordRole = roles[1]
+                    Wep1 = roles[2]
+                    Wep2 = roles[3]
+                    discordName = roles[4]
+
+                    update.append({'range': 'C' + str(x) + ':' + 'H' + str(x), "values": [[discordID, inGameRole, Wep1, Wep2, discordRole,discordName]]})
+                    j = j + 1
+                else:
+                    placeToUpdate = 8
+                    for ID_on_List in IDonSheet:
+                        if ID_on_List == str(removeNumber[1]):
+                            roles = getAllRoles(removeNumber[0], users, roleList)
+                            inGameRole = roles[0]
+                            discordRole = roles[1]
+                            Wep1 = roles[2]
+                            Wep2 = roles[3]
+                            discordName = roles[4]
+                            update.append({'range': 'D' + str(placeToUpdate) + ':' + 'H' + str(placeToUpdate),"values": [[inGameRole, Wep1, Wep2, discordRole, discordName]]})
+                            j = j + 1
+                            placeToUpdate = placeToUpdate + 1
+                        else:
+                            placeToUpdate = placeToUpdate + 1
+            else:
+                worksheet.batch_update(update)
+                update.clear()
+                j = 0
+        worksheet.batch_update(update)
+
+#Get discord ID - Complete 
+def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
+    discordUsername = inGameName.replace(" ", "")
+    for letter in discordUsername:
+        if letter in string.punctuation:
+            discordUsername = discordUsername.replace(letter, "")
+    for a, name in enumerate(namesFromGlobalListData):
+        name = name.replace(" ", "")
+        for letter in name:
+            if letter in string.punctuation:
+                name = name.replace(letter, "")
+        if str(name).upper() == discordUsername.upper():
+            return discordIDs[a]
+        if str(name).upper() in discordUsername.upper():
+            return discordIDs[a]
+    return "Not in company"
 
     @commands.command()
     async def scan(self, ctx, arg):
