@@ -805,7 +805,10 @@ class bdb(commands.Cog):
                     j = j + 1
                 else:
                     if len(clockOut.splitlines()) < len(clockIn.splitlines()):
-                        clockOut = clockOut + "\n" +  str(datetime.now().strftime("%H:%M:%S"))
+                        if clockOut != "":
+                            clockOut = clockOut + "\n" +  str(datetime.now().strftime("%H:%M:%S"))
+                        else:
+                            clockOut = str(datetime.now().strftime("%H:%M:%S"))
                         totalTimeAttened = timeCalculation(clockIn, clockOut)
                         print(totalTimeAttened)
                         update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
