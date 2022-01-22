@@ -5,7 +5,7 @@ import discord
 from discord import Webhook, RequestsWebhookAdapter
 
 #requirements for googlsheet integration
-import os
+import os, sys
 import glob
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -976,8 +976,10 @@ class bdb(commands.Cog):
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
                 result = 255 - close
             except Exception as e:
-                print(issue)
-                print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                "Row Creation current row, check for consistency = " + str(j), "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
