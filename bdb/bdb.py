@@ -36,6 +36,8 @@ from datetime import datetime, date, time, timedelta
 
 from discord.utils import get
 
+import pickle
+
 
 #for google image folders and loukans tradepost pictures
 def listfolders(client, filid, des):
