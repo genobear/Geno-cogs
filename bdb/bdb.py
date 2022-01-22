@@ -978,8 +978,8 @@ class bdb(commands.Cog):
             await ctx.send("Try again with images attached")        
         attachments = ctx.message.attachments
         #save attachments locally
-        for attachment in attachments:
-            k=0
+        k=0
+        for attachment in attachments:            
             filename = f"{ROOT_DIR}/Images/Image_{k}"
             await attachment.save(filename)
             await ctx.send(filename + " saved")
