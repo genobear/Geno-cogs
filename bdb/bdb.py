@@ -411,6 +411,7 @@ def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
             return discordIDs[a]
         if str(name).upper() in discordUsername.upper():
             return discordIDs[a]
+    sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function", "Person Not in company check name matches discord name")
     return "Not in company"
 
 #Corrects war stat row data - Complete
