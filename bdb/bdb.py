@@ -816,11 +816,13 @@ class bdb(commands.Cog):
                         yPosition = yPosition + 1
                         j = j + 1
             else:
+                updateGlobal = list(filter(None, updateGlobal))
                 dataFromGlobalList.batch_update(updateGlobal)
                 updateGlobal.clear()
                 worksheet.batch_update(update)
                 update.clear()
                 j = 0  #
+        updateGlobal = list(filter(None, updateGlobal))
         dataFromGlobalList.batch_update(updateGlobal)
         updateVersionNumber(dataFromGlobalList)
         worksheet.batch_update(update)
