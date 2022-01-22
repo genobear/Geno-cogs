@@ -652,10 +652,10 @@ class bdb(commands.Cog):
         roleList = []
         i = 0
         for member in role.members:
-            users.append(str(x) + ":" + str(member.display_name))
-            idList.append(str(x) + ":" + str(member.id))
+            users.append(str(i) + ":" + str(member.display_name))
+            idList.append(str(i) + ":" + str(member.id))
             for role in member.roles:
-                roleList.append(str(x) + ":" + str(role.name))
+                roleList.append(str(i) + ":" + str(role.name))
             i = i + 1
 
         for ID in idList:
