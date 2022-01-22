@@ -412,7 +412,7 @@ def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
 
 #Corrects war stat row data - Complete
 def rowCorrection(rowData, nameOffImage, rowNumber):
-    with open('zeroCorrectionList', 'rb') as fp:
+    with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
         zeroCorrectionList = pickle.load(fp)
     with open('correctName', 'rb') as fp:
         nameCorrectionList = pickle.load(fp)
