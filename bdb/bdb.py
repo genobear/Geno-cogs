@@ -683,6 +683,9 @@ class bdb(commands.Cog):
                 j = 0
         worksheet.batch_update(update)
         await ctx.send("Global List Populated")
+        await ctx.send(roleList)
+        await ctx.send(idList)
+        await ctx.send(users)
 
     # @commands.command()
     # async def tradepost(self, ctx):
