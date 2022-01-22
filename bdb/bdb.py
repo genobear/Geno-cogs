@@ -1047,7 +1047,8 @@ class bdb(commands.Cog):
         updateVersionNumber(dataFromGlobalList)
         await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
-             if os.path.exists(f'{ROOT_DIR}/Images'+filename):
+            await ctx.send(filename)
+            if os.path.exists(f'{ROOT_DIR}/Images'+filename):
                  os.remove(f'{ROOT_DIR}/Images'+filename)
                  await ctx.send(f"{filename} deleted")                
         
