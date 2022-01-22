@@ -414,9 +414,9 @@ def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
 def rowCorrection(rowData, nameOffImage, rowNumber):
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
         zeroCorrectionList = pickle.load(fp)
-    with open('correctName', 'rb') as fp:
+    with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
         nameCorrectionList = pickle.load(fp)
-    with open('incorrectName', 'rb') as fp:
+    with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
         nameIncorrectionList = pickle.load(fp)
     if len(rowData.split()) >= 6:
         if len(nameOffImage) > 6:
