@@ -996,7 +996,7 @@ class bdb(commands.Cog):
     async def zeroCorrectionListShow(self, ctx):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             itemlist = pickle.load(fp)
-        await ctx.send("```"+itemlist+"```")
+        await ctx.send("```"+str(itemlist)+"```")
 
     @commands.command()
     async def zeroCorrectionListDelete(self, ctx, item):
