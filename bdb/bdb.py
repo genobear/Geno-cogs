@@ -1048,8 +1048,8 @@ class bdb(commands.Cog):
         await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
             await ctx.send(filename)
-            if os.path.exists(f'{ROOT_DIR}/Images'+filename):
-                 os.remove(f'{ROOT_DIR}/Images'+filename)
+            if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
+                 os.remove(f'{ROOT_DIR}/Images/'+filename)
                  await ctx.send(f"{filename} deleted")                
         
 
