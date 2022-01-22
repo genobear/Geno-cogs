@@ -976,6 +976,7 @@ class bdb(commands.Cog):
 
         #prepate local images for tesseract
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
+            image = f"{ROOT_DIR}/Images/" + image
             await ctx.send(file=discord.File(image))            
         #     issue = image
         #     try:
