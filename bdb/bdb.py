@@ -27,6 +27,15 @@ from googleapiclient import http
 import time
 from dotenv import load_dotenv
 
+import cv2
+import pytesseract
+import string
+
+import time
+from datetime import datetime, date, time, timedelta
+
+from discord.utils import get
+
 
 #for google image folders and loukans tradepost pictures
 def listfolders(client, filid, des):
@@ -104,6 +113,7 @@ def sendLog(Urgency, Status,Value,Line, Area,Comment):
         rooNonWebHookCrit.send(msg)
     if Urgency == "Update":
         rooNonWebHookCrit.send(msg)
+    
     logWebHook.send(msg)
     #webhook.send(msg)
 
@@ -173,54 +183,40 @@ def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(8)))
     return int(len(str_list) + 1)
 
-
-def updateActivity(area, listOfMembers, roleList):
+def updateVersionNumber(globalSheet):
+    allData = globalSheet.get_all_values()
+    currentBuild = str(allData[9][1])
+    previousBuild = currentBuild
+    newCurrentBuild = float(str(currentBuild).replace("V", "")) + 0.01
+    globalSheet.update('B10', "V" + str(newCurrentBuild))
+    globalSheet.update('B14', previousBuild)
+    
+def updateActivity(area, idList, users, roleList):
     worksheet = client.open("BDB Push Attendance").worksheet(area)
     next_row = next_available_row(worksheet)
-    usersOnSheet = worksheet.col_values(8)
-    usersOnSheet1 = usersOnSheet[7:]
+    usersOnSheet = worksheet.col_values(3)
+    discordIDOnSheet = usersOnSheet[7:]
     z = 0
     x = next_row + 1
     j = 0
     allDetails = worksheet.get_all_values()
-    listMemberCorrection = []
+    idListCorrection = [i.split(":")[1] for i in idList]
     update = []
-    for person in listOfMembers:
-        corrected = str(person).split(":")
-        listMemberCorrection.append(str(corrected[1])[1:])
-    for member in listMemberCorrection:
-        userRoles = []
-        inGameRole = ""
-        discordRole = ""
-        Wep1 = ""
-        Wep2 = ""
+    for discordID in idList:
+        removeNumber = str(discordID).split(":")
+        discordID = removeNumber[1]
         if j < 1000:
-            if member not in usersOnSheet1:
-                if str(z) in str(listOfMembers[z]):
-                    for roles in roleList:
-                        if str(z) in roles:
-                            userRoles.append(str(roles).replace(str(z), ""))
-                memberName = str(member).replace(str(z) + ": ","")
-                for positions in allInGameRoles:
-                    if positions in userRoles:
-                        inGameRole = positions
-                        break
-                weaponCount = 0
-                for weapons in allInGameWeapons:
-                    if weapons in userRoles:
-                        if Wep1 == "":
-                            Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
-                        else:
-                            Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
-                            break
-                    weaponCount = weaponCount + 1
-                for status in allDiscordRoles:
-                    if status in userRoles:
-                        discordRole = status
-                        break
+            if discordID not in discordIDOnSheet:  # If memberID not in sheet add them and their roles
+                roles = getAllRoles(removeNumber[0], users, roleList)
+                inGameRole = roles[0]
+                discordRole = roles[1]
+                Wep1 = roles[2]
+                Wep2 = roles[3]
+                memberName = roles[4]
                 try:
-                    update.append({'range': 'D' + str(x) + ':' + 'K' + str(x),
-                                   "values": [[inGameRole,Wep1,Wep2,discordRole,memberName, str(datetime.now().strftime("%H:%M:%S")), ]]})
+                    update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+                                   "values": [[discordID,inGameRole, Wep1, Wep2, discordRole, memberName,
+                                               str(datetime.now().strftime("%H:%M:%S")), ]]})
                     x = x + 1
                     j = j + 1
                     z = z + 1
@@ -232,23 +228,22 @@ def updateActivity(area, listOfMembers, roleList):
         else:
             worksheet.batch_update(update)
             update.clear()
-            j = 0 #
+            j = 0  #
     yPosition = 8
     a = 7
     j = 0
-    for user in usersOnSheet1: #For users on sheet
-        if user not in listMemberCorrection: # if user is not in dicord channel
-            if allDetails[a][9] == "": # They dont have a clock out time
+    for user in discordIDOnSheet:  # For users on sheet
+        if user not in idListCorrection:  # if user is not in dicord channel
+            if allDetails[a][9] == "":  # They dont have a clock out time
                 memberName = allDetails[a][7]
                 clockIn = allDetails[a][8]
                 clockOut = str(datetime.now().strftime("%H:%M:%S"))
                 update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
-                               "values": [[memberName, clockIn, clockOut]]}) #Clock them out
+                               "values": [[memberName, clockIn, clockOut]]})  # Clock them out
                 j = j + 1
                 a = a + 1
                 yPosition = yPosition + 1
             else:
-
                 if len(str(allDetails[a][9]).splitlines()) < len(str(allDetails[a][8]).splitlines()):
                     memberName = allDetails[a][7]
                     clockIn = str(allDetails[a][8])
@@ -261,15 +256,15 @@ def updateActivity(area, listOfMembers, roleList):
                 else:
                     a = a + 1
                     yPosition = yPosition + 1
-        else: #If they are in the channel
-            if allDetails[a][9] != "": #They do have a clock out time
+        else:  # If they are in the channel
+            if allDetails[a][9] != "":  # They do have a clock out time
                 if len(str(allDetails[a][9]).splitlines()) == len(str(allDetails[a][8]).splitlines()):
                     memberName = allDetails[a][7]
                     clockIn = str(allDetails[a][8]) + "\n" + str(datetime.now().strftime("%H:%M:%S"))
                     clockOut = allDetails[a][9]
 
                     update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
-                               "values": [[memberName, clockIn, clockOut]]})
+                                   "values": [[memberName, clockIn, clockOut]]})
                     j = j + 1
                     a = a + 1
                     yPosition = yPosition + 1
@@ -280,51 +275,32 @@ def updateActivity(area, listOfMembers, roleList):
     worksheet.batch_update(update)
     
 
-def populate(area, listOfMembers, roleList):
+def populate(name, users, roleList, idList): # needs idlist passing from start activity command
     spreadsheet = client.open('BDB Push Attendance')
-    worksheet1 = client.open("BDB Push Attendance").worksheet('Template 2') #Opens Sheet for reading
-    worksheet1.duplicate(new_sheet_name=area) #Duplicates sheet from template
-    worksheet = client.open("BDB Push Attendance").worksheet(area) #Opens new duplicated sheet
+    worksheet1 = client.open("BDB Push Attendance").worksheet("Template 2") #Opens Sheet for reading
+    worksheet1.duplicate(new_sheet_name=name) #Duplicates sheet from template
+    worksheet = client.open("BDB Push Attendance").worksheet(name) #Opens new duplicated sheet
     worksheet.update('G4', str(datetime.now().strftime("%H:%M:%S"))) #Populate time
     worksheet.update('E4', str(datetime.now().strftime("%d-%m-%Y"))) #Populate time
-    worksheet.update('D2', area) #populates area
+    worksheet.update('D2', name) #populates area
     worksheet.update('K2', "Open") #Populates sheet status
     next_row = next_available_row(worksheet) #Calculates next row
     update = [] #Update array
     x = next_row + 1 #x variable for row
     j = 0 #j variable for max amount of updates in single batch
     z = 0 #z variable for gettings roles from list
-    for member in listOfMembers:
-        userRoles = []
-        inGameRole = ""
-        discordRole = ""
-        Wep1 = ""
-        Wep2 = ""
+    for memberID in idList:
+        removeNumber = str(memberID).split(":")
+        discordID = removeNumber[1]
+        roles = getAllRoles(removeNumber[0], users, roleList) #needs to pass rolelist userlist
+        inGameRole = roles[0]
+        discordRole = roles[1]
+        Wep1 = roles[2]
+        Wep2 = roles[3]
+        memberName = roles[4]
         if j < 1000:
-            if str(z) in str(member):
-                for roles in roleList:
-                    if str(z) in roles:
-                        userRoles.append(str(roles).replace(str(z),""))
-            memberName = str(member).replace(str(z)+": ","")
-            for positions in allInGameRoles:
-                if positions in userRoles:
-                    inGameRole = positions
-                    break
-            weaponCount = 0
-            for weapons in allInGameWeapons:
-                if weapons in userRoles:
-                    if Wep1 == "":
-                        Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
-                    else:
-                        Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount],"")
-                        break
-                weaponCount = weaponCount + 1
-            for status in allDiscordRoles:
-                if status in userRoles:
-                    discordRole = status
-                    break
             try:
-                update.append({'range': 'D' + str(x) + ':' + 'K' + str(x), "values": [[inGameRole,Wep1,Wep2,discordRole,memberName,str(datetime.now().strftime("%H:%M:%S")) ,]]})
+                update.append({'range': 'C' + str(x) + ':' + 'K' + str(x), "values": [[discordID,inGameRole,Wep1,Wep2,discordRole,memberName,str(datetime.now().strftime("%H:%M:%S"))]]})
                 x = x + 1
                 j = j + 1
                 z = z + 1
@@ -341,7 +317,7 @@ def populate(area, listOfMembers, roleList):
                 "updateSheetProperties": {
                     "properties": {
                         "sheetId": worksheet.id,
-                        "hidden" : False,
+                        #"hidden" : False,
                         "tabColor": {
                             "red": 0.0,
                             "green": 1.0,
@@ -349,15 +325,193 @@ def populate(area, listOfMembers, roleList):
                         }
                     },
                     "fields": "tabColor",
-                    "fields": "hidden"
+                    #"fields": "hidden"
                 }
             }
         ]
     }
     spreadsheet.batch_update(body)
-    sendLog("Activity populated: " + area + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
+    sendLog("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
+def updateGlobalListOfMembers():
 
+    role = get(discord.roles, id=926088568265388033)
+
+    x = 0    
+    roleList = []
+    idList = []
+    users = []
+    for member in role.members:
+        users.append(str(x) + ":" + str(member.display_name))
+        idList.append(str(x) + ":" + str(member.id))
+        for role in member.roles:
+            roleList.append(str(x) + ":" + str(role.name))
+        x = x + 1
+
+    worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+    IDonSheet = worksheet.col_values(3)[7:]
+    allValues = worksheet.get_all_values()
+    update = []
+    j = 0
+    for ID in idList:
+        if j < 1000:
+            removeNumber = str(ID).split(":")
+            if str(removeNumber[1]) not in IDonSheet:
+                for a in 1000:
+                    if not allValues[a][3]:
+                        x = a
+                        break
+                #Add them to sheet
+                discordID = removeNumber[1]
+                roles = getAllRoles(removeNumber[0], users, roleList)
+                inGameRole = roles[0]
+                discordRole = roles[1]
+                Wep1 = roles[2]
+                Wep2 = roles[3]
+                discordName = roles[4]
+
+                update.append({'range': 'C' + str(x) + ':' + 'H' + str(x), "values": [[discordID, inGameRole, Wep1, Wep2, discordRole,discordName]]})
+                j = j + 1
+            else:
+                placeToUpdate = 8
+                for ID_on_List in IDonSheet:
+                    if ID_on_List == str(removeNumber[1]):
+                        roles = getAllRoles(removeNumber[0], users, roleList)
+                        inGameRole = roles[0]
+                        discordRole = roles[1]
+                        Wep1 = roles[2]
+                        Wep2 = roles[3]
+                        discordName = roles[4]
+                        update.append({'range': 'D' + str(placeToUpdate) + ':' + 'H' + str(placeToUpdate),"values": [[inGameRole, Wep1, Wep2, discordRole, discordName]]})
+                        j = j + 1
+                        placeToUpdate = placeToUpdate + 1
+                    else:
+                        placeToUpdate = placeToUpdate + 1
+        else:
+            worksheet.batch_update(update)
+            update.clear()
+            j = 0
+    worksheet.batch_update(update)
+
+#Get discord ID - Complete 
+def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
+    discordUsername = inGameName.replace(" ", "")
+    for letter in discordUsername:
+        if letter in string.punctuation:
+            discordUsername = discordUsername.replace(letter, "")
+    for a, name in enumerate(namesFromGlobalListData):
+        name = name.replace(" ", "")
+        for letter in name:
+            if letter in string.punctuation:
+                name = name.replace(letter, "")
+        if str(name).upper() == discordUsername.upper():
+            return discordIDs[a]
+        if str(name).upper() in discordUsername.upper():
+            return discordIDs[a]
+    return "Not in company"
+
+#Corrects war stat row data - Complete
+def rowCorrection(rowData, nameOffImage, rowNumber):
+    with open('zeroCorrectionList', 'rb') as fp:
+        zeroCorrectionList = pickle.load(fp)
+    with open('correctName', 'rb') as fp:
+        nameCorrectionList = pickle.load(fp)
+    with open('incorrectName', 'rb') as fp:
+        nameIncorrectionList = pickle.load(fp)
+    if len(rowData.split()) >= 6:
+        if len(nameOffImage) > 6:
+            try:
+                imgErrorCorrection = rowData.split()#Splits data by comma
+                name = nameOffImage[rowNumber]
+                if name in nameIncorrectionList:
+                    for a, names in enumerate(nameIncorrectionList):
+                        if names == name:
+                            name = nameCorrectionList[a]
+                nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])#Removes numbers from name
+                #Making name without punction
+                for letter in nameWithoutNumbers:
+                    if letter in string.punctuation:
+                        nameWithoutNumbers.replace(letter, "")
+                for a, entry in enumerate(imgErrorCorrection):
+                    if entry in zeroCorrectionList:
+                        imgErrorCorrection[a] = "0"
+                # Cross refrence numbers
+                del imgErrorCorrection[0]
+                for b, word in enumerate(imgErrorCorrection):
+                    for letter in word:
+                        if letter in string.punctuation:
+                            imgErrorCorrection[b] =   imgErrorCorrection[b].replace(letter, "")
+                            sendLog("Check for consistency", "232", word, "Punctuation removal" ,"if this was a zero add value to zeroCorrectionList using function","")
+                for c, word in enumerate(imgErrorCorrection):
+                    if word.isdecimal() == False:
+                        del imgErrorCorrection[c]
+                        sendLog("Warning","Deleting Row Data",word,"246","Row Data Correction","Ensure this was meant to be deleted")
+                imgErrorCorrection = list(filter(None, imgErrorCorrection))
+                imgErrorCorrection.insert(0, name)
+                return imgErrorCorrection
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                sendLog("Critical",e,imgErrorCorrection, (exc_type, fname, exc_tb.tb_lineno), "Row Correction","Some fucky shit in row correction")
+        else:
+            imgErrorCorrection = rowData.split()#Splits data by comma
+            name = imgErrorCorrection[0]
+            if imgErrorCorrection[0] in nameIncorrectionList:
+                for a, names in enumerate(nameIncorrectionList):
+                    if names == imgErrorCorrection[0]:
+                        name = nameCorrectionList[a]
+            for b, stuff in enumerate(nameOffImage):
+                if name in stuff:
+                    #print(stuff)
+                    randomStuff = 1
+            del imgErrorCorrection[0]
+            for a, entry in enumerate(imgErrorCorrection):
+                if entry in zeroCorrectionList:
+                    imgErrorCorrection[a] = "0"
+            for b, word in enumerate(imgErrorCorrection):
+                for letter in word:
+                    if letter in string.punctuation:
+                        imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
+                        sendLog("Check for consistency", "232", word, "Punctuation removal",
+                                "if this was a zero add value to zeroCorrectionList using function", "")
+            for c, word in enumerate(imgErrorCorrection):
+                if word.isdecimal() == False:
+                    del imgErrorCorrection[c]
+                    sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction",
+                            "Ensure this was meant to be deleted")
+            imgErrorCorrection = list(filter(None, imgErrorCorrection))
+            imgErrorCorrection.insert(0, name)
+            return imgErrorCorrection
+    else:
+        return None
+def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kills,deaths, assissts, healing, damage):#NOT A COMMAND
+    if discordID.isdecimal():
+        if discordID in discordIDFromGlobal:
+            for f, data in enumerate(discordIDFromGlobal):
+                if data == discordID:
+                    if globalAllData[f + 7][10] != "":
+                        totalWarsGlobal = int(globalAllData[f + 7][10]) + 1
+                        scoreGlobal = int(globalAllData[f + 7][11]) + int(score)
+                        killsGlobal = int(globalAllData[f + 7][12]) + int(kills)
+                        deathsGlobal = int(globalAllData[f + 7][13]) + int(deaths)
+                        assisstsGlobal = int(globalAllData[f + 7][14]) + int(assissts)
+                        healingGlobal = int(globalAllData[f + 7][15]) + int(healing)
+                        damageGlobal = int(globalAllData[f + 7][16]) + int(damage)
+                        return (
+                            {'range': 'K' + str(f + 8) + ':' + 'Q' + str(f + 8),
+                             "values": [[totalWarsGlobal, scoreGlobal, killsGlobal, deathsGlobal,
+                                         assisstsGlobal, healingGlobal, damageGlobal]]})
+                    else:
+                        totalWarsGlobal = 1
+                        scoreGlobal = score
+                        killsGlobal = kills
+                        deathsGlobal = deaths
+                        assisstsGlobal = assissts
+                        healingGlobal = healing
+                        damageGlobal = damage
+                        return ({'range': 'K' + str(f + 8) + ':' + 'Q' + str(f + 8),
+                                                  "values": [[totalWarsGlobal, scoreGlobal, killsGlobal, deathsGlobal,
+                                                              assisstsGlobal, healingGlobal, damageGlobal]]})
 
 #Static Data
 allInGameWeapons = ["⛏️ Great axe", "❄️ Ice Gauntlet", "🎯 Musket", "🛡️ Sword + Shield", "❤️ Life Staff",
@@ -368,6 +522,58 @@ allInGameWeaponsCorrections = ["Great axe", "Ice Gauntlet", "Musket", "Sword + S
                                            "Sword & Shield(DPS)", "Bow", "Fort Support", "Void Gauntlet"]
 allInGameRoles = ["DPS", "HEALER", "TANK"]
 allDiscordRoles = ["⚜️","Consul", "Admin", "Officer", "Member", "Trial"]
+
+pytesseract.pytesseract.tesseract_cmd = r"/usr/bin/tesseract"
+
+def timeCalculation(clockIn, clockOut):
+    def calculateTime(inClock, outClock):
+        inClock.replace("\n", "")
+        outClock.replace("\n", "")
+        inClock = inClock.split(":")
+        outClock = outClock.split(":")
+        return timedelta(hours=int(outClock[0]), minutes=int(outClock[1]), seconds=int(outClock[2])) - timedelta(hours=int(inClock[0]), minutes=int(inClock[1]), seconds=int(inClock[2]))
+    clockIn.replace("'", "").replace(" ", "")
+    clockOut.replace("'", "").replace(" ", "")
+    clockIn = clockIn.splitlines()
+    clockOut = clockOut.splitlines()
+    clockOut = list(filter(None, clockOut))
+    clockIn = list(filter(None, clockIn))
+    totalTime = []
+    for a, time in enumerate(clockIn):
+        rowCalculation = calculateTime(time, clockOut[a]).seconds
+        totalTime.append(rowCalculation)
+    finalTime = 0
+    for time in totalTime:
+        finalTime += time
+
+    convertedTime = timedelta(seconds=finalTime)
+    return convertedTime
+
+def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
+    if discordID in discordIDFromGlobal:
+        for f, data in enumerate(discordIDFromGlobal):
+            if data == discordID:
+                if globalAllData[f + 7][9] != "":
+                    totalEventsGlobal = int(globalAllData[f + 7][9]) + 1
+                    timeToWork = globalAllData[f + 7][8]
+                    timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
+                    if len(timeToWork) == 3:
+                        timeOffSheet = timedelta(hours=int(timeToWork[0]), minutes=int(timeToWork[1]), seconds=int(timeToWork[2])).seconds
+                        finalTime = time.seconds + timeOffSheet
+                        finalTime = str(timedelta(seconds=finalTime))
+                        return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[finalTime, totalEventsGlobal]]})
+                    else:
+                        timeOffSheet = timedelta(hours=int(timeToWork[1]), minutes=int(timeToWork[2]), seconds=int(timeToWork[3])).seconds
+                        daysToSeconds = int(timeToWork[0]) * 86400
+                        daysPlusTime = daysToSeconds + timeOffSheet
+                        finalTime = time.seconds + daysPlusTime
+                        finalTime = str(timedelta(seconds=finalTime))
+                        return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8),"values": [[finalTime, totalEventsGlobal]]})
+                else:
+                    totalEventsGlobal = 1
+                    timeToBoard = str(timedelta(seconds=time.seconds))
+
+                    return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[timeToBoard, totalEventsGlobal]]})
 
 hours = 0
 secs = 0
@@ -493,10 +699,10 @@ class bdb(commands.Cog):
         
         
     @commands.command()
-    async def start_activity(self,ctx,target_voice_channel: discord.VoiceChannel, area):
+    async def start_activity(self,ctx,target_voice_channel: discord.VoiceChannel, name):
         """Start attendance check from <target_voice_channel> to Google Sheet.
 
-        Use the <area> name to set the sheet name.
+        Use the <name> to set the sheet name.
         The name is case sensitve, and you must surround and spaces in quotation marks
         
         Activity will be automatically updated every 10 minutes. 
@@ -507,18 +713,22 @@ class bdb(commands.Cog):
         
         #Gather member list from target voice channel
         x = 0
-        listOfMembers = []
+        users = []
         roleList = []
+        idList = []   
+
         for member in target_voice_channel.members:
-            listOfMembers.append(str(x) +": " + str(member.display_name))
+            users.append(str(x) + ":" + str(member.display_name))
+            idList.append(str(x) + ":" + str(member.id))
             for role in member.roles:
-                roleList.append(str(x) + str(role.name))
+                roleList.append(str(x) + ":" + str(role.name))
             x = x + 1
+
+        populate(name, users, roleList, idList)
+        #populate(area, listOfMembers, roleList)
+        self.looper.start(name,target_voice_channel)
         
-        populate(area, listOfMembers, roleList)
-        self.looper.start(area,target_voice_channel)
-        
-        await ctx.send("Activity tracking started for: "+area)
+        await ctx.send("Activity tracking started for: "+ name)
         
     @commands.command()
     async def pause_activity(self, ctx):
@@ -547,13 +757,20 @@ class bdb(commands.Cog):
     @commands.command()
     async def end_activity(self,ctx,area):
         """End attendance check on <area>"""
+    #def Close(area):#command
+        updateGlobalListOfMembers()
         spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
+        worksheet.update('I4', str(datetime.now().strftime("%H:%M:%S")))
+        dataFromGlobalList = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+        discordIDFromGlobal = dataFromGlobalList.col_values(3)[7:]
+        allGlobalData = dataFromGlobalList.get_all_values()
         allDetails = worksheet.get_all_values()
-        usersOnSheet = worksheet.col_values(8)
-        usersOnSheet1 = usersOnSheet[7:]
+        idOnSheet = worksheet.col_values(3)
+        usersOnSheet1 = idOnSheet[7:]
         update = []
+        updateGlobal = []
         a = 7
         j = 0
         yPosition = 8
@@ -562,26 +779,39 @@ class bdb(commands.Cog):
                 clockIn = str(allDetails[a][8])
                 clockOut = str(allDetails[a][9])
                 memberName = allDetails[a][7]
-    
+                memberID = allDetails[a][2]
+
                 if len(clockIn.splitlines()) == len(clockOut.splitlines()):
+                    totalTimeAttened = timeCalculation(clockIn, clockOut)
+                    update.append({'range': 'K' + str(yPosition) + ':' + 'K' + str(yPosition),
+                                "values": [[str(totalTimeAttened)]]})
+                    updateGlobal.append(updateGlobalEventStats(memberID, totalTimeAttened, discordIDFromGlobal,allGlobalData))
                     a = a + 1
                     yPosition = yPosition + 1
-    
+                    j = j + 1
                 else:
                     if len(clockOut.splitlines()) < len(clockIn.splitlines()):
-                        clockOut = clockOut + "\n" + str(datetime.now().strftime("%H:%M:%S"))
+                        clockOut = clockOut + "\n" +  str(datetime.now().strftime("%H:%M:%S"))
+                        totalTimeAttened = timeCalculation(clockIn, clockOut)
+                        print(totalTimeAttened)
                         update.append({'range': 'H' + str(yPosition) + ':' + 'K' + str(yPosition),
-                                       "values": [[memberName, clockIn, clockOut]]})
+                                    "values": [[memberName, clockIn, clockOut, str(timedelta(seconds=totalTimeAttened.seconds))]]})
+                        updateGlobal.append(
+                            updateGlobalEventStats(memberID, totalTimeAttened, discordIDFromGlobal, allGlobalData))
                         a = a + 1
                         yPosition = yPosition + 1
                         j = j + 1
             else:
+                dataFromGlobalList.batch_update(updateGlobal)
+                updateGlobal.clear()
                 worksheet.batch_update(update)
                 update.clear()
                 j = 0  #
+        dataFromGlobalList.batch_update(updateGlobal)
+        updateVersionNumber(dataFromGlobalList)
         worksheet.batch_update(update)
         self.looper.cancel()
-        worksheet.update_title(str(area) + str(datetime.now().strftime("%d-%m-%Y")) + "(Closed)")
+        worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
         body = {
         "requests": [
                 {
@@ -607,34 +837,112 @@ class bdb(commands.Cog):
     async def looper(self,area,target_voice_channel: discord.VoiceChannel):
         #Gather member list from target voice channel
         x = 0
-        listOfMembers = []
+        
         roleList = []
+        idList = []
+        users = []
+
         for member in target_voice_channel.members:
-            listOfMembers.append(str(x) +": " + str(member.display_name))
+            users.append(str(x) + ":" + str(member.display_name))
+            idList.append(str(x) + ":" + str(member.id))
             for role in member.roles:
-                roleList.append(str(x) + str(role.name))
+                roleList.append(str(x) + ":" + str(role.name))
             x = x + 1
+
         #def loop(area, listOfMembers, roleList):
         status = "Open"
         spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         status = worksheet.acell('K2').value
         if status == "Open":
-            updateActivity(area, listOfMembers, roleList)
+            updateActivity(area, idList, users, roleList)
             sendLog_debug(area +" updated: " +  "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
         else:
             sendLog(area + " closed from Google Sheet: " + "https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
             self.looper.cancel()
             
     @commands.command()
-    async def warstats(self, ctx, file_types=("jpeg","png")):
+    async def warstats(self, ctx, Name, file_types=("jpeg","png")):
         leadboardImages = []
+    
+        updateGlobalListOfMembers()
+        dataFromGlobalList = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+        discordIDFromGlobal = dataFromGlobalList.col_values(3)[7:]
+        globalAllData = dataFromGlobalList.get_all_values()
+        namesFromGlobalList = dataFromGlobalList.col_values(8)[7:]
+        namesFromGlobalList = [each_string.upper().replace(" ", "") for each_string in namesFromGlobalList]
+        for a, word in enumerate(namesFromGlobalList):
+            for letter in word:
+                if letter in string.punctuation:
+                    namesFromGlobalList[a] = word.replace(letter, "")
+        worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
+        worksheet1.duplicate(new_sheet_name=Name)
+        worksheet = client.open("BDB Push Attendance").worksheet(Name)
+        worksheet.update('D2', Name)
+        x = 8
+        update = []
+        updateGlobalStats = []
+        j = 1
 
         if not ctx.message.attachments:
             await ctx.send("Try again with images attached")        
         leadboardImages = ctx.message.attachments
         for image in leadboardImages:
-            await ctx.send(image)
+            issue = image
+            try:
+                image = cv2.imread(image,0)
+                #Edit for accuracy (Image read)
+                thresh = cv2.threshold(image, 160, 255, cv2.THRESH_BINARY)[1]
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+                close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+                result = 255 - close
+            except Exception as e:
+                print(issue)
+                print(e)
+            textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            nameOffImage = list(filter(None, nameOffImage))
+            textOffImage = list(filter(None, textOffImage))
+            rowNumber = 0
+            for baseRow in textOffImage:
+                try:
+                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    if row != None:
+                        discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+                        name = row[0]
+                        score = row[1]
+                        kills = row[2]
+                        deaths = row[3]
+                        assissts = row[4]
+                        healing = row[5]
+                        damage = row[6]
+                        if discordID.isdecimal():
+                            updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
+
+                        if j < 1000:
+                            update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+                                        "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
+                            x = x + 1
+                            j = j + 1
+                            rowNumber = rowNumber + 1
+
+
+                        else:
+                            dataFromGlobalList.batch_update(updateGlobalStats)
+                            worksheet.batch_update(update)
+                            update.clear()
+                            updateGlobalStats.clear()
+                            j = 0
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
+        print(updateGlobalStats)
+        worksheet.batch_update(update)
+        worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
+
+        dataFromGlobalList.batch_update(updateGlobalStats)
+        updateVersionNumber(dataFromGlobalList)
         await ctx.message.delete()
 
     #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
