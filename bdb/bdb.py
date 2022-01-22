@@ -359,7 +359,7 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
 #         if j < 1000:
 #             removeNumber = str(ID).split(":")
 #             if str(removeNumber[1]) not in IDonSheet:
-#                 for a in 1000:
+#                 for a in range(1000):
 #                     if not allValues[a][3]:
 #                         x = a
 #                         break
@@ -423,14 +423,14 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
     if len(rowData.split()) >= 6:
         if len(nameOffImage) > 6:
             try:
-                imgErrorCorrection = rowData.split()#Splits data by comma
+                imgErrorCorrection = rowData.split()  # Splits data by comma
                 name = nameOffImage[rowNumber]
                 if name in nameIncorrectionList:
                     for a, names in enumerate(nameIncorrectionList):
                         if names == name:
                             name = nameCorrectionList[a]
-                nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])#Removes numbers from name
-                #Making name without punction
+                nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])  # Removes numbers from name
+                # Making name without punction
                 for letter in nameWithoutNumbers:
                     if letter in string.punctuation:
                         nameWithoutNumbers.replace(letter, "")
@@ -439,19 +439,23 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                         imgErrorCorrection[a] = "0"
                 # Cross refrence numbers
                 del imgErrorCorrection[0]
-                for c, word in enumerate(imgErrorCorrection):
-                    if word.isdecimal() == False:
-                        del imgErrorCorrection[c]
-                        sendLog("Warning","Deleting Row Data",word,"246","Row Data Correction","Ensure this was meant to be deleted")
                 for b, word in enumerate(imgErrorCorrection):
                     for letter in word:
                         if letter in string.punctuation:
-                            imgErrorCorrection[b] =   imgErrorCorrection[b].replace(letter, "")
-                            sendLog("Check for consistency", "232", word, "Punctuation removal" ,"if this was a zero add value to zeroCorrectionList using function","")
-                        if letter in zeroCorrectionList:
                             imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
+                            sendLog("Check for consistency", "232", word, "Punctuation removal",
+                                    "if this was a zero add value to zeroCorrectionList using function", "")
+                for c, word in enumerate(imgErrorCorrection):
+                    if word.isdecimal() == False:
+                        del imgErrorCorrection[c]
+                        sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction",
+                                "Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
+                if len(imgErrorCorrection) < 7:
+                    sendLog("Critical", "N/A", rowData, imgErrorCorrection, "Row Correction",
+                            "Some fucky shit in row correction")
+                    return None
                 return imgErrorCorrection
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
