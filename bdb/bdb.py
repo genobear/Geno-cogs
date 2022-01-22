@@ -639,7 +639,7 @@ class bdb(commands.Cog):
 
     #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
     #This can be discord command, get full member list, rolelist and id list and pass to getAllRoles
-    @commands.command
+    @commands.command()
     async def populateGlobalList(self, ctx, role: discord.role):
         worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
         IDonSheet = worksheet.col_values(3)[7:]
