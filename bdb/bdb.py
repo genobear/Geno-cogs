@@ -335,7 +335,7 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
 
 def updateGlobalListOfMembers():
 
-    role = discord.Guild.get_role(926088568265388033)
+    role = discord.Guild.get_role(role_id=926088568265388033)
 
     x = 0    
     roleList = []
