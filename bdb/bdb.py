@@ -1038,7 +1038,7 @@ class bdb(commands.Cog):
     async def nameCorrectionListShow(self, ctx):
         with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
             itemlist = pickle.load(fp)
-        await ctx.send("```"+itemlist+"```")
+        await ctx.send("```"+str(itemlist)+"```")
         with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
             itemlist2 = pickle.load(fp)
         await ctx.send("```"+str(itemlist2)+"```")
