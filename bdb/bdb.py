@@ -444,6 +444,8 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                         if letter in string.punctuation:
                             imgErrorCorrection[b] =   imgErrorCorrection[b].replace(letter, "")
                             sendLog("Check for consistency", "232", word, "Punctuation removal" ,"if this was a zero add value to zeroCorrectionList using function","")
+                        if letter in zeroCorrectionList:
+                            imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")                        
                 for c, word in enumerate(imgErrorCorrection):
                     if word.isdecimal() == False:
                         del imgErrorCorrection[c]
