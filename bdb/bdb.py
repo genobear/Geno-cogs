@@ -449,7 +449,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     if word.isdecimal() == False:
                         for letter in word:
                             if letter in zeroCorrectionList:
-                                imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
+                                imgErrorCorrection[c] = imgErrorCorrection[c].replace(letter, "")
                         if word.isdecimal() == False:
                             del imgErrorCorrection[c]
                             sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
@@ -637,7 +637,7 @@ class bdb(commands.Cog):
             if j < 1000:
                 removeNumber = str(ID).split(":")
                 if str(removeNumber[1]) not in IDonSheet:
-                    for a in 1000:
+                    for a in range(1000):
                         if not allValues[a][3]:
                             x = a
                             break
