@@ -603,7 +603,7 @@ class bdb(commands.Cog):
 
     async def updateGlobalListOfMembers(self, ctx):
         guild = ctx.guild
-        role = guild.get_role(self, role_id='926088568265388033')
+        role = get(guild.roles, id=926088568265388033)
 
         x = 0    
         roleList = []
