@@ -1,3 +1,4 @@
+from collections import UserString
 from redbot.core import commands
 from discord.ext import tasks
 import discord
@@ -27,6 +28,7 @@ import time
 from dotenv import load_dotenv
 
 
+#for google image folders and loukans tradepost pictures
 def listfolders(client, filid, des):
     results = client.files().list(
         pageSize=1000, q="\'" + filid + "\'" + " in parents",
@@ -45,7 +47,7 @@ def listfolders(client, filid, des):
     return folder
 
 
-# To Download Files
+# To Download Files from google drive
 def downloadfiles(client, dowid, name,dfilespath):
     request = client.files().get_media(fileId=dowid)
     fh = io.BytesIO()
@@ -60,8 +62,9 @@ def downloadfiles(client, dowid, name,dfilespath):
 
 
 
-
+#for gsheet client.json
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+CSVFile = os.path.join(ROOT_DIR, 'CSV Files/')
 
 #SCANNER GSHEET CREDS
 scope = ["https://spreadsheets.google.com/feeds",
@@ -79,23 +82,81 @@ client2 = gspread.authorize(creds2)
 
 
 
-
+#secretly load webhook
 load_dotenv()
-url1 = os.environ.get('webhookurl')
-url2 = os.environ.get('logWebHookurl')
+webhookurl = os.environ.get('webhookurl')
+logWebHookurl = os.environ.get('logWebHookurl')
+rooWebHookCriticalurl = os.environ.get('rooWebHookCriticalurl')
+rooNonWebHookCriturl = os.environ.get('rooNonWebHookCriturl')
 #webhooks for logs
-webhook = Webhook.from_url(str(url1), adapter=RequestsWebhookAdapter())
-logWebHook = Webhook.from_url(str(url2), adapter=RequestsWebhookAdapter())
+webhook = Webhook.from_url(str(webhookurl), adapter=RequestsWebhookAdapter())
+logWebHook = Webhook.from_url(str(logWebHookurl), adapter=RequestsWebhookAdapter())
+rooWebHookCritical = Webhook.from_url(str(rooWebHookCriticalurl), adapter=RequestsWebhookAdapter())
+rooNonWebHookCrit = Webhook.from_url(str(rooNonWebHookCriturl), adapter=RequestsWebhookAdapter())
 
-def sendLog(msg):
+#Send detailed log - Complete
+def sendLog(Urgency, Status,Value,Line, Area,Comment):
+    msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
+
+    if Urgency == "Critical":
+        rooWebHookCritical.send(msg)
+    if Urgency == "Warning":
+        rooNonWebHookCrit.send(msg)
+    if Urgency == "Update":
+        rooNonWebHookCrit.send(msg)
     logWebHook.send(msg)
-    webhook.send(msg)
+    #webhook.send(msg)
 
 def sendLog_debug(msg):
     logWebHook.send(msg)
     #webhook.send(msg)
 
+#Gets all roles - Need to get roleList and userList from bot
+def getAllRoles(placeInList, users, roleList):
+    def getRole(numerInList):
+        userRoles = []
+        for roles in roleList:
+            roles = roles.split(":")
+            if str(numerInList) == roles[0]:
+                userRoles.append(str(roles[1]))
+        return userRoles
+    def getInGameRole(userRoles):
+        for positions in allInGameRoles:
+            if positions in userRoles:
+                inGameRole = positions
+                return inGameRole
+    def getInDiscordRole(userRoles):
+        for status in allDiscordRoles:
+            if status in userRoles:
+                discordRole = status
+                return discordRole
+    def getWeapons(userRoles, Wep1):
+        weaponCount = 0
+        for weapons in allInGameWeapons:
+            if weapons in userRoles:
+                if Wep1 == "":
+                    Wep1 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
+                    return Wep1
+                else:
+                    if Wep1 not in weapons:
+                        Wep2 = str(weapons).replace(allInGameWeaponsCorrections[weaponCount], "")
+                        return Wep2
+            weaponCount = weaponCount + 1
+    def getDiscordName(placeInList):
+        for names in users:
+            if placeInList == str(names).split(":")[0]:
+                return str(names).split(":")[1]
 
+    userRoles = getRole(placeInList)
+    inGameRole = getInGameRole(userRoles)
+    discordRole = getInDiscordRole(userRoles)
+    Wep1 = getWeapons(userRoles, "")
+    Wep2 = getWeapons(userRoles, Wep1)
+    discordName = getDiscordName(placeInList)
+
+    return [inGameRole,discordRole ,Wep1,Wep2,discordName]
+
+#genuinely cant remember if this is used
 def get_lists(target_voice_channel: discord.VoiceChannel):
     #Gather member list from target voice channel
     x = 0
@@ -107,7 +168,7 @@ def get_lists(target_voice_channel: discord.VoiceChannel):
             roleList.append(str(x) + str(role.name))
         x = x + 1
 
-#internal function to find next available row
+#Next Avail Row - Complete
 def next_available_row(sheet):
     str_list = list(filter(None, sheet.col_values(8)))
     return int(len(str_list) + 1)
@@ -374,7 +435,7 @@ class bdb(commands.Cog):
         
     @commands.command()
     async def memberlist(self, ctx, role: discord.Role):
-        "Get a list of users in a vocie channel"
+        "Get a list of users in a voie channel"
         x = 0
         roleList = []
         member_names = [] #(list)
@@ -567,57 +628,106 @@ class bdb(commands.Cog):
             
     @commands.command()
     async def warstats(self, ctx, file_types=("jpeg","png")):
+        leadboardImages = []
+
         if not ctx.message.attachments:
-            await ctx.send("Try again with attachment")        
-        attachments = ctx.message.attachments
-        for attachment in attachments:
-            await ctx.send(attachment)
+            await ctx.send("Try again with images attached")        
+        leadboardImages = ctx.message.attachments
+        for image in leadboardImages:
+            await ctx.send(image)
         await ctx.message.delete()
 
-    @commands.command()
-    async def tradepost(self, ctx):
-        service = build('drive', 'v3', credentials=creds)
-        Folder_id = "'1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'"  # Enter The Downloadable folder ID From Shared Link
+    #Only to be ran when clearing our global list fully. Basically wiping all Data - Complete
+    #This can be discord command, get full member list, rolelist and id list and pass to getAllRoles
+    @commands.command
+    async def populateGlobalList(self, ctx, role: discord.role):
+        worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+        IDonSheet = worksheet.col_values(3)[7:]
+        listOfCurrentMembersID = []
+        update = []
+        j = 0
+        x = 8
+        idList = [] 
+        users = []
+        roleList = []
+        i = 0
+        for member in role.members:
+            users.append(str(x) + ":" + str(member.display_name))
+            idList.append(str(x) + ":" + str(member.id))
+            for role in member.roles:
+                roleList.append(str(x) + ":" + str(role.name))
+            i = i + 1
 
-        for filename in os.listdir('/home/genobear90/Folder'):
-        #for filename in files:
-            if os.path.exists('/home/genobear90/Folder/'+filename+'/'+filename):
-                os.remove('/home/genobear90/Folder/'+filename+'/'+filename)                
-            os.rmdir('/home/genobear90/Folder/'+filename)
+        for ID in idList:
+            if j < 1000:
+                removeNumber = str(ID).split(":")
+                if str(removeNumber[1]) not in IDonSheet:
+                    # Add them to sheet
+                    discordID = removeNumber[1]
+                    roles = getAllRoles(removeNumber[0], users, roleList) #need to pass some userlists
+                    inGameRole = roles[0]
+                    discordRole = roles[1]
+                    Wep1 = roles[2]
+                    Wep2 = roles[3]
+                    discordName = roles[4]
 
-        results = service.files().list(
-            pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
-        items = results.get('files', [])
-        if not items:
-            print('No files found.')
-        else:
-            print('Files:')
-            for item in items:
-                if item['mimeType'] == 'application/vnd.google-apps.folder':
-                    if not os.path.isdir("Folder"):
-                        os.mkdir("Folder")
-                    bfolderpath = os.getcwd()+"/Folder/"
-                    if not os.path.isdir(bfolderpath+item['name']):
-                        os.mkdir(bfolderpath+item['name'])
+                    update.append({'range': 'C' + str(x) + ':' + 'H' + str(x),
+                                "values": [[discordID, inGameRole, Wep1, Wep2, discordRole, discordName]]})
+                    listOfCurrentMembersID.append(
+                        str(removeNumber[1]).upper().replace(" ", ""))  # Need to add user to sheet
+                    j = j + 1
+                    x = x +1
+            else:
+                worksheet.batch_update(update)
+                update.clear()
+                j = 0
+        worksheet.batch_update(update)
+        await ctx.send("Global List Populated")
 
-                    folderpath = bfolderpath+item['name']
-                    listfolders(service, item['id'], folderpath)
-                else:
-                    if not os.path.isdir("Folder"):
-                        os.mkdir("Folder")
-                    bfolderpath = os.getcwd()+"/Folder/"
-                    if not os.path.isdir(bfolderpath + item['name']):
-                        os.mkdir(bfolderpath + item['name'])
+    # @commands.command()
+    # async def tradepost(self, ctx):
+    #     service = build('drive', 'v3', credentials=creds)
+    #     Folder_id = "'1VFKzwum9X1j7BrLJCCfjZ_2bCIZHPplY'"  # Enter The Downloadable folder ID From Shared Link
 
-                    filepath = bfolderpath + item['name']
-                    downloadfiles(service, item['id'], item['name'], filepath)
-        #files = glob.glob('/home/genobear90/Folder/*')
-        for filename in sorted(os.listdir('/home/genobear90/Folder')):
-        #for filename in files:
-            await ctx.send(file=discord.File('/home/genobear90/Folder/'+filename+'/'+filename))
-            os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
-            os.rmdir('/home/genobear90/Folder/'+filename)
+    #     for filename in os.listdir('/home/genobear90/Folder'):
+    #     #for filename in files:
+    #         if os.path.exists('/home/genobear90/Folder/'+filename+'/'+filename):
+    #             os.remove('/home/genobear90/Folder/'+filename+'/'+filename)                
+    #         os.rmdir('/home/genobear90/Folder/'+filename)
+
+    #     results = service.files().list(
+    #         pageSize=1000, q=Folder_id+" in parents", fields="nextPageToken, files(id, name, mimeType)").execute()
+    #     items = results.get('files', [])
+    #     if not items:
+    #         print('No files found.')
+    #     else:
+    #         print('Files:')
+    #         for item in items:
+    #             if item['mimeType'] == 'application/vnd.google-apps.folder':
+    #                 if not os.path.isdir("Folder"):
+    #                     os.mkdir("Folder")
+    #                 bfolderpath = os.getcwd()+"/Folder/"
+    #                 if not os.path.isdir(bfolderpath+item['name']):
+    #                     os.mkdir(bfolderpath+item['name'])
+
+    #                 folderpath = bfolderpath+item['name']
+    #                 listfolders(service, item['id'], folderpath)
+    #             else:
+    #                 if not os.path.isdir("Folder"):
+    #                     os.mkdir("Folder")
+    #                 bfolderpath = os.getcwd()+"/Folder/"
+    #                 if not os.path.isdir(bfolderpath + item['name']):
+    #                     os.mkdir(bfolderpath + item['name'])
+
+    #                 filepath = bfolderpath + item['name']
+    #                 downloadfiles(service, item['id'], item['name'], filepath)
+    #     #files = glob.glob('/home/genobear90/Folder/*')
+    #     for filename in sorted(os.listdir('/home/genobear90/Folder')):
+    #     #for filename in files:
+    #         await ctx.send(file=discord.File('/home/genobear90/Folder/'+filename+'/'+filename))
+    #         os.remove('/home/genobear90/Folder/'+filename+'/'+filename)
+    #         os.rmdir('/home/genobear90/Folder/'+filename)
         
-        #os.removedirs('/home/genobear90/Folder/')
+    #     #os.removedirs('/home/genobear90/Folder/')
 
-        await ctx.send("Data maintained by LOUKAN")
+    #     await ctx.send("Data maintained by LOUKAN")
