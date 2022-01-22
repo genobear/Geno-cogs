@@ -650,13 +650,13 @@ class bdb(commands.Cog):
         idList = [] 
         users = []
         roleList = []
-        i = 0
+        k = 0
         for member in role.members:
-            users.append(str(i) + ":" + str(member.display_name))
-            idList.append(str(i) + ":" + str(member.id))
+            users.append(str(k) + ":" + str(member.display_name))
+            idList.append(str(k) + ":" + str(member.id))
             for role in member.roles:
-                roleList.append(str(i) + ":" + str(role.name))
-            i = i + 1
+                roleList.append(str(k) + ":" + str(role.name))
+            k = k + 1
 
         for ID in idList:
             if j < 1000:
@@ -676,7 +676,7 @@ class bdb(commands.Cog):
                     listOfCurrentMembersID.append(
                         str(removeNumber[1]).upper().replace(" ", ""))  # Need to add user to sheet
                     j = j + 1
-                    x = x +1
+                    x = x + 1
             else:
                 worksheet.batch_update(update)
                 update.clear()
