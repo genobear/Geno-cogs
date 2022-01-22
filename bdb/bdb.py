@@ -942,7 +942,7 @@ class bdb(commands.Cog):
     async def warstats(self, ctx, Name, file_types=("jpeg","png")):
         leadboardImages = []
     
-        await self.updateGlobalListOfMembers(ctx, self)
+        await self.updateGlobalListOfMembers(ctx)
         dataFromGlobalList = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
         discordIDFromGlobal = dataFromGlobalList.col_values(3)[7:]
         globalAllData = dataFromGlobalList.get_all_values()
