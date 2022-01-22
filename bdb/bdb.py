@@ -835,7 +835,7 @@ class bdb(commands.Cog):
     async def end_activity(self,ctx,area):
         """End attendance check on <area>"""
     #def Close(area):#command
-        updateGlobalListOfMembers()
+        await self.updateGlobalListOfMembers(ctx)
         spreadsheet = client2.open('BDB Push Attendance')
         worksheet = client.open("BDB Push Attendance").worksheet(area)  # Opens new duplicated sheet
         worksheet.update('K2', "Closed")  # Populates sheet status
@@ -942,7 +942,7 @@ class bdb(commands.Cog):
     async def warstats(self, ctx, Name, file_types=("jpeg","png")):
         leadboardImages = []
     
-        updateGlobalListOfMembers()
+        await self.updateGlobalListOfMembers(ctx, self)
         dataFromGlobalList = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
         discordIDFromGlobal = dataFromGlobalList.col_values(3)[7:]
         globalAllData = dataFromGlobalList.get_all_values()
