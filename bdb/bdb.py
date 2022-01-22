@@ -447,15 +447,18 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                                     "if this was a zero add value to zeroCorrectionList using function", "")
                 for c, word in enumerate(imgErrorCorrection):
                     if word.isdecimal() == False:
-                        del imgErrorCorrection[c]
-                        sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction",
-                                "Ensure this was meant to be deleted")
+                        for letter in word:
+                            if letter in zeroCorrectionList:
+                                imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
+                        if word.isdecimal() == False:
+                            del imgErrorCorrection[c]
+                            sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
                 if len(imgErrorCorrection) < 7:
                     sendLog("Critical", "N/A", rowData, imgErrorCorrection, "Row Correction",
                             "Some fucky shit in row correction")
-                    return None
+                    return
                 return imgErrorCorrection
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
