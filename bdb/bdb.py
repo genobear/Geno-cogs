@@ -333,9 +333,9 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
     spreadsheet.batch_update(body)
     sendLog("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
-def updateGlobalListOfMembers():
+def updateGlobalListOfMembers(s):
 
-    role = get(discord.Role, id=926088568265388033)
+    role = discord.get_role(926088568265388033)
 
     x = 0    
     roleList = []
