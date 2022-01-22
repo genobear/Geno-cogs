@@ -188,10 +188,10 @@ def next_available_row(sheet):
 
 def updateVersionNumber(globalSheet):
     allData = globalSheet.get_all_values()
-    currentBuild = str(allData[9][1])
+    currentBuild = allData[9][1]
     previousBuild = currentBuild
-    newCurrentBuild = float(str(currentBuild).replace("V", "")) + 0.01
-    globalSheet.update('B10', "V" + str(newCurrentBuild))
+    newCurrentBuild = float(currentBuild) + 0.01
+    globalSheet.update('B10', newCurrentBuild)
     globalSheet.update('B14', previousBuild)
 
 def updateActivity(area, idList, users, roleList):
