@@ -601,7 +601,7 @@ class bdb(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def updateGlobalListOfMembers(self):
+    async def updateGlobalListOfMembers(self, ctx):
         role = discord.Guild.get_role(self, role_id=926088568265388033)
 
         x = 0    
@@ -659,6 +659,7 @@ class bdb(commands.Cog):
                 update.clear()
                 j = 0
         worksheet.batch_update(update)
+        ctx.send("global update")
 
 
 
