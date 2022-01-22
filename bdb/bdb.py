@@ -970,8 +970,9 @@ class bdb(commands.Cog):
         for attachment in attachments:
             x=0
             filename = f"{ROOT_DIR}/Images/Image_{x}"
-            attachment.save(filename)
+            await attachment.save(filename)
             await ctx.send(filename + " saved")
+            x=x+1
 
         #prepate local images for tesseract
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
