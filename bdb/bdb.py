@@ -447,9 +447,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                                     "if this was a zero add value to zeroCorrectionList using function", "")
                 for c, word in enumerate(imgErrorCorrection):
                     if word.isdecimal() == False:
-                        for letter in word:
-                            if letter in zeroCorrectionList:
-                                imgErrorCorrection[c] = imgErrorCorrection[c].replace(letter, "")
+                        word = re.sub("[^0-9]", "", word)
                         if word.isdecimal() == False:
                             del imgErrorCorrection[c]
                             sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
