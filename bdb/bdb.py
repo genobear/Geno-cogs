@@ -388,6 +388,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                             "Some fucky shit in row correction")
                     return
+                sendLog("Warning", imgErrorCorrection, "","","","")
                 return imgErrorCorrection
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
