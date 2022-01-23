@@ -1261,7 +1261,7 @@ class bdb(commands.Cog):
                 os.remove(f'{ROOT_DIR}/Images/' + filename)
                 await ctx.send(f"{filename} deleted")
 
-@commands.command()
+    @commands.command()
     async def zeroCorrectionList(self, ctx, item):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             itemlist = pickle.load(fp)
