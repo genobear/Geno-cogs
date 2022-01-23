@@ -370,6 +370,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                 del imgErrorCorrection[0]
                 if imgErrorCorrection[0] in name:
                     del imgErrorCorrection[0]
+                sendLog("Warning", imgErrorCorrection, "", "", "", "")
                 for b, word in enumerate(imgErrorCorrection):
                     for letter in word:
                         if letter in string.punctuation:
@@ -384,11 +385,11 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                             sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
+                sendLog("Warning", imgErrorCorrection, "", "", "", "")
                 if len(imgErrorCorrection) < 7:
                     sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                             "Some fucky shit in row correction")
                     return
-                sendLog("Warning", imgErrorCorrection, "","","","")
                 return imgErrorCorrection
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
