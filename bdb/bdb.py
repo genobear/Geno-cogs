@@ -429,6 +429,109 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
     else:
         return None
 
+#getsImageData
+def imgProcession(img):
+    def getName(img):
+        image = cv2.imread(img)
+        # Edit for accuracy (Image read)
+        thresh = cv2.threshold(image, 165, 255, cv2.THRESH_BINARY)[1]
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+        imgStats = 255 - close
+        y = 0
+        x = 0
+        h = 700
+        w = 250
+        crop = imgStats[y:y + h, x:x + w]
+        nameOffImage = str(pytesseract.image_to_string(crop)).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getScore(img):
+        y = 0
+        x = 250
+        h = 700
+        w = 225
+        crop = img[y:y + h, x:x + w]
+
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getKills(img):
+        y = 0
+        x = 400
+        h = 700
+        w = 225
+        crop = img[y:y + h, x:x + w]
+
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getDeaths(img):
+        y = 0
+        x = 530
+        h = 700
+        w = 225
+        crop = img[y:y + h, x:x + w]
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getAssissts(img):
+        y = 0
+        x = 680
+        h = 700
+        w = 200
+        crop = img[y:y + h, x:x + w]
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getHealing(img):
+        y = 0
+        x = 820
+        h = 700
+        w = 200
+        crop = img[y:y + h, x:x + w]
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+    def getDamage(img):
+        y = 0
+        x = 1000
+        h = 700
+        w = 200
+        crop = img[y:y + h, x:x + w]
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 digits')).split("\n")
+        nameOffImage = list(filter(None, nameOffImage))
+        return nameOffImage
+
+    image = cv2.imread(img)
+    # Edit for accuracy (Image read)
+    thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3))
+    close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+    imgStats = 255 - close
+
+    names = getName(img)
+    scores = getScore(imgStats)
+    kills = getKills(imgStats)
+    deaths = getDeaths(imgStats)
+    assists = getAssissts(imgStats)
+    heals = getHealing(imgStats)
+    damages = getDamage(imgStats)
+    fullScoreboard = []
+    for a, rows in enumerate(names):
+        if rows == names[a]:
+            name = names[a]
+            score = scores[a]
+            kill = kills[a]
+            death = deaths[a]
+            assist = assists[a]
+            heal = heals[a]
+            damage = damages[a]
+            userRow = [name,score,kill,death,assist,heal,damage]
+            print(userRow)
+            fullScoreboard.append(userRow)
+    return fullScoreboard
+
 def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kills,deaths, assissts, healing, damage):#NOT A COMMAND
     if discordID.isdecimal():
         if discordID in discordIDFromGlobal:
@@ -960,22 +1063,23 @@ class bdb(commands.Cog):
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
             image = f"{ROOT_DIR}/Images/" + image
             issue = image
-            try:
-                image = cv2.imread(image,0)
-                #Edit for accuracy (Image read)
-                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
-                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-                close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
-                result = 255 - close
-            except Exception as e:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
-                        "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
-            nameOffImage = list(filter(None, nameOffImage))
-            textOffImage = list(filter(None, textOffImage))
+            textOffImage = imgProcession(image)
+            # try:
+            #     image = cv2.imread(image,0)
+            #     #Edit for accuracy (Image read)
+            #     thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
+            #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+            #     close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+            #     result = 255 - close
+            # except Exception as e:
+            #     exc_type, exc_obj, exc_tb = sys.exc_info()
+            #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            #     sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+            #             "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
+            # textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
+            # nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            # nameOffImage = list(filter(None, nameOffImage))
+            # textOffImage = list(filter(None, textOffImage))
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
