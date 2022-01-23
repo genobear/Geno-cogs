@@ -1032,6 +1032,7 @@ class bdb(commands.Cog):
                     if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                         os.remove(f'{ROOT_DIR}/Images/'+filename)
                         await ctx.send(f"{filename} deleted")
+                return
 
             if not pred.result:
                 if can_react:
@@ -1042,7 +1043,7 @@ class bdb(commands.Cog):
                         if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                             os.remove(f'{ROOT_DIR}/Images/'+filename)
                             await ctx.send(f"{filename} deleted")
-                            return
+                    return
                 else:
                     await ctx.send("OK then.")
                     await ctx.send("Not updating global leaderboard, deleting old files")
@@ -1051,7 +1052,7 @@ class bdb(commands.Cog):
                         if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                             os.remove(f'{ROOT_DIR}/Images/'+filename)
                             await ctx.send(f"{filename} deleted")
-                            return
+                    return
             else:
                 if can_react:
                     with contextlib.suppress(discord.Forbidden):
