@@ -363,6 +363,8 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                         imgErrorCorrection[a] = "0"
                 # Cross refrence numbers
                 del imgErrorCorrection[0]
+                if imgErrorCorrection[0] in name:
+                    del imgErrorCorrection[0]
                 for b, word in enumerate(imgErrorCorrection):
                     for letter in word:
                         if letter in string.punctuation:
