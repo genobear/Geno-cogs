@@ -827,18 +827,18 @@ class bdb(commands.Cog):
                         j = j + 1
             else:
                 updateGlobal = list(filter(None, updateGlobal))
-                if "test" in area:
-                    await ctx.send("test in area, not updating global")
-                else:
-                    dataFromGlobalList.batch_update(updateGlobal)
-                    updateGlobal.clear()
+                dataFromGlobalList.batch_update(updateGlobal)
+                updateGlobal.clear()
                 worksheet.batch_update(update)
                 update.clear()
                 j = 0  #
         updateGlobal = list(filter(None, updateGlobal))
         try:
-            dataFromGlobalList.batch_update(updateGlobal)
-            updateVersionNumber(dataFromGlobalList)
+            if "test" in area:
+                await ctx.send("test in area, not updating global")
+            else:
+                dataFromGlobalList.batch_update(updateGlobal)
+                updateVersionNumber(dataFromGlobalList)
         except Exception as e:
             sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
         worksheet.batch_update(update)
