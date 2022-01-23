@@ -983,10 +983,12 @@ class bdb(commands.Cog):
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
-        if len(update) >= 50:
+        if "test" in Name:
+            await ctx.send("test in Name, not updating global")
+        else:
             dataFromGlobalList.batch_update(updateGlobalStats)
             updateVersionNumber(dataFromGlobalList)
-        await ctx.message.delete()
+        #await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
             await ctx.send(filename)
             if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
