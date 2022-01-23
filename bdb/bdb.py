@@ -996,6 +996,7 @@ class bdb(commands.Cog):
             if len(discordID) < 50:
                 #Ask question is this data correct, if no don't update global. If yes update gloabl and version number.
                 randomVariableToNotThrowError = 1
+                await ctx.send("im not updating global")
             else:
                 dataFromGlobalList.batch_update(updateGlobalStats)
                 updateVersionNumber(dataFromGlobalList)
