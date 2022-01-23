@@ -458,6 +458,22 @@ def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kil
                                                   "values": [[totalWarsGlobal, scoreGlobal, killsGlobal, deathsGlobal,
                                                               assisstsGlobal, healingGlobal, damageGlobal]]})
 
+def updateGlobalStatEvent(discordID, discordIDFromGlobal,globalAllData):#NOT A COMMAND
+    if discordID.isdecimal():
+        if discordID in discordIDFromGlobal:
+            for f, data in enumerate(discordIDFromGlobal):
+                if data == discordID:
+                    if globalAllData[f + 7][10] != "":
+                        totalWarsGlobal = int(globalAllData[f + 7][11].replace(",", "")) + 1
+
+                        return (
+                            {'range': 'K' + str(f + 8) + ':' + 'K' + str(f + 8),
+                             "values": [[totalWarsGlobal]]})
+                    else:
+                        totalWarsGlobal = 1
+                        return ({'range': 'K' + str(f + 8) + ':' + 'K' + str(f + 8),
+                                                  "values": [[totalWarsGlobal]]})
+
 #Static Data
 allInGameWeapons = ["⛏️ Great axe", "❄️ Ice Gauntlet", "🎯 Musket", "🛡️ Sword + Shield", "❤️ Life Staff",
                                 "🤺 Rapier", "🔱 Spear", "🔥 Firestaff", "🔨 War Hammer", "🪓 Hatchet",
@@ -926,6 +942,7 @@ class bdb(commands.Cog):
         update = []
         updateGlobalStats = []
         j = 1
+        peopleNotInCompany = []
 
         if not ctx.message.attachments:
             await ctx.send("Try again with images attached")
@@ -976,7 +993,8 @@ class bdb(commands.Cog):
                         damage = row[6]
                         if discordID.isdecimal():
                             updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
-
+                        else:
+                            peopleNotInCompany.append(name)
                         if j < 1000:
                             update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
                                         "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
@@ -1070,9 +1088,179 @@ class bdb(commands.Cog):
             await ctx.send(filename)
             if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                  os.remove(f'{ROOT_DIR}/Images/'+filename)
-                 await ctx.send(f"{filename} deleted")                
-        
+                 await ctx.send(f"{filename} deleted")
+
     @commands.command()
+    async def eventstats(self, ctx, Name, file_types=("jpeg", "png")):
+        leadboardImages = []
+
+        await self.updateGlobalListOfMembers(ctx)
+        dataFromGlobalList = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
+        discordIDFromGlobal = dataFromGlobalList.col_values(3)[7:]
+        globalAllData = dataFromGlobalList.get_all_values()
+        namesFromGlobalList = dataFromGlobalList.col_values(8)[7:]
+        namesFromGlobalList = [each_string.upper().replace(" ", "") for each_string in namesFromGlobalList]
+        for a, word in enumerate(namesFromGlobalList):
+            for letter in word:
+                if letter in string.punctuation:
+                    namesFromGlobalList[a] = word.replace(letter, "")
+        worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
+        worksheet1.duplicate(new_sheet_name=Name)
+        worksheet = client.open("BDB Push Attendance").worksheet(Name)
+        worksheet.update('D2', Name)
+        x = 8
+        update = []
+        updateGlobalStats = []
+        j = 1
+        peopleNotInCompany = []
+        if not ctx.message.attachments:
+            await ctx.send("Try again with images attached")
+            return
+        attachments = ctx.message.attachments
+        # save attachments locally
+        k = 0
+        for attachment in attachments:
+            filename = f"{ROOT_DIR}/Images/Image_{k}"
+            await attachment.save(filename)
+            await ctx.send(filename + " saved")
+            k = k + 1
+        # prepate local images for tesseract
+        numberOfDiscordIDs = []
+        for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
+            image = f"{ROOT_DIR}/Images/" + image
+            issue = image
+            try:
+                image = cv2.imread(image, 0)
+                # Edit for accuracy (Image read)
+                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+                close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+                result = 255 - close
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                        "Row Creation current row, check for consistency = " + str(issue),
+                        "Fucky shit reading img text")
+            textOffImage = str(pytesseract.image_to_string(result, config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            nameOffImage = list(filter(None, nameOffImage))
+            textOffImage = list(filter(None, textOffImage))
+            rowNumber = 0
+            for baseRow in textOffImage:
+                try:
+                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    if row != None:
+                        discordID = getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
+                        if discordID != "Not in company":
+                            numberOfDiscordIDs.append(discordID)
+                        name = row[0]
+                        score = row[1]
+                        kills = row[2]
+                        deaths = row[3]
+                        assissts = row[4]
+                        healing = row[5]
+                        damage = row[6]
+                        if discordID.isdecimal():
+                            updateGlobalStats.append(updateGlobalStatEvent(discordID, discordIDFromGlobal, globalAllData))
+                        else:
+                            peopleNotInCompany.append(name)
+                        if j < 1000:
+                            update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+                                           "values": [
+                                               [discordID, j, name, score, kills, deaths, assissts, healing, damage]]})
+                            x = x + 1
+                            j = j + 1
+                            rowNumber = rowNumber + 1
+
+
+                        else:
+                            dataFromGlobalList.batch_update(updateGlobalStats)
+                            worksheet.batch_update(update)
+                            update.clear()
+                            updateGlobalStats.clear()
+                            j = 0
+                    else:
+                        rowNumber = rowNumber + 1
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
+                            "Row Creation current row, check for consistency = " + str(j),
+                            "Fucky shit writing to sheet")
+        print(updateGlobalStats)
+        worksheet.batch_update(update)
+        worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
+
+        if "test" in Name:
+            await ctx.send("test in Name, not updating global")
+        else:
+            # if len(discordID) < 50:
+            #     #Ask question is this data correct, if no don't update global. If yes update gloabl and version number.
+            #     randomVariableToNotThrowError = 1
+            #     await ctx.send(f"discordID length is {len(discordID)} im not updating global")
+            can_react = ctx.channel.permissions_for(ctx.me).add_reactions
+            message = "Would you like to update the global leaderboard with this data?"
+            if not can_react:
+                message += " (y/n)"
+            query: discord.Message = await ctx.send(message)
+            if can_react:
+                # noinspection PyAsyncCall
+                start_adding_reactions(query, ReactionPredicate.YES_OR_NO_EMOJIS)
+                pred = ReactionPredicate.yes_or_no(query, ctx.author)
+                event = "reaction_add"
+            else:
+                pred = MessagePredicate.yes_or_no(ctx)
+                event = "message"
+            try:
+                await ctx.bot.wait_for(event, check=pred, timeout=300)
+            except asyncio.TimeoutError:
+                await query.delete()
+                await ctx.send("Not updating global leaderboard, deleting old files")
+                for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                    await ctx.send(filename)
+                    if os.path.exists(f'{ROOT_DIR}/Images/' + filename):
+                        os.remove(f'{ROOT_DIR}/Images/' + filename)
+                        await ctx.send(f"{filename} deleted")
+                return
+
+            if not pred.result:
+                if can_react:
+                    await query.delete()
+                    await ctx.send("Not updating global leaderboard, deleting old files")
+                    for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                        await ctx.send(filename)
+                        if os.path.exists(f'{ROOT_DIR}/Images/' + filename):
+                            os.remove(f'{ROOT_DIR}/Images/' + filename)
+                            await ctx.send(f"{filename} deleted")
+                    return
+                else:
+                    await ctx.send("OK then.")
+                    await ctx.send("Not updating global leaderboard, deleting old files")
+                    for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                        await ctx.send(filename)
+                        if os.path.exists(f'{ROOT_DIR}/Images/' + filename):
+                            os.remove(f'{ROOT_DIR}/Images/' + filename)
+                            await ctx.send(f"{filename} deleted")
+                    return
+            else:
+                if can_react:
+                    with contextlib.suppress(discord.Forbidden):
+                        await query.clear_reactions()
+
+        # await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
+        await ctx.send("Updating global leaderboard")
+        dataFromGlobalList.batch_update(updateGlobalStats)
+        updateVersionNumber(dataFromGlobalList)
+
+        # await ctx.message.delete()
+        for filename in os.listdir(f'{ROOT_DIR}/Images'):
+            await ctx.send(filename)
+            if os.path.exists(f'{ROOT_DIR}/Images/' + filename):
+                os.remove(f'{ROOT_DIR}/Images/' + filename)
+                await ctx.send(f"{filename} deleted")
+
+@commands.command()
     async def zeroCorrectionList(self, ctx, item):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             itemlist = pickle.load(fp)
