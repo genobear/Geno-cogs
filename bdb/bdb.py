@@ -826,8 +826,11 @@ class bdb(commands.Cog):
                 update.clear()
                 j = 0  #
         updateGlobal = list(filter(None, updateGlobal))
-        dataFromGlobalList.batch_update(updateGlobal)
-        updateVersionNumber(dataFromGlobalList)
+        if "test" in area:
+            await ctx.send("Test in area, not updating global")
+        else:
+            dataFromGlobalList.batch_update(updateGlobal)
+            updateVersionNumber(dataFromGlobalList)        
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
