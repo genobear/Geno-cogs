@@ -1023,7 +1023,7 @@ class bdb(commands.Cog):
                 pred = MessagePredicate.yes_or_no(ctx)
                 event = "message"
             try:
-                await ctx.bot.wait_for(event, check=pred, timeout=60)
+                await ctx.bot.wait_for(event, check=pred, timeout=300)
             except asyncio.TimeoutError:
                 await query.delete()
                 await ctx.send("Not updating global leaderboard, deleting old files")
