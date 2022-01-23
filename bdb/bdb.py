@@ -837,7 +837,7 @@ class bdb(commands.Cog):
             dataFromGlobalList.batch_update(updateGlobal)
             updateVersionNumber(dataFromGlobalList)
         except Exception as e:
-            sendLog("Critical", "Tryiong to update global", updateGlobal, "830", "Event Ending", "Weird Shit updating global")
+            sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
