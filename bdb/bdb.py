@@ -1063,23 +1063,23 @@ class bdb(commands.Cog):
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
             image = f"{ROOT_DIR}/Images/" + image
             issue = image
-            textOffImage = imgProcession(image)
-            # try:
-            #     image = cv2.imread(image,0)
-            #     #Edit for accuracy (Image read)
-            #     thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
-            #     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-            #     close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
-            #     result = 255 - close
-            # except Exception as e:
-            #     exc_type, exc_obj, exc_tb = sys.exc_info()
-            #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            #     sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
-            #             "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            # textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
-            # nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
-            # nameOffImage = list(filter(None, nameOffImage))
-            # textOffImage = list(filter(None, textOffImage))
+            #textOffImage = imgProcession(image)
+            try:
+                image = cv2.imread(image,0)
+                #Edit for accuracy (Image read)
+                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+                close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+                result = 255 - close
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                        "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
+            textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            nameOffImage = list(filter(None, nameOffImage))
+            textOffImage = list(filter(None, textOffImage))
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
