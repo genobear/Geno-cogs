@@ -39,6 +39,11 @@ from discord.utils import get
 
 import pickle
 
+from redbot.core.utils.menus import start_adding_reactions
+from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+import asyncio
+import contextlib
+
 
 #for google image folders and loukans tradepost pictures
 def listfolders(client, filid, des):
@@ -990,16 +995,50 @@ class bdb(commands.Cog):
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
+
+
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
         else:
-            if len(discordID) < 50:
-                #Ask question is this data correct, if no don't update global. If yes update gloabl and version number.
-                randomVariableToNotThrowError = 1
-                await ctx.send(f"discordID length is {len(discordID)} im not updating global")
+            # if len(discordID) < 50:
+            #     #Ask question is this data correct, if no don't update global. If yes update gloabl and version number.
+            #     randomVariableToNotThrowError = 1
+            #     await ctx.send(f"discordID length is {len(discordID)} im not updating global")
+            can_react = ctx.channel.permissions_for(ctx.me).add_reactions
+            message="Would you like to update the global leaderboard with this data?"
+            if not can_react:
+                message += " (y/n)"
+            query: discord.Message = await ctx.send(message)
+            if can_react:
+                # noinspection PyAsyncCall
+                start_adding_reactions(query, ReactionPredicate.YES_OR_NO_EMOJIS)
+                pred = ReactionPredicate.yes_or_no(query, ctx.author)
+                event = "reaction_add"
             else:
-                dataFromGlobalList.batch_update(updateGlobalStats)
-                updateVersionNumber(dataFromGlobalList)
+                pred = MessagePredicate.yes_or_no(ctx)
+                event = "message"
+            try:
+                await ctx.bot.wait_for(event, check=pred, timeout=600)
+            except asyncio.TimeoutError:
+                await query.delete()
+                return
+
+            if not pred.result:
+                if can_react:
+                    await query.delete()
+                else:
+                    await ctx.send("OK then.")
+                return
+            else:
+                if can_react:
+                    with contextlib.suppress(discord.Forbidden):
+                        await query.clear_reactions()
+
+        #await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
+        await ctx.send("Updating global leaderboard")
+        dataFromGlobalList.batch_update(updateGlobalStats)
+        updateVersionNumber(dataFromGlobalList)
+
         #await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
             await ctx.send(filename)
@@ -1152,6 +1191,7 @@ class bdb(commands.Cog):
         await ctx.send(file=discord.File(f"{filename}.txt"))
         await ctx.send(file=discord.File(f"{filename2}.txt"))
         await ctx.send(file=discord.File(f"{filename3}.txt"))
+
 
 
     # @commands.command()
