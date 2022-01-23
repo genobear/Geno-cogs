@@ -370,7 +370,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                 del imgErrorCorrection[0]
                 if imgErrorCorrection[0] in name:
                     del imgErrorCorrection[0]
-                sendLog("Warning", imgErrorCorrection, "", "", "", "")
+                #sendLog("Warning", imgErrorCorrection, "", "", "", "")
                 for b, word in enumerate(imgErrorCorrection):
                     for letter in word:
                         if letter in string.punctuation:
@@ -385,7 +385,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                             sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
-                sendLog("Warning", imgErrorCorrection, "", "", "", "")
+                #sendLog("Warning", imgErrorCorrection, "", "", "", "")
                 if len(imgErrorCorrection) < 7:
                     sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                             "Some fucky shit in row correction")
@@ -928,7 +928,8 @@ class bdb(commands.Cog):
         j = 1
 
         if not ctx.message.attachments:
-            await ctx.send("Try again with images attached")        
+            await ctx.send("Try again with images attached")
+            return        
         attachments = ctx.message.attachments
         #save attachments locally
         k=0
@@ -1022,10 +1023,16 @@ class bdb(commands.Cog):
                 pred = MessagePredicate.yes_or_no(ctx)
                 event = "message"
             try:
-                await ctx.bot.wait_for(event, check=pred, timeout=600)
+                await ctx.bot.wait_for(event, check=pred, timeout=300)
             except asyncio.TimeoutError:
                 await query.delete()
-                #return
+                await ctx.send("Not updating global leaderboard, deleting old files")
+                for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                    await ctx.send(filename)
+                    if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
+                        os.remove(f'{ROOT_DIR}/Images/'+filename)
+                        await ctx.send(f"{filename} deleted")
+                return
 
             if not pred.result:
                 if can_react:
@@ -1036,6 +1043,7 @@ class bdb(commands.Cog):
                         if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                             os.remove(f'{ROOT_DIR}/Images/'+filename)
                             await ctx.send(f"{filename} deleted")
+                    return
                 else:
                     await ctx.send("OK then.")
                     await ctx.send("Not updating global leaderboard, deleting old files")
@@ -1044,7 +1052,7 @@ class bdb(commands.Cog):
                         if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                             os.remove(f'{ROOT_DIR}/Images/'+filename)
                             await ctx.send(f"{filename} deleted")
-                return
+                    return
             else:
                 if can_react:
                     with contextlib.suppress(discord.Forbidden):
