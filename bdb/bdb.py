@@ -434,16 +434,16 @@ def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kil
         if discordID in discordIDFromGlobal:
             for f, data in enumerate(discordIDFromGlobal):
                 if data == discordID:
-                    if globalAllData[f + 7][10] != "":
-                        totalWarsGlobal = int(globalAllData[f + 7][10].replace(",", "")) + 1
-                        scoreGlobal = int(globalAllData[f + 7][11].replace(",", "")) + int(score)
-                        killsGlobal = int(globalAllData[f + 7][12].replace(",", "")) + int(kills)
-                        deathsGlobal = int(globalAllData[f + 7][13].replace(",", "")) + int(deaths)
-                        assisstsGlobal = int(globalAllData[f + 7][14].replace(",", "")) + int(assissts)
-                        healingGlobal = int(globalAllData[f + 7][15].replace(",", "")) + int(healing)
-                        damageGlobal = int(globalAllData[f + 7][16].replace(",", "")) + int(damage)
+                    if globalAllData[f + 7][11] != "":
+                        totalWarsGlobal = int(globalAllData[f + 7][11].replace(",", "")) + 1
+                        scoreGlobal = int(globalAllData[f + 7][12].replace(",", "")) + int(score)
+                        killsGlobal = int(globalAllData[f + 7][13].replace(",", "")) + int(kills)
+                        deathsGlobal = int(globalAllData[f + 7][14].replace(",", "")) + int(deaths)
+                        assisstsGlobal = int(globalAllData[f + 7][15].replace(",", "")) + int(assissts)
+                        healingGlobal = int(globalAllData[f + 7][16].replace(",", "")) + int(healing)
+                        damageGlobal = int(globalAllData[f + 7][17].replace(",", "")) + int(damage)
                         return (
-                            {'range': 'K' + str(f + 8) + ':' + 'Q' + str(f + 8),
+                            {'range': 'L' + str(f + 8) + ':' + 'R' + str(f + 8),
                              "values": [[totalWarsGlobal, scoreGlobal, killsGlobal, deathsGlobal,
                                          assisstsGlobal, healingGlobal, damageGlobal]]})
                     else:
@@ -454,7 +454,7 @@ def updateGlobalStatWar(discordID, discordIDFromGlobal,globalAllData, score, kil
                         assisstsGlobal = assissts
                         healingGlobal = healing
                         damageGlobal = damage
-                        return ({'range': 'K' + str(f + 8) + ':' + 'Q' + str(f + 8),
+                        return ({'range': 'L' + str(f + 8) + ':' + 'R' + str(f + 8),
                                                   "values": [[totalWarsGlobal, scoreGlobal, killsGlobal, deathsGlobal,
                                                               assisstsGlobal, healingGlobal, damageGlobal]]})
 
