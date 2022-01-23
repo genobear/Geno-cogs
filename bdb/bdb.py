@@ -927,6 +927,7 @@ class bdb(commands.Cog):
             await ctx.send(filename + " saved")
             k=k+1
         #prepate local images for tesseract
+        numberOfDiscordIDs = []
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
             image = f"{ROOT_DIR}/Images/" + image
             issue = image
@@ -952,6 +953,8 @@ class bdb(commands.Cog):
                     row = rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
                         discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+                        if discordID != "Not in company":
+                            numberOfDiscordIDs.append(discordID)
                         name = row[0]
                         score = row[1]
                         kills = row[2]
@@ -986,8 +989,12 @@ class bdb(commands.Cog):
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
         else:
-            dataFromGlobalList.batch_update(updateGlobalStats)
-            updateVersionNumber(dataFromGlobalList)
+            if len(discordID) < 50:
+                #Ask question is this data correct, if no don't update global. If yes update gloabl and version number.
+                randomVariableToNotThrowError = 1
+            else:
+                dataFromGlobalList.batch_update(updateGlobalStats)
+                updateVersionNumber(dataFromGlobalList)
         #await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
             await ctx.send(filename)
