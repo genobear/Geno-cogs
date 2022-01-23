@@ -1021,24 +1021,26 @@ class bdb(commands.Cog):
                 await ctx.bot.wait_for(event, check=pred, timeout=600)
             except asyncio.TimeoutError:
                 await query.delete()
-                return
+                #return
 
             if not pred.result:
                 if can_react:
                     await query.delete()
                 else:
                     await ctx.send("OK then.")
-                return
+                #return
             else:
                 if can_react:
                     with contextlib.suppress(discord.Forbidden):
                         await query.clear_reactions()
+
             await ctx.send("Not updating global leaderboard, deleting files old files")
             for filename in os.listdir(f'{ROOT_DIR}/Images'):
                 await ctx.send(filename)
                 if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
                     os.remove(f'{ROOT_DIR}/Images/'+filename)
-                    await ctx.send(f"{filename} deleted") 
+                    await ctx.send(f"{filename} deleted")
+                    return 
         #await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
         await ctx.send("Updating global leaderboard")
         dataFromGlobalList.batch_update(updateGlobalStats)
