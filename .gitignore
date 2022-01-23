@@ -118,3 +118,6 @@ bdb/secrets.py
 *.env
 bdb/client2.json
 bdb/drive test.py
+bdb/correctName
+bdb/incorrectName
+bdb/zeroCorrectionList
