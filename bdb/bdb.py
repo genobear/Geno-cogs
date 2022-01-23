@@ -554,16 +554,23 @@ class bdb(commands.Cog):
         worksheet = client.open("BDB Push Attendance").worksheet("BDB Global Leaderboard")
         IDonSheet = worksheet.col_values(3)[7:]
         allValues = worksheet.get_all_values()
+        positionsTaken = []
+
+        def getPlace():
+            for n, place in enumerate(IDonSheet):
+                if place == "":
+                    x = n + 8
+                    if x not in positionsTaken:
+                        positionsTaken.append(x)
+                        return x
+            return len(IDonSheet) + 8
         update = []
         j = 0
         for ID in idList:
             if j < 1000:
                 removeNumber = str(ID).split(":")
                 if str(removeNumber[1]) not in IDonSheet:
-                    for a in range(1000):
-                        if not allValues[a][3]:
-                            x = a
-                            break
+                    x = getPlace()
                     #Add them to sheet
                     discordID = removeNumber[1]
                     roles = getAllRoles(removeNumber[0], users, roleList)
