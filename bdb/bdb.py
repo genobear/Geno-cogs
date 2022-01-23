@@ -400,6 +400,8 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     #print(stuff)
                     randomStuff = 1
             del imgErrorCorrection[0]
+            if imgErrorCorrection[0] in name:
+                del imgErrorCorrection[0]
             for a, entry in enumerate(imgErrorCorrection):
                 if entry in zeroCorrectionList:
                     imgErrorCorrection[a] = "0"
