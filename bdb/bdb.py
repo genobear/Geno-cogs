@@ -1123,7 +1123,7 @@ class bdb(commands.Cog):
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
 
-
+        await ctx.send("```"+"People not in company/n"+str(peopleNotInCompany)+"```")
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
         else:
@@ -1132,6 +1132,7 @@ class bdb(commands.Cog):
             #     randomVariableToNotThrowError = 1
             #     await ctx.send(f"discordID length is {len(discordID)} im not updating global")
             can_react = ctx.channel.permissions_for(ctx.me).add_reactions
+            
             message="Would you like to update the global leaderboard with this data?"
             if not can_react:
                 message += " (y/n)"
@@ -1364,7 +1365,7 @@ class bdb(commands.Cog):
                 os.remove(f'{ROOT_DIR}/Images/' + filename)
                 await ctx.send(f"{filename} deleted")
 
-@commands.command()
+    @commands.command()
     async def zeroCorrectionList(self, ctx, item):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             itemlist = pickle.load(fp)
