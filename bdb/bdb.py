@@ -602,7 +602,7 @@ class bdb(commands.Cog):
                 update.clear()
                 j = 0
         worksheet.batch_update(update)
-        ctx.send("global update")
+        await ctx.send("global update")
 
 
 
@@ -827,8 +827,11 @@ class bdb(commands.Cog):
                         j = j + 1
             else:
                 updateGlobal = list(filter(None, updateGlobal))
-                dataFromGlobalList.batch_update(updateGlobal)
-                updateGlobal.clear()
+                if "test" in area:
+                    await ctx.send("test in area, not updating global")
+                else:
+                    dataFromGlobalList.batch_update(updateGlobal)
+                    updateGlobal.clear()
                 worksheet.batch_update(update)
                 update.clear()
                 j = 0  #
