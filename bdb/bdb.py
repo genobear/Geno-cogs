@@ -1022,10 +1022,15 @@ class bdb(commands.Cog):
                 pred = MessagePredicate.yes_or_no(ctx)
                 event = "message"
             try:
-                await ctx.bot.wait_for(event, check=pred, timeout=600)
+                await ctx.bot.wait_for(event, check=pred, timeout=60)
             except asyncio.TimeoutError:
                 await query.delete()
-                #return
+                await ctx.send("Not updating global leaderboard, deleting old files")
+                for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                    await ctx.send(filename)
+                    if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
+                        os.remove(f'{ROOT_DIR}/Images/'+filename)
+                        await ctx.send(f"{filename} deleted")
 
             if not pred.result:
                 if can_react:
