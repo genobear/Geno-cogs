@@ -1033,7 +1033,12 @@ class bdb(commands.Cog):
                 if can_react:
                     with contextlib.suppress(discord.Forbidden):
                         await query.clear_reactions()
-
+            await ctx.send("Not updating global leaderboard, deleting files old files")
+            for filename in os.listdir(f'{ROOT_DIR}/Images'):
+                await ctx.send(filename)
+                if os.path.exists(f'{ROOT_DIR}/Images/'+filename):
+                    os.remove(f'{ROOT_DIR}/Images/'+filename)
+                    await ctx.send(f"{filename} deleted") 
         #await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
         await ctx.send("Updating global leaderboard")
         dataFromGlobalList.batch_update(updateGlobalStats)
