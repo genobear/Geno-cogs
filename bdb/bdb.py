@@ -1038,9 +1038,13 @@ class bdb(commands.Cog):
                 if letter in string.punctuation:
                     namesFromGlobalList[a] = word.replace(letter, "")
         worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
+        template = client.open("BDB War Stats History").worksheet('Template For War')
+        template.duplicate(new_sheet_name=Name)
         worksheet1.duplicate(new_sheet_name=Name)
         worksheet = client.open("BDB Push Attendance").worksheet(Name)
+        publicSheetForWar = client.open("BDB War Stats History").worksheet(Name)
         worksheet.update('D2', Name)
+        publicSheetForWar.update('D2', Name)
         x = 8
         update = []
         updateGlobalStats = []
@@ -1110,6 +1114,7 @@ class bdb(commands.Cog):
                         else:
                             dataFromGlobalList.batch_update(updateGlobalStats)
                             worksheet.batch_update(update)
+                            publicSheetForWar.batch_update(update)
                             update.clear()
                             updateGlobalStats.clear()
                             j = 0
@@ -1121,8 +1126,9 @@ class bdb(commands.Cog):
                     sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
         print(updateGlobalStats)
         worksheet.batch_update(update)
+        publicSheetForWar.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
-
+        publicSheetForWar.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
         await ctx.send("```"+"People not in company/n"+str(peopleNotInCompany)+"```")
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
