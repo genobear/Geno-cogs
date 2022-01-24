@@ -1040,10 +1040,7 @@ class bdb(commands.Cog):
         worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
         worksheet1.duplicate(new_sheet_name=Name)
 
-        template = client.open("BDB War Stats History").worksheet('Template For War')
-        template.duplicate(new_sheet_name=Name)
-        publicSheetForWar = client.open("BDB War Stats History").worksheet(Name)
-        publicSheetForWar.update('D2', Name)
+
 
         worksheet = client.open("BDB Push Attendance").worksheet(Name)
         worksheet.update('D2', Name)
@@ -1125,10 +1122,10 @@ class bdb(commands.Cog):
                     sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
         print(updateGlobalStats)
         worksheet.batch_update(update)
-        publicSheetForWar.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
-        publicSheetForWar.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
         await ctx.send("```"+"People not in company/n"+str(peopleNotInCompany)+"```")
+
+        
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
         else:
@@ -1192,6 +1189,14 @@ class bdb(commands.Cog):
         await ctx.send("Updating global leaderboard")
         dataFromGlobalList.batch_update(updateGlobalStats)
         updateVersionNumber(dataFromGlobalList)
+        
+        #duplicate to public sheet
+        template = client.open("BDB War Stats History").worksheet('Template For War')
+        template.duplicate(new_sheet_name=Name)
+        publicSheetForWar = client.open("BDB War Stats History").worksheet(Name)
+        publicSheetForWar.update('D2', Name)
+        publicSheetForWar.batch_update(update)
+        publicSheetForWar.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
 
         #await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
