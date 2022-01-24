@@ -642,16 +642,29 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
 hours = 0
 secs = 0
 
-
+#Get discord ID - Complete 
+def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
+    discordUsername = inGameName.replace(" ", "")
+    for letter in discordUsername:
+        if letter in string.punctuation:
+            discordUsername = discordUsername.replace(letter, "")
+    for a, name in enumerate(namesFromGlobalListData):
+        name = name.replace(" ", "")
+        for letter in name:
+            if letter in string.punctuation:
+                name = name.replace(letter, "")
+        if str(name).upper() == discordUsername.upper():
+            return discordIDs[a]
+        if str(name).upper() in discordUsername.upper():
+            return discordIDs[a]
+    sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
+    return "Not in company"
 
 class bdb(commands.Cog):
     """My custom cog"""
 
     def __init__(self, bot):
         self.bot = bot
-
-    #Get discord ID - Complete 
-
 
     async def sendLog(Urgency, Status,Value,Line, Area,Comment):
         msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
@@ -662,23 +675,6 @@ class bdb(commands.Cog):
             rooNonWebHookCrit.send(msg)
         if Urgency == "Update":
             rooNonWebHookCrit.send(msg)
-
-    async def getDiscordID(self,inGameName, namesFromGlobalListData, discordIDs):
-        discordUsername = inGameName.replace(" ", "")
-        for letter in discordUsername:
-            if letter in string.punctuation:
-                discordUsername = discordUsername.replace(letter, "")
-        for a, name in enumerate(namesFromGlobalListData):
-            name = name.replace(" ", "")
-            for letter in name:
-                if letter in string.punctuation:
-                    name = name.replace(letter, "")
-            if str(name).upper() == discordUsername.upper():
-                return discordIDs[a]
-            if str(name).upper() in discordUsername.upper():
-                return discordIDs[a]
-        await self.sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
-        return "Not in company"
 
     async def updateGlobalListOfMembers(self, ctx):
         guild = ctx.guild
@@ -984,7 +980,7 @@ class bdb(commands.Cog):
                 dataFromGlobalList.batch_update(updateGlobal)
                 updateVersionNumber(dataFromGlobalList)
         except Exception as e:
-            await self.sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
+            await sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
@@ -1091,7 +1087,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                await self.sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
@@ -1102,7 +1098,7 @@ class bdb(commands.Cog):
                 try:
                     row = rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
-                        discordID = self.getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+                        discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
                         name = row[0]
@@ -1133,7 +1129,7 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    await self.sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
+                    await sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
@@ -1268,7 +1264,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                await self.sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result, config='--psm 6')).split("\n")
@@ -1280,7 +1276,7 @@ class bdb(commands.Cog):
                 try:
                     row = rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
-                        discordID = self.getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
+                        discordID = getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
                         name = row[0]
@@ -1314,7 +1310,7 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    await self.sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
+                    await sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
                             "Row Creation current row, check for consistency = " + str(j),
                             "Fucky shit writing to sheet")
         print(updateGlobalStats)
@@ -1416,10 +1412,10 @@ class bdb(commands.Cog):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'wb') as fp:
             pickle.dump(itemlist, fp)
 
-        await self.sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+        await sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
                 "Zero correction List updated by removing -" + str(item), "")
         
-        await self.sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
+        await sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
         await ctx.send("Deleted")
 
     @commands.command()
