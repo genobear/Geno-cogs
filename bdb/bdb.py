@@ -568,17 +568,20 @@ class bdb(commands.Cog):
     #Get discord ID - Complete 
 
 
-    async def sendLog(self, Urgency, Status,Value,Line, Area,Comment):
+    async def sendLog(ctx, self, Urgency, Status,Value,Line, Area,Comment):
         msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
 
         if Urgency == "Critical":
-            rooWebHookCritical.send(msg)
+            #rooWebHookCritical.send(msg)
+            await ctx.send(msg)
         if Urgency == "Warning":
-            rooNonWebHookCrit.send(msg)
+            #rooNonWebHookCrit.send(msg)
+            await ctx.send(msg)
         if Urgency == "Update":
-            rooNonWebHookCrit.send(msg)
+            #rooNonWebHookCrit.send(msg)
+            await ctx.send(msg)
 
-    async def getDiscordID(self,inGameName, namesFromGlobalListData, discordIDs):
+    async def getDiscordID(self,ctx,inGameName, namesFromGlobalListData, discordIDs):
         discordUsername = inGameName.replace(" ", "")
         for letter in discordUsername:
             if letter in string.punctuation:
@@ -592,10 +595,10 @@ class bdb(commands.Cog):
                 return discordIDs[a]
             if str(name).upper() in discordUsername.upper():
                 return discordIDs[a]
-        await self.sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
+        await self.sendLog(ctx,"Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
         return "Not in company"
 
-    async def rowCorrection(self, rowData, nameOffImage, rowNumber):
+    async def rowCorrection(ctx, self, rowData, nameOffImage, rowNumber):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             zeroCorrectionList = pickle.load(fp)
         with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
@@ -628,26 +631,26 @@ class bdb(commands.Cog):
                         for letter in word:
                             if letter in string.punctuation:
                                 imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
-                                await self.sendLog("Check for consistency", "232", word, "Punctuation removal",
+                                await self.sendLog(ctx,"Check for consistency", "232", word, "Punctuation removal",
                                         "if this was a zero add value to zeroCorrectionList using function", "")
                     for c, word in enumerate(imgErrorCorrection):
                         if word.isdecimal() == False:
                             imgErrorCorrection[c] = re.sub("[^0-9]", "", word)
                             if imgErrorCorrection[c].isdecimal() == False:
                                 del imgErrorCorrection[c]
-                                await self.sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
+                                await self.sendLog(ctx,"Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
                     imgErrorCorrection = list(filter(None, imgErrorCorrection))
                     imgErrorCorrection.insert(0, name)
                     #sendLog("Warning", imgErrorCorrection, "", "", "", "")
                     if len(imgErrorCorrection) < 7:
-                        await self.sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
+                        await self.sendLog(ctx,"Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                                 "Some fucky shit in row correction")
                         return
                     return imgErrorCorrection
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    await self.sendLog("Critical",e,imgErrorCorrection, (exc_type, fname, exc_tb.tb_lineno), "Row Correction","Some fucky shit in row correction")
+                    await self.sendLog(ctx,"Critical",e,imgErrorCorrection, (exc_type, fname, exc_tb.tb_lineno), "Row Correction","Some fucky shit in row correction")
             else:
                 imgErrorCorrection = rowData.split()#Splits data by comma
                 name = imgErrorCorrection[0]
@@ -669,12 +672,12 @@ class bdb(commands.Cog):
                     for letter in word:
                         if letter in string.punctuation:
                             imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
-                            await self.sendLog("Check for consistency", "232", word, "Punctuation removal",
+                            await self.sendLog(ctx,"Check for consistency", "232", word, "Punctuation removal",
                                     "if this was a zero add value to zeroCorrectionList using function", "")
                 for c, word in enumerate(imgErrorCorrection):
                     if word.isdecimal() == False:
                         del imgErrorCorrection[c]
-                        await self.sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction",
+                        await self.sendLog(ctx,"Warning", "Deleting Row Data", word, "246", "Row Data Correction",
                                 "Ensure this was meant to be deleted")
                 imgErrorCorrection = list(filter(None, imgErrorCorrection))
                 imgErrorCorrection.insert(0, name)
@@ -986,7 +989,7 @@ class bdb(commands.Cog):
                 dataFromGlobalList.batch_update(updateGlobal)
                 updateVersionNumber(dataFromGlobalList)
         except Exception as e:
-            await self.sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
+            await self.sendLog(ctx,"Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
@@ -1093,7 +1096,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                await self.sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await self.sendLog(ctx,"Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
@@ -1102,9 +1105,9 @@ class bdb(commands.Cog):
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
-                    row = self.rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = self.rowCorrection(ctx,baseRow, nameOffImage, rowNumber)
                     if row != None:
-                        discordID = self.getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+                        discordID = self.getDiscordID(ctx,row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
                         name = row[0]
@@ -1135,7 +1138,7 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    await self.sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
+                    await self.sendLog(ctx,"Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
@@ -1270,7 +1273,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                await self.sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await self.sendLog(ctx,"Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result, config='--psm 6')).split("\n")
@@ -1280,9 +1283,9 @@ class bdb(commands.Cog):
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
-                    row = self.rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = self.rowCorrection(ctx, baseRow, nameOffImage, rowNumber)
                     if row != None:
-                        discordID = self.getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
+                        discordID = self.getDiscordID(ctx,row[0], namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
                         name = row[0]
@@ -1316,7 +1319,7 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    await self.sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
+                    await self.sendLog(ctx,"Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
                             "Row Creation current row, check for consistency = " + str(j),
                             "Fucky shit writing to sheet")
         print(updateGlobalStats)
@@ -1418,10 +1421,10 @@ class bdb(commands.Cog):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'wb') as fp:
             pickle.dump(itemlist, fp)
 
-        await self.sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+        await self.sendLog(ctx,"Warning", "Removing Item Zero Correction List", itemlist, "219",
                 "Zero correction List updated by removing -" + str(item), "")
         
-        await self.sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
+        await self.sendLog(ctx,"Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
         await ctx.send("Deleted")
 
     @commands.command()
@@ -1440,8 +1443,8 @@ class bdb(commands.Cog):
         with open(f'{ROOT_DIR}/correctName', 'wb') as fp:
             pickle.dump(correctNameList, fp)
 
-        await self.sendLog("Warning","Changing incorrect name List",incorrectNameList, "219","Zero correction List updated with -" + incorrectName,"")
-        await self.sendLog("Warning", "Changing Correct name List", correctNameList, "219","Zero correction List updated with -" + correctName, "")
+        await self.sendLog(ctx,"Warning","Changing incorrect name List",incorrectNameList, "219","Zero correction List updated with -" + incorrectName,"")
+        await self.sendLog(ctx,"Warning", "Changing Correct name List", correctNameList, "219","Zero correction List updated with -" + correctName, "")
         await ctx.send("Name Corrected")
 
     @commands.command()
