@@ -1102,7 +1102,7 @@ class bdb(commands.Cog):
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = self.rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
                         discordID = self.getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
@@ -1280,7 +1280,7 @@ class bdb(commands.Cog):
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = self.rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
                         discordID = self.getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
