@@ -111,18 +111,18 @@ logWebHook = Webhook.from_url(str(logWebHookurl), adapter=RequestsWebhookAdapter
 rooWebHookCritical = Webhook.from_url(str(rooWebHookCriticalurl), adapter=RequestsWebhookAdapter())
 rooNonWebHookCrit = Webhook.from_url(str(rooNonWebHookCriturl), adapter=RequestsWebhookAdapter())
 
-#Send detailed log - Complete
-def sendLog(Urgency, Status,Value,Line, Area,Comment):
-    msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
+# #Send detailed log - Complete
+# def sendLog(Urgency, Status,Value,Line, Area,Comment):
+#     msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
 
-    if Urgency == "Critical":
-        rooWebHookCritical.send(msg)
-    if Urgency == "Warning":
-        rooNonWebHookCrit.send(msg)
-    if Urgency == "Update":
-        rooNonWebHookCrit.send(msg)
+#     if Urgency == "Critical":
+#         rooWebHookCritical.send(msg)
+#     if Urgency == "Warning":
+#         rooNonWebHookCrit.send(msg)
+#     if Urgency == "Update":
+#         rooNonWebHookCrit.send(msg)
     
-    logWebHook.send(msg)
+#    logWebHook.send(msg)
     #webhook.send(msg)
 
 def sendLog_debug(msg):
@@ -666,6 +666,16 @@ class bdb(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def sendLog(Urgency, Status,Value,Line, Area,Comment):
+        msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
+
+        if Urgency == "Critical":
+            rooWebHookCritical.send(msg)
+        if Urgency == "Warning":
+            rooNonWebHookCrit.send(msg)
+        if Urgency == "Update":
+            rooNonWebHookCrit.send(msg)
+
     async def updateGlobalListOfMembers(self, ctx):
         guild = ctx.guild
         role = get(guild.roles, id=926088568265388033)
@@ -970,7 +980,7 @@ class bdb(commands.Cog):
                 dataFromGlobalList.batch_update(updateGlobal)
                 updateVersionNumber(dataFromGlobalList)
         except Exception as e:
-            sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
+            await sendLog("Critical", "Tryiong to update global", e, "830", "Event Ending", "Weird Shit updating global")
         worksheet.batch_update(update)
         self.looper.cancel()
         worksheet.update_title(str(area) + " " + str(datetime.now().strftime("%d-%m-%Y")) + " (Closed)")
@@ -1077,7 +1087,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
@@ -1119,13 +1129,13 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
+                    await sendLog("Critical",e,row,(exc_type, fname, exc_tb.tb_lineno),"Row Creation current row, check for consistency = " + str(j), "Fucky shit writing to sheet")
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
         await ctx.send("```"+"People not in company/n"+str(peopleNotInCompany)+"```")
 
-        
+
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
         else:
@@ -1254,7 +1264,7 @@ class bdb(commands.Cog):
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
+                await sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result, config='--psm 6')).split("\n")
@@ -1300,7 +1310,7 @@ class bdb(commands.Cog):
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                    sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
+                    await sendLog("Critical", e, row, (exc_type, fname, exc_tb.tb_lineno),
                             "Row Creation current row, check for consistency = " + str(j),
                             "Fucky shit writing to sheet")
         print(updateGlobalStats)
@@ -1402,10 +1412,10 @@ class bdb(commands.Cog):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'wb') as fp:
             pickle.dump(itemlist, fp)
 
-        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+        await sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
                 "Zero correction List updated by removing -" + str(item), "")
         
-        sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
+        await sendLog("Warning","Changing Zero Correction List",itemlist, "219","Zero correction List updated with -" + str(item),"")
         await ctx.send("Deleted")
 
     @commands.command()
@@ -1424,8 +1434,8 @@ class bdb(commands.Cog):
         with open(f'{ROOT_DIR}/correctName', 'wb') as fp:
             pickle.dump(correctNameList, fp)
 
-        sendLog("Warning","Changing incorrect name List",incorrectNameList, "219","Zero correction List updated with -" + incorrectName,"")
-        sendLog("Warning", "Changing Correct name List", correctNameList, "219","Zero correction List updated with -" + correctName, "")
+        await sendLog("Warning","Changing incorrect name List",incorrectNameList, "219","Zero correction List updated with -" + incorrectName,"")
+        await sendLog("Warning", "Changing Correct name List", correctNameList, "219","Zero correction List updated with -" + correctName, "")
         await ctx.send("Name Corrected")
 
     @commands.command()
@@ -1452,9 +1462,9 @@ class bdb(commands.Cog):
             pickle.dump(itemlist2, fp)
 
 
-        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+        await sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
                 "Zero correction List updated by removing -" + str(incorrectNameToRemove), "")
-        sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
+        await sendLog("Warning", "Removing Item Zero Correction List", itemlist, "219",
                 "Zero correction List updated by removing -" + str(correctNameToRemove), "")
         
         await ctx.send("List Deleted")
