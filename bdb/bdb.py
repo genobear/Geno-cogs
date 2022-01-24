@@ -568,7 +568,7 @@ class bdb(commands.Cog):
     #Get discord ID - Complete 
 
 
-    async def sendLog(ctx, self, Urgency, Status,Value,Line, Area,Comment):
+    async def sendLog(self, ctx, Urgency, Status,Value,Line, Area,Comment):
         msg = "Time of Log = " + str(datetime.now().strftime("%H:%M:%S")) + "\n" + "Urgency = " + Urgency + "\n" + "Error Code / Name of Log = " + str(Status) + "\n" +"Line = " + str(Line) + "\n" + "Value = " + str(Value) + "\n" + "Area = " + str(Area) + "\n" +"Comment = " + Comment
 
         if Urgency == "Critical":
@@ -598,7 +598,7 @@ class bdb(commands.Cog):
         await self.sendLog(ctx,"Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
         return "Not in company"
 
-    async def rowCorrection(ctx, self, rowData, nameOffImage, rowNumber):
+    async def rowCorrection(self,ctx, rowData, nameOffImage, rowNumber):
         with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
             zeroCorrectionList = pickle.load(fp)
         with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
