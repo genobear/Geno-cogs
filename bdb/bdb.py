@@ -1038,13 +1038,15 @@ class bdb(commands.Cog):
                 if letter in string.punctuation:
                     namesFromGlobalList[a] = word.replace(letter, "")
         worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
+        worksheet1.duplicate(new_sheet_name=Name)
+
         template = client.open("BDB War Stats History").worksheet('Template For War')
         template.duplicate(new_sheet_name=Name)
-        worksheet1.duplicate(new_sheet_name=Name)
-        worksheet = client.open("BDB Push Attendance").worksheet(Name)
         publicSheetForWar = client.open("BDB War Stats History").worksheet(Name)
-        worksheet.update('D2', Name)
         publicSheetForWar.update('D2', Name)
+
+        worksheet = client.open("BDB Push Attendance").worksheet(Name)
+        worksheet.update('D2', Name)
         x = 8
         update = []
         updateGlobalStats = []
@@ -1112,11 +1114,8 @@ class bdb(commands.Cog):
 
 
                         else:
-                            dataFromGlobalList.batch_update(updateGlobalStats)
                             worksheet.batch_update(update)
-                            publicSheetForWar.batch_update(update)
                             update.clear()
-                            updateGlobalStats.clear()
                             j = 0
                     else:
                         rowNumber = rowNumber + 1
