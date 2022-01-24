@@ -567,7 +567,7 @@ def updateGlobalStatEvent(discordID, discordIDFromGlobal,globalAllData):#NOT A C
             for f, data in enumerate(discordIDFromGlobal):
                 if data == discordID:
                     if globalAllData[f + 7][10] != "":
-                        totalWarsGlobal = int(globalAllData[f + 7][11].replace(",", "")) + 1
+                        totalWarsGlobal = int(globalAllData[f + 7][10].replace(",", "")) + 1
 
                         return (
                             {'range': 'K' + str(f + 8) + ':' + 'K' + str(f + 8),
