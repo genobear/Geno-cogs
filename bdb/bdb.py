@@ -43,6 +43,7 @@ from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 import asyncio
 import contextlib
+from PIL import Image
 
 
 #for google image folders and loukans tradepost pictures
