@@ -1096,7 +1096,7 @@ class bdb(commands.Cog):
             rowNumber = 0
             for baseRow in textOffImage:
                 try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    #row = rowCorrection(baseRow, nameOffImage, rowNumber)
                     if row != None:
                         discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
