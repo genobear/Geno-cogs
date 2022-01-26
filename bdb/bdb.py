@@ -438,7 +438,7 @@ def imgProcession(img):
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
-        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 --oem 3 digits -c tessedit_char_whitelist=0123456789')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789\\')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
 
         return nameOffImage
