@@ -508,7 +508,7 @@ def imgProcession(img):
         # Now we put it back in Pillow/PIL land
         imfile = Image.fromarray(bw)
         imfile.save(f"{ROOT_DIR}/Images/" + str(filname))
-        path = os.listdir(f'{ROOT_DIR}/Images/' + filname)
+        path = f"{ROOT_DIR}/Images/" + filname
         return path
 
 
