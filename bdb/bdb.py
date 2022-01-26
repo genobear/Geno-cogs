@@ -45,6 +45,8 @@ import asyncio
 import contextlib
 from PIL import Image
 
+import numpy as np
+
 
 #for google image folders and loukans tradepost pictures
 def listfolders(client, filid, des):
