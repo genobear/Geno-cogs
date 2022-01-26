@@ -432,7 +432,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
 
 #getsImageData
 def imgProcession(img):
-    with open('zeroCorrectionList', 'rb') as fp:
+    with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
