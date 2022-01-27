@@ -468,10 +468,11 @@ def imgProcession(img):
         else:
             for a, data in enumerate(nameOffImage):
                 if data.isdecimal() == False:
-                    for character in data:
-                        if character.isdecimal() == False:
-                            nameOffImage[a].replace(character, "")
-
+                    if data in zeroCorrectionList:
+                        nameOffImage[a] = "0"
+        if len(nameOffImage) < numberOffNames:
+            print(printWhat)
+            print(nameOffImage)
         return nameOffImage
 
     def CheckForNewZeros(score,kill,death,assist,heal,damage):
