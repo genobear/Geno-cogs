@@ -632,14 +632,17 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
         for f, data in enumerate(discordIDFromGlobal):
             if data == discordID:
                 if globalAllData[f + 7][9] != "":
-                    totalEventsGlobal = int(globalAllData[f + 7][9].replace(" ", "")) + 1
-                    timeToWork = globalAllData[f + 7][8]
-                    timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
-                    if len(timeToWork) == 3:
-                        timeOffSheet = timedelta(hours=int(timeToWork[0]), minutes=int(timeToWork[1]), seconds=int(timeToWork[2])).seconds
-                        finalTime = time.seconds + timeOffSheet
-                        finalTime = str(timedelta(seconds=finalTime))
-                        return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[finalTime, totalEventsGlobal]]})
+                    try:
+                        totalEventsGlobal = int(globalAllData[f + 7][9]) + 1
+                        timeToWork = globalAllData[f + 7][8]
+                        timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
+                        if len(timeToWork) == 3:
+                            timeOffSheet = timedelta(hours=int(timeToWork[0]), minutes=int(timeToWork[1]), seconds=int(timeToWork[2])).seconds
+                            finalTime = time.seconds + timeOffSheet
+                            finalTime = str(timedelta(seconds=finalTime))
+                            return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[finalTime, totalEventsGlobal]]})
+                    except Exception as e:
+                        sendLog("Critical", discordID, time, globalAllData[f + 7][9], "", "")
                     else:
                         timeOffSheet = timedelta(hours=int(timeToWork[1]), minutes=int(timeToWork[2]), seconds=int(timeToWork[3])).seconds
                         daysToSeconds = int(timeToWork[0]) * 86400
