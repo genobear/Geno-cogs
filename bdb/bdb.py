@@ -438,7 +438,7 @@ def imgProcession(img):
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
-        nameOffImage = str(pytesseract.image_to_string(crop, config='--oem 0 -c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='-c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
 
         return nameOffImage
@@ -468,11 +468,10 @@ def imgProcession(img):
         else:
             for a, data in enumerate(nameOffImage):
                 if data.isdecimal() == False:
-                    if data in zeroCorrectionList:
-                        nameOffImage[a] = "0"
-        if len(nameOffImage) < numberOffNames:
-            print(printWhat)
-            print(nameOffImage)
+                    for character in data:
+                        if character.isdecimal() == False:
+                            nameOffImage[a].replace(character, "")
+
         return nameOffImage
 
     def CheckForNewZeros(score,kill,death,assist,heal,damage):
