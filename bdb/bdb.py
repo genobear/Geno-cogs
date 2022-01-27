@@ -438,7 +438,7 @@ def imgProcession(img):
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
-        nameOffImage = str(pytesseract.image_to_string(crop, config='-c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--oem 0 -c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
 
         return nameOffImage
@@ -631,18 +631,15 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
     if discordID in discordIDFromGlobal:
         for f, data in enumerate(discordIDFromGlobal):
             if data == discordID:
-                if globalAllData[f + 7][9].isdecimal() == True:
-                    try:
-                        totalEventsGlobal = int(globalAllData[f + 7][9]) + 1
-                        timeToWork = globalAllData[f + 7][8]
-                        timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
-                        if len(timeToWork) == 3:
-                            timeOffSheet = timedelta(hours=int(timeToWork[0]), minutes=int(timeToWork[1]), seconds=int(timeToWork[2])).seconds
-                            finalTime = time.seconds + timeOffSheet
-                            finalTime = str(timedelta(seconds=finalTime))
-                            return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[finalTime, totalEventsGlobal]]})
-                    except Exception as e:
-                        sendLog("Critical", discordID, time, globalAllData[f + 7][9], "", "")
+                if globalAllData[f + 7][9] != "":
+                    totalEventsGlobal = int(globalAllData[f + 7][9]) + 1
+                    timeToWork = globalAllData[f + 7][8]
+                    timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
+                    if len(timeToWork) == 3:
+                        timeOffSheet = timedelta(hours=int(timeToWork[0]), minutes=int(timeToWork[1]), seconds=int(timeToWork[2])).seconds
+                        finalTime = time.seconds + timeOffSheet
+                        finalTime = str(timedelta(seconds=finalTime))
+                        return ({'range': 'I' + str(f + 8) + ':' + 'J' + str(f + 8), "values": [[finalTime, totalEventsGlobal]]})
                     else:
                         timeOffSheet = timedelta(hours=int(timeToWork[1]), minutes=int(timeToWork[2]), seconds=int(timeToWork[3])).seconds
                         daysToSeconds = int(timeToWork[0]) * 86400
