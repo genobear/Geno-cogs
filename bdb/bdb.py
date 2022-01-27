@@ -631,7 +631,7 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
     if discordID in discordIDFromGlobal:
         for f, data in enumerate(discordIDFromGlobal):
             if data == discordID:
-                if globalAllData[f + 7][9] != "":
+                if globalAllData[f + 7][9].isdecimal() :
                     try:
                         totalEventsGlobal = int(globalAllData[f + 7][9]) + 1
                         timeToWork = globalAllData[f + 7][8]
