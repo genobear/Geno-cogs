@@ -632,7 +632,7 @@ def updateGlobalEventStats(discordID, time,discordIDFromGlobal, globalAllData):
         for f, data in enumerate(discordIDFromGlobal):
             if data == discordID:
                 if globalAllData[f + 7][9] != "":
-                    totalEventsGlobal = int(globalAllData[f + 7][9]).replace(" ", "") + 1
+                    totalEventsGlobal = int(globalAllData[f + 7][9].replace(" ", "")) + 1
                     timeToWork = globalAllData[f + 7][8]
                     timeToWork = timeToWork.replace(" day, ", ":").replace(" days, ", ":").split(":")
                     if len(timeToWork) == 3:
