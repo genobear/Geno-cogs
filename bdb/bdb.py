@@ -371,23 +371,13 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
     with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
         nameIncorrectionList = pickle.load(fp)
     try:
-        imgErrorCorrection = rowData.split()  # Splits data by comma
-        name = nameOffImage[rowNumber]
-        if name in nameIncorrectionList:
-            for a, names in enumerate(nameIncorrectionList):
-                if names == name:
-                    name = nameCorrectionList[a]
-        nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])  # Removes numbers from name
-        # Making name without punction
-        for letter in nameWithoutNumbers:
-            if letter in string.punctuation:
-                nameWithoutNumbers.replace(letter, "")
+        imgErrorCorrection = rowData.split()# Splits data by comma
         for a, entry in enumerate(imgErrorCorrection):
             if entry in zeroCorrectionList:
                 imgErrorCorrection[a] = "0"
-        # Cross refrence numbers
-        if imgErrorCorrection[0] in name:
-            del imgErrorCorrection[0]
+        # # Cross refrence numbers
+        # if imgErrorCorrection[0] in name:
+        #     del imgErrorCorrection[0]
         #sendLog("Warning", imgErrorCorrection, "", "", "", "")
         for b, word in enumerate(imgErrorCorrection):
             for letter in word:
@@ -402,13 +392,28 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     del imgErrorCorrection[c]
                     sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
         imgErrorCorrection = list(filter(None, imgErrorCorrection))
-        imgErrorCorrection.insert(0, name)
-        #sendLog("Warning", imgErrorCorrection, "", "", "", "")
-        if len(imgErrorCorrection) < 7:
-            sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
-                    "Some fucky shit in row correction")
-            return
-        return imgErrorCorrection
+
+        for k, stuff in enumerate(nameOffImage):
+            if stuff.split()[1]:
+                if stuff.split()[1] in imgErrorCorrection:
+                    name = nameCorrectionList[rowNumber + k]
+            else:
+                if stuff.split()[0] in imgErrorCorrection:
+                    name = nameCorrectionList[rowNumber + k]
+        if name:
+            if name in nameIncorrectionList:
+                for a, names in enumerate(nameIncorrectionList):
+                    if names == name:
+                        name = nameCorrectionList[a]
+            imgErrorCorrection.insert(0, name)
+            #sendLog("Warning", imgErrorCorrection, "", "", "", "")
+            if len(imgErrorCorrection) < 7:
+                sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
+                        "Some fucky shit in row correction")
+                return
+            return imgErrorCorrection
+        else:
+            return None
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
