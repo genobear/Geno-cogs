@@ -438,7 +438,7 @@ def imgProcession(img):
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
-        nameOffImage = str(pytesseract.image_to_string(crop, config='-c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--oem 0 -c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
 
         return nameOffImage
@@ -460,7 +460,6 @@ def imgProcession(img):
         return nameOffImage
 
     def getDataOffImage(img, y, x, h, w, numberOffNames, printWhat):
-
         crop = img[y:y + h, x:x + w]
         nameOffImage = processImage(cv2.resize(crop, None, fx=1.5, fy=1.5))
         if all(i.isdecimal() for i in nameOffImage):
