@@ -432,6 +432,20 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
     else:
         return None
 
+def convetImageRGB(img):
+    filname = "conversion.png"
+    col = Image.open(img)
+    gray = col.convert('L')
+    # Let numpy do the heavy lifting for converting pixels to pure black or white
+    bw = np.asarray(gray).copy()
+    # Pixel range is 0...255, 256/2 = 128
+    bw[bw < 128] = 0  # Black
+    bw[bw >= 128] = 255  # White
+    # Now we put it back in Pillow/PIL land
+    imfile = Image.fromarray(bw)
+    imfile.save(f"{ROOT_DIR}/Images/" + str(filname))
+    path = f"{ROOT_DIR}/Images/" + filname
+    return path
 #getsImageData
 def imgProcession(img):
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
@@ -1095,7 +1109,7 @@ class bdb(commands.Cog):
             issue = image
             #textOffImage = imgProcession(image)
             try:
-                image = cv2.imread(image,0)
+                image = cv2.imread(convetImageRGB(image),0)
                 #Edit for accuracy (Image read)
                 thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
