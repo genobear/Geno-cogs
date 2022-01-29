@@ -440,7 +440,7 @@ def imgProcession(img):
     def processImage(crop):
         nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
-        nameOffImage = list(filter('\x0c', nameOffImage))
+        nameOffImage.remove('\x0c')
 
         if all(i.isdecimal() for i in nameOffImage):
             return nameOffImage
@@ -466,7 +466,7 @@ def imgProcession(img):
         crop = cv2.resize(crop, None, fx=1.5, fy=1.5)
         nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 --oem 3')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
-        nameOffImage = list(filter('\x0c', nameOffImage))
+        nameOffImage.remove('\x0c')
         return nameOffImage
 
     def getDataOffImage(img, y, x, h, w, numberOffNames, printWhat):
