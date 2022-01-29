@@ -687,7 +687,7 @@ def getDiscordID(inGameName, namesFromGlobalListData, discordIDs):
     sendLog("Warning", "Person Not Detected In Company", inGameName, "414", "Get Discord ID Function","Person Not in company check name matches discord name")
     return "Not in company"
 
-class bdb(commands.Cog):
+class bdbdev(commands.Cog):
     """My custom cog"""
 
     def __init__(self, bot):
