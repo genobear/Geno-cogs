@@ -1107,6 +1107,8 @@ class bdb(commands.Cog):
             textOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 200:500 + 1920],config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 0:125 + 150])).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
+            if '\x0c' in nameOffImage:
+                nameOffImage.remove('\x0c')
             textOffImage = list(filter(None, textOffImage))
             rowNumber = 0
             for baseRow in textOffImage:
