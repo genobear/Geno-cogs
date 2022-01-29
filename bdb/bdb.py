@@ -370,6 +370,21 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
         nameCorrectionList = pickle.load(fp)
     with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
         nameIncorrectionList = pickle.load(fp)
+    def nameCorrection(name):
+        if name:
+            if name in nameIncorrectionList:
+                for a, names in enumerate(nameIncorrectionList):
+                    if names == name:
+                        name = nameCorrectionList[a]
+            imgErrorCorrection.insert(0, name)
+            #sendLog("Warning", imgErrorCorrection, "", "", "", "")
+            if len(imgErrorCorrection) < 7:
+                sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
+                        "Some fucky shit in row correction")
+                return
+            return imgErrorCorrection
+        else:
+            return None
     try:
         imgErrorCorrection = rowData.split()# Splits data by comma
         for a, entry in enumerate(imgErrorCorrection):
@@ -397,23 +412,12 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
             if len(stuff.split()) > 1:
                 if stuff.split()[1] in imgErrorCorrection:
                     name = nameCorrectionList[rowNumber + k]
+                    nameCorrection(name)
             else:
                 if stuff.split()[0] in imgErrorCorrection:
                     name = nameCorrectionList[rowNumber + k]
-        if name:
-            if name in nameIncorrectionList:
-                for a, names in enumerate(nameIncorrectionList):
-                    if names == name:
-                        name = nameCorrectionList[a]
-            imgErrorCorrection.insert(0, name)
-            #sendLog("Warning", imgErrorCorrection, "", "", "", "")
-            if len(imgErrorCorrection) < 7:
-                sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
-                        "Some fucky shit in row correction")
-                return
-            return imgErrorCorrection
-        else:
-            return None
+                    nameCorrection(name)
+        return None
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
