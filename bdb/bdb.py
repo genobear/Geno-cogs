@@ -443,8 +443,8 @@ def convetImageRGB(img):
     bw[bw >= 128] = 255  # White
     # Now we put it back in Pillow/PIL land
     imfile = Image.fromarray(bw)
-    imfile.save(f"{ROOT_DIR}/Images/" + str(filname))
-    path = f"{ROOT_DIR}/Images/" + filname
+    imfile.save(f"{ROOT_DIR}/conversion/" + str(filname))
+    path = f"{ROOT_DIR}/conversion/" + filname
     return path
 #getsImageData
 def imgProcession(img):
@@ -534,8 +534,8 @@ def imgProcession(img):
         bw[bw >= 128] = 255  # White
         # Now we put it back in Pillow/PIL land
         imfile = Image.fromarray(bw)
-        imfile.save(f"{ROOT_DIR}/Images/" + str(filname))
-        path = f"{ROOT_DIR}/Images/" + filname
+        imfile.save(f"{ROOT_DIR}/conversion/" + str(filname))
+        path = f"{ROOT_DIR}/conversion/" + filname
         return path
 
 
