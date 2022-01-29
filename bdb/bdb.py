@@ -1096,7 +1096,7 @@ class bdb(commands.Cog):
                 image = cv2.imread(convetImageRGB(image),0)
                 #Edit for accuracy (Image read)
                 thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
-                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 2))
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
                 result = 255 - close
             except Exception as e:
