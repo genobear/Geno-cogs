@@ -438,11 +438,19 @@ def imgProcession(img):
         zeroCorrectionList = pickle.load(fp)
 
     def processImage(crop):
-        tesseract.setVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        nameOffImage = str(pytesseract.image_to_string(crop, config='-c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
+        nameOffImage = list(filter('\x0c', nameOffImage))
 
-        return nameOffImage
+        if all(i.isdecimal() for i in nameOffImage):
+            return nameOffImage
+        else:
+            for a, data in enumerate(nameOffImage):
+                if data.isdecimal() == False:
+                    for character in data:
+                        if character.isdecimal() == False:
+                            data[a].replace(character, "")
+            return nameOffImage
     def getName(img):
         image = cv2.imread(convetImageRGB(img))
         # Edit for accuracy (Image read)
