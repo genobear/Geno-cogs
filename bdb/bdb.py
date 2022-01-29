@@ -1109,7 +1109,7 @@ class bdb(commands.Cog):
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
             textOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 200:500 + 1920],config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 0:125 + 150])).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 0:300 + 120])).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
                 nameOffImage.remove('\x0c')
