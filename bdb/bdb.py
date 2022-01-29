@@ -415,13 +415,12 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     name = nameCorrection(name)
                     imgErrorCorrection.insert(0, name)
                     break
-                    
+
         if len(imgErrorCorrection) < 7:
             sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                     "Some fucky shit in row correction")
-            return
+            return None
         return imgErrorCorrection
-        return None
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
