@@ -439,7 +439,7 @@ def imgProcession(img):
 
     def processImage(crop):
         tesseract.setVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        nameOffImage = str(pytesseract.image_to_string(crop, config='--oem 0 -c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
+        nameOffImage = str(pytesseract.image_to_string(crop, config='-c tessedit_char_whitelist=0123456789 --psm 6')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
 
         return nameOffImage
