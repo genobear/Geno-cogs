@@ -364,6 +364,7 @@ def getName(img):
 
 #Corrects war stat row data - Complete
 def rowCorrection(rowData, nameOffImage, rowNumber):
+    logWebHook.send(nameOffImage)
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
         zeroCorrectionList = pickle.load(fp)
     with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
