@@ -466,6 +466,7 @@ def imgProcession(img):
         crop = cv2.resize(crop, None, fx=1.5, fy=1.5)
         nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 --oem 3')).split("\n")
         nameOffImage = list(filter(None, nameOffImage))
+        nameOffImage = list(filter('\x0c', nameOffImage))
         return nameOffImage
 
     def getDataOffImage(img, y, x, h, w, numberOffNames, printWhat):
