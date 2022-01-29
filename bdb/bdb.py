@@ -344,6 +344,24 @@ def populate(name, users, roleList, idList): # needs idlist passing from start a
     spreadsheet.batch_update(body)
     sendLog_debug("Activity populated: " + name + ": https://docs.google.com/spreadsheets/d/"+str(spreadsheet.id)+"/edit#gid="+str(worksheet.id))
 
+
+def getName(img):
+    image = cv2.imread(convetImageRGB(img))
+    # Edit for accuracy (Image read)
+    thresh = cv2.threshold(image, 165, 255, cv2.THRESH_BINARY)[1]
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
+    imgStats = 255 - close
+    y = 0
+    x = 0
+    h = 700
+    w = 250
+    crop = imgStats[y:y + h, x:x + w]
+    crop = cv2.resize(crop, None, fx=1.5, fy=1.5)
+    nameOffImage = str(pytesseract.image_to_string(crop, config='--psm 6 --oem 3')).split("\n")
+    nameOffImage = list(filter(None, nameOffImage))
+    return nameOffImage
+
 #Corrects war stat row data - Complete
 def rowCorrection(rowData, nameOffImage, rowNumber):
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
@@ -352,85 +370,50 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
         nameCorrectionList = pickle.load(fp)
     with open(f'{ROOT_DIR}/incorrectName', 'rb') as fp:
         nameIncorrectionList = pickle.load(fp)
-    if len(rowData.split()) >= 6:
-        if len(nameOffImage) > 6:
-            try:
-                imgErrorCorrection = rowData.split()  # Splits data by comma
-                name = nameOffImage[rowNumber]
-                if name in nameIncorrectionList:
-                    for a, names in enumerate(nameIncorrectionList):
-                        if names == name:
-                            name = nameCorrectionList[a]
-                nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])  # Removes numbers from name
-                # Making name without punction
-                for letter in nameWithoutNumbers:
-                    if letter in string.punctuation:
-                        nameWithoutNumbers.replace(letter, "")
-                for a, entry in enumerate(imgErrorCorrection):
-                    if entry in zeroCorrectionList:
-                        imgErrorCorrection[a] = "0"
-                # Cross refrence numbers
-                del imgErrorCorrection[0]
-                if imgErrorCorrection[0] in name:
-                    del imgErrorCorrection[0]
-                #sendLog("Warning", imgErrorCorrection, "", "", "", "")
-                for b, word in enumerate(imgErrorCorrection):
-                    for letter in word:
-                        if letter in string.punctuation:
-                            imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
-                            sendLog("Check for consistency", "232", word, "Punctuation removal",
-                                    "if this was a zero add value to zeroCorrectionList using function", "")
-                for c, word in enumerate(imgErrorCorrection):
-                    if word.isdecimal() == False:
-                        imgErrorCorrection[c] = re.sub("[^0-9]", "", word)
-                        if imgErrorCorrection[c].isdecimal() == False:
-                            del imgErrorCorrection[c]
-                            sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
-                imgErrorCorrection = list(filter(None, imgErrorCorrection))
-                imgErrorCorrection.insert(0, name)
-                #sendLog("Warning", imgErrorCorrection, "", "", "", "")
-                if len(imgErrorCorrection) < 7:
-                    sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
-                            "Some fucky shit in row correction")
-                    return
-                return imgErrorCorrection
-            except Exception as e:
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                sendLog("Critical",e,imgErrorCorrection, (exc_type, fname, exc_tb.tb_lineno), "Row Correction","Some fucky shit in row correction")
-        else:
-            imgErrorCorrection = rowData.split()#Splits data by comma
-            name = imgErrorCorrection[0]
-            if imgErrorCorrection[0] in nameIncorrectionList:
-                for a, names in enumerate(nameIncorrectionList):
-                    if names == imgErrorCorrection[0]:
-                        name = nameCorrectionList[a]
-            for b, stuff in enumerate(nameOffImage):
-                if name in stuff:
-                    #print(stuff)
-                    randomStuff = 1
+    try:
+        imgErrorCorrection = rowData.split()  # Splits data by comma
+        name = nameOffImage[rowNumber]
+        if name in nameIncorrectionList:
+            for a, names in enumerate(nameIncorrectionList):
+                if names == name:
+                    name = nameCorrectionList[a]
+        nameWithoutNumbers = ''.join([i for i in name if not i.isdigit()])  # Removes numbers from name
+        # Making name without punction
+        for letter in nameWithoutNumbers:
+            if letter in string.punctuation:
+                nameWithoutNumbers.replace(letter, "")
+        for a, entry in enumerate(imgErrorCorrection):
+            if entry in zeroCorrectionList:
+                imgErrorCorrection[a] = "0"
+        # Cross refrence numbers
+        if imgErrorCorrection[0] in name:
             del imgErrorCorrection[0]
-            if imgErrorCorrection[0] in name:
-                del imgErrorCorrection[0]
-            for a, entry in enumerate(imgErrorCorrection):
-                if entry in zeroCorrectionList:
-                    imgErrorCorrection[a] = "0"
-            for b, word in enumerate(imgErrorCorrection):
-                for letter in word:
-                    if letter in string.punctuation:
-                        imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
-                        sendLog("Check for consistency", "232", word, "Punctuation removal",
-                                "if this was a zero add value to zeroCorrectionList using function", "")
-            for c, word in enumerate(imgErrorCorrection):
-                if word.isdecimal() == False:
+        #sendLog("Warning", imgErrorCorrection, "", "", "", "")
+        for b, word in enumerate(imgErrorCorrection):
+            for letter in word:
+                if letter in string.punctuation:
+                    imgErrorCorrection[b] = imgErrorCorrection[b].replace(letter, "")
+                    sendLog("Check for consistency", "232", word, "Punctuation removal",
+                            "if this was a zero add value to zeroCorrectionList using function", "")
+        for c, word in enumerate(imgErrorCorrection):
+            if word.isdecimal() == False:
+                imgErrorCorrection[c] = re.sub("[^0-9]", "", word)
+                if imgErrorCorrection[c].isdecimal() == False:
                     del imgErrorCorrection[c]
-                    sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction",
-                            "Ensure this was meant to be deleted")
-            imgErrorCorrection = list(filter(None, imgErrorCorrection))
-            imgErrorCorrection.insert(0, name)
-            return imgErrorCorrection
-    else:
-        return None
+                    sendLog("Warning", "Deleting Row Data", word, "246", "Row Data Correction","Ensure this was meant to be deleted")
+        imgErrorCorrection = list(filter(None, imgErrorCorrection))
+        imgErrorCorrection.insert(0, name)
+        #sendLog("Warning", imgErrorCorrection, "", "", "", "")
+        if len(imgErrorCorrection) < 7:
+            sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
+                    "Some fucky shit in row correction")
+            return
+        return imgErrorCorrection
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        sendLog("Critical",e,imgErrorCorrection, (exc_type, fname, exc_tb.tb_lineno), "Row Correction","Some fucky shit in row correction")
+
 
 def convetImageRGB(img):
     filname = "conversion.png"
@@ -1120,8 +1103,8 @@ class bdb(commands.Cog):
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(result,config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            textOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 200:500 + 1920],config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 0:125 + 150])).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             textOffImage = list(filter(None, textOffImage))
             rowNumber = 0
