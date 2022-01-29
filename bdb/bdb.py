@@ -394,7 +394,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
         imgErrorCorrection = list(filter(None, imgErrorCorrection))
 
         for k, stuff in enumerate(nameOffImage):
-            if len(stuff.split) > 1:
+            if len(stuff.split()) > 1:
                 if stuff.split()[1] in imgErrorCorrection:
                     name = nameCorrectionList[rowNumber + k]
             else:
