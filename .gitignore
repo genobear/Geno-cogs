@@ -123,3 +123,6 @@ bdb/incorrectName
 bdb/zeroCorrectionList
 bdb-dev/client2.json
 bdb-dev/client.json
+*client.json
+*client2.json
+
