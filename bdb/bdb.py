@@ -1227,10 +1227,10 @@ class bdb(commands.Cog):
 
 
                      
-        #await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
-        await ctx.send("Updating global leaderboard")
-        dataFromGlobalList.batch_update(updateGlobalStats)
-        updateVersionNumber(dataFromGlobalList)
+            #await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
+            await ctx.send("Updating global leaderboard")
+            dataFromGlobalList.batch_update(updateGlobalStats)
+            updateVersionNumber(dataFromGlobalList)
         
         #duplicate to public sheet
         template = client.open("BDB War Stats History").worksheet('Template For War')
