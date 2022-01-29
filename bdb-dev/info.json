@@ -1,0 +1,7 @@
+{
+    "author" : ["Geno"],
+    "install_msg" : "Message the user will recieve when they agree to install your repository.",
+    "name" : "Geno-cogs",
+    "short" : "Some bad cogs for bdb",
+    "requirements" : ["gspread", "oauth2client", "tabulate"]
+}

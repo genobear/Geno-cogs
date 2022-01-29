@@ -121,3 +121,5 @@ bdb/drive test.py
 bdb/correctName
 bdb/incorrectName
 bdb/zeroCorrectionList
+bdb-dev/client2.json
+bdb-dev/client.json
