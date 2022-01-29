@@ -1250,7 +1250,7 @@ class bdb(commands.Cog):
         # save attachments locally
         k = 0
         for attachment in attachments:
-            filename = f"{ROOT_DIR}/Images/Image_{k}"
+            filename = f"{ROOT_DIR}/Images/Image_{k}.png"
             await attachment.save(filename)
             await ctx.send(filename + " saved")
             k = k + 1
