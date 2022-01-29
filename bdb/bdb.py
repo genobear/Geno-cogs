@@ -376,13 +376,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                 for a, names in enumerate(nameIncorrectionList):
                     if names == name:
                         name = nameCorrectionList[a]
-            imgErrorCorrection.insert(0, name)
-            #sendLog("Warning", imgErrorCorrection, "", "", "", "")
-            if len(imgErrorCorrection) < 7:
-                sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
-                        "Some fucky shit in row correction")
-                return
-            return imgErrorCorrection
+                        return name
         else:
             return None
     try:
@@ -412,11 +406,21 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
             if len(stuff.split()) > 1:
                 if stuff.split()[1] in imgErrorCorrection:
                     name = nameCorrectionList[rowNumber + k]
-                    nameCorrection(name)
+                    name = nameCorrection(name)
+                    imgErrorCorrection.insert(0, name)
+                    break
             else:
                 if stuff.split()[0] in imgErrorCorrection:
                     name = nameCorrectionList[rowNumber + k]
-                    nameCorrection(name)
+                    name = nameCorrection(name)
+                    imgErrorCorrection.insert(0, name)
+                    break
+                    
+        if len(imgErrorCorrection) < 7:
+            sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
+                    "Some fucky shit in row correction")
+            return
+        return imgErrorCorrection
         return None
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
