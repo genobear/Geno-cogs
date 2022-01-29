@@ -447,7 +447,8 @@ def imgProcession(img):
             return nameOffImage
         else:
             for a, data in enumerate(nameOffImage):
-                sendLog('Critical', data,data,data,data,a)
+                logWebHook.send(a)
+                logWebHook.send(data)
                 if data.isdecimal() == False:
                     for character in data:
                         if character.isdecimal() == False:
