@@ -1126,7 +1126,7 @@ class bdb(commands.Cog):
                 try:
                     row = rowCorrection(baseRow, nameOffImage, rowNumber)
                     #row = baseRow
-                    if row != None:
+                    if row[0] != None:
                         discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
