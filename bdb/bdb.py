@@ -363,7 +363,7 @@ def getName(img):
     return nameOffImage
 
 #Corrects war stat row data - Complete
-def rowCorrection(rowData, nameOffImage, rowNumber):
+def rowCorrection(rowData, nameOffImage):
     with open(f'{ROOT_DIR}/zeroCorrectionList', 'rb') as fp:
         zeroCorrectionList = pickle.load(fp)
     with open(f'{ROOT_DIR}/correctName', 'rb') as fp:
@@ -377,6 +377,7 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
                     if names == name:
                         name = nameCorrectionList[a]
                         return name
+                return name
         else:
             return None
     try:
@@ -403,23 +404,19 @@ def rowCorrection(rowData, nameOffImage, rowNumber):
         imgErrorCorrection = list(filter(None, imgErrorCorrection))
 
         for k, stuff in enumerate(nameOffImage):
-            if len(stuff.split()) > 1:
-                if stuff.split()[1] in imgErrorCorrection:
-                    name = nameCorrectionList[rowNumber + k]
-                    name = nameCorrection(name)
-                    imgErrorCorrection.insert(0, name)
-                    break
-            else:
-                if stuff.split()[0] in imgErrorCorrection:
-                    name = nameCorrectionList[rowNumber + k]
-                    name = nameCorrection(name)
-                    imgErrorCorrection.insert(0, name)
-                    break
-
+            for l, data in enumerate(stuff.split()):
+                if data.isdecimal():
+                    if data in imgErrorCorrection:
+                        name = ", ".join(stuff.split()[:l])
+                        imgErrorCorrection.insert(0, name.replace(",", ""))
+                        break
         if len(imgErrorCorrection) < 7:
             sendLog("Critical", "N/A", rowData, imgErrorCorrection, nameOffImage,
                     "Some fucky shit in row correction")
+            print(imgErrorCorrection)
+            print(nameOffImage)
             return None
+
         return imgErrorCorrection
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -1115,18 +1112,18 @@ class bdb(commands.Cog):
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 200:500 + 1920],config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result[0:0 + 1080, 0:300 + 120])).split("\n")
+            textOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 200:500 + 1920], None, fx=2, fy=2),config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=1.5, fy=1.5),config='--psm 6')).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
                 nameOffImage.remove('\x0c')
             textOffImage = list(filter(None, textOffImage))
-            rowNumber = 0
+
             for baseRow in textOffImage:
                 try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = rowCorrection(baseRow, nameOffImage)
                     #row = baseRow
-                    if row[0] != None:
+                    if row[0]:
                         discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
                         if discordID != "Not in company":
                             numberOfDiscordIDs.append(discordID)
@@ -1146,15 +1143,10 @@ class bdb(commands.Cog):
                                         "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
                             x = x + 1
                             j = j + 1
-                            rowNumber = rowNumber + 1
-
-
                         else:
                             worksheet.batch_update(update)
                             update.clear()
                             j = 0
-                    else:
-                        rowNumber = rowNumber + 1
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
