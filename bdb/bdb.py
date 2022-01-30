@@ -1114,8 +1114,8 @@ class bdb(commands.Cog):
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 220:500 + 1920], None, fx=1.7, fy=1.7),config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=2, fy=2),config='--psm 6')).split("\n")
+            textOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 250:500 + 1920], None, fx=1.7, fy=1.7),config='--psm 6')).split("\n")
+            nameOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=1.7, fy=1.7),config='--psm 6')).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
                 nameOffImage.remove('\x0c')
@@ -1296,10 +1296,10 @@ class bdb(commands.Cog):
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
             textOffImage = str(
-                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 220:500 + 1920], None,fx=1.7, fy=1.7),
+                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 250:500 + 1920], None,fx=1.7, fy=1.7),
                                             config='--psm 6')).split("\n")
             nameOffImage = str(
-                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=2, fy=2),
+                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=1.7, fy=1.7),
                                             config='--psm 6')).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
