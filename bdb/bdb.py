@@ -1105,7 +1105,7 @@ class bdb(commands.Cog):
             try:
                 image = cv2.imread(convetImageRGB(image),0)
                 #Edit for accuracy (Image read)
-                thresh = cv2.threshold(image, 180, 255, cv2.THRESH_BINARY)[1]
+                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
                 result = 255 - close
@@ -1114,7 +1114,7 @@ class bdb(commands.Cog):
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue), "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 200:500 + 1920], None, fx=1.5, fy=1.5),config='--psm 6')).split("\n")
+            textOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 220:500 + 1920], None, fx=1.7, fy=1.7),config='--psm 6')).split("\n")
             nameOffImage = str(pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=2, fy=2),config='--psm 6')).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
@@ -1285,7 +1285,7 @@ class bdb(commands.Cog):
             try:
                 image = cv2.imread(convetImageRGB(image), 0)
                 # Edit for accuracy (Image read)
-                thresh = cv2.threshold(image, 180, 255, cv2.THRESH_BINARY)[1]
+                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
                 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
                 result = 255 - close
@@ -1296,7 +1296,7 @@ class bdb(commands.Cog):
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
             textOffImage = str(
-                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 200:500 + 1920], None,fx=1.5, fy=1.5),
+                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 220:500 + 1920], None,fx=1.7, fy=1.7),
                                             config='--psm 6')).split("\n")
             nameOffImage = str(
                 pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=2, fy=2),
