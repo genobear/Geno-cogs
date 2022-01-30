@@ -1119,6 +1119,8 @@ class bdb(commands.Cog):
             nameOffImage = list(filter(None, nameOffImage))
             if '\x0c' in nameOffImage:
                 nameOffImage.remove('\x0c')
+            if '\x0c' in textOffImage:
+                textOffImage.remove('\x0c')
             textOffImage = list(filter(None, textOffImage))
 
             for baseRow in textOffImage:
@@ -1254,6 +1256,7 @@ class bdb(commands.Cog):
                     namesFromGlobalList[a] = word.replace(letter, "")
         worksheet1 = client.open("BDB Push Attendance").worksheet('Template For War')
         worksheet1.duplicate(new_sheet_name=Name)
+
         worksheet = client.open("BDB Push Attendance").worksheet(Name)
         worksheet.update('D2', Name)
         x = 8
@@ -1261,6 +1264,7 @@ class bdb(commands.Cog):
         updateGlobalStats = []
         j = 1
         peopleNotInCompany = []
+
         if not ctx.message.attachments:
             await ctx.send("Try again with images attached")
             return
@@ -1277,11 +1281,12 @@ class bdb(commands.Cog):
         for image in sorted(os.listdir(f'{ROOT_DIR}/Images/')):
             image = f"{ROOT_DIR}/Images/" + image
             issue = image
+            # textOffImage = imgProcession(image)
             try:
-                image = cv2.imread(image, 0)
+                image = cv2.imread(convetImageRGB(image), 0)
                 # Edit for accuracy (Image read)
-                thresh = cv2.threshold(image, 170, 255, cv2.THRESH_BINARY)[1]
-                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+                thresh = cv2.threshold(image, 180, 255, cv2.THRESH_BINARY)[1]
+                kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
                 close = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
                 result = 255 - close
             except Exception as e:
@@ -1290,46 +1295,49 @@ class bdb(commands.Cog):
                 sendLog("Critical", e, "Issue", (exc_type, fname, exc_tb.tb_lineno),
                         "Row Creation current row, check for consistency = " + str(issue),
                         "Fucky shit reading img text")
-            textOffImage = str(pytesseract.image_to_string(result, config='--psm 6')).split("\n")
-            nameOffImage = str(pytesseract.image_to_string(result)).split("\n")
+            textOffImage = str(
+                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 200:500 + 1920], None, fx=2, fy=2),
+                                            config='--psm 6')).split("\n")
+            nameOffImage = str(
+                pytesseract.image_to_string(cv2.resize(result[0:0 + 1080, 0:300 + 120], None, fx=2, fy=2),
+                                            config='--psm 6')).split("\n")
             nameOffImage = list(filter(None, nameOffImage))
+            if '\x0c' in nameOffImage:
+                nameOffImage.remove('\x0c')
+            if '\x0c' in textOffImage:
+                textOffImage.remove('\x0c')
             textOffImage = list(filter(None, textOffImage))
-            rowNumber = 0
+
             for baseRow in textOffImage:
                 try:
-                    row = rowCorrection(baseRow, nameOffImage, rowNumber)
+                    row = rowCorrection(baseRow, nameOffImage)
                     if row != None:
-                        discordID = getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
-                        if discordID != "Not in company":
-                            numberOfDiscordIDs.append(discordID)
-                        name = row[0]
-                        score = row[1]
-                        kills = row[2]
-                        deaths = row[3]
-                        assissts = row[4]
-                        healing = row[5]
-                        damage = row[6]
-                        if discordID.isdecimal():
-                            updateGlobalStats.append(updateGlobalStatEvent(discordID, discordIDFromGlobal, globalAllData))
-                        else:
-                            peopleNotInCompany.append(name)
-                        if j < 1000:
-                            update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
-                                           "values": [
-                                               [discordID, j, name, score, kills, deaths, assissts, healing, damage]]})
-                            x = x + 1
-                            j = j + 1
-                            rowNumber = rowNumber + 1
-
-
-                        else:
-                            dataFromGlobalList.batch_update(updateGlobalStats)
-                            worksheet.batch_update(update)
-                            update.clear()
-                            updateGlobalStats.clear()
-                            j = 0
-                    else:
-                        rowNumber = rowNumber + 1
+                        if row[0]:
+                            discordID = getDiscordID(row[0], namesFromGlobalList, discordIDFromGlobal)
+                            if discordID != "Not in company":
+                                numberOfDiscordIDs.append(discordID)
+                            name = row[0]
+                            score = row[1]
+                            kills = row[2]
+                            deaths = row[3]
+                            assissts = row[4]
+                            healing = row[5]
+                            damage = row[6]
+                            if discordID.isdecimal():
+                                updateGlobalStats.append(
+                                    updateGlobalStatEvent(discordID, discordIDFromGlobal, globalAllData))
+                            else:
+                                peopleNotInCompany.append(name)
+                            if j < 1000:
+                                update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+                                               "values": [[discordID, j, name, score, kills, deaths, assissts, healing,
+                                                           damage]]})
+                                x = x + 1
+                                j = j + 1
+                            else:
+                                worksheet.batch_update(update)
+                                update.clear()
+                                j = 0
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -1339,6 +1347,7 @@ class bdb(commands.Cog):
         print(updateGlobalStats)
         worksheet.batch_update(update)
         worksheet.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
+        await ctx.send("```" + "People not in company/n" + str(peopleNotInCompany) + "```")
 
         if "test" in Name:
             await ctx.send("test in Name, not updating global")
@@ -1348,6 +1357,7 @@ class bdb(commands.Cog):
             #     randomVariableToNotThrowError = 1
             #     await ctx.send(f"discordID length is {len(discordID)} im not updating global")
             can_react = ctx.channel.permissions_for(ctx.me).add_reactions
+
             message = "Would you like to update the global leaderboard with this data?"
             if not can_react:
                 message += " (y/n)"
@@ -1396,10 +1406,18 @@ class bdb(commands.Cog):
                     with contextlib.suppress(discord.Forbidden):
                         await query.clear_reactions()
 
-        # await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
-        await ctx.send("Updating global leaderboard")
-        dataFromGlobalList.batch_update(updateGlobalStats)
-        updateVersionNumber(dataFromGlobalList)
+            # await ctx.invoke(ctx.bot.get_cog("Core").reload, *updated_cognames)
+            await ctx.send("Updating global leaderboard")
+            dataFromGlobalList.batch_update(updateGlobalStats)
+            updateVersionNumber(dataFromGlobalList)
+
+        # duplicate to public sheet
+        template = client.open("BDB War Stats History").worksheet('Template For War')
+        template.duplicate(new_sheet_name=Name)
+        publicSheetForWar = client.open("BDB War Stats History").worksheet(Name)
+        publicSheetForWar.update('D2', Name)
+        publicSheetForWar.batch_update(update)
+        publicSheetForWar.update_title(str(Name) + " " + str(datetime.now().strftime("%d-%m-%Y")))
 
         # await ctx.message.delete()
         for filename in os.listdir(f'{ROOT_DIR}/Images'):
