@@ -377,6 +377,7 @@ def rowCorrection(rowData, nameOffImage):
                     if names == name:
                         name = nameCorrectionList[a]
                         return name
+            else:
                 return name
         else:
             return None
@@ -408,6 +409,7 @@ def rowCorrection(rowData, nameOffImage):
                 if data.isdecimal():
                     if data in imgErrorCorrection:
                         name = ", ".join(stuff.split()[:l])
+                        name = nameCorrection(name)
                         imgErrorCorrection.insert(0, name.replace(",", ""))
                         break
         if len(imgErrorCorrection) < 7:
@@ -1122,31 +1124,31 @@ class bdb(commands.Cog):
             for baseRow in textOffImage:
                 try:
                     row = rowCorrection(baseRow, nameOffImage)
-                    #row = baseRow
-                    if row[0]:
-                        discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
-                        if discordID != "Not in company":
-                            numberOfDiscordIDs.append(discordID)
-                        name = row[0]
-                        score = row[1]
-                        kills = row[2]
-                        deaths = row[3]
-                        assissts = row[4]
-                        healing = row[5]
-                        damage = row[6]
-                        if discordID.isdecimal():
-                            updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
-                        else:
-                            peopleNotInCompany.append(name)
-                        if j < 1000:
-                            update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
-                                        "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
-                            x = x + 1
-                            j = j + 1
-                        else:
-                            worksheet.batch_update(update)
-                            update.clear()
-                            j = 0
+                    if row != None:
+                        if row[0]:
+                            discordID = getDiscordID(row[0],namesFromGlobalList, discordIDFromGlobal)
+                            if discordID != "Not in company":
+                                numberOfDiscordIDs.append(discordID)
+                            name = row[0]
+                            score = row[1]
+                            kills = row[2]
+                            deaths = row[3]
+                            assissts = row[4]
+                            healing = row[5]
+                            damage = row[6]
+                            if discordID.isdecimal():
+                                updateGlobalStats.append(updateGlobalStatWar(discordID,discordIDFromGlobal,globalAllData,score,kills,deaths,assissts,healing,damage))
+                            else:
+                                peopleNotInCompany.append(name)
+                            if j < 1000:
+                                update.append({'range': 'C' + str(x) + ':' + 'K' + str(x),
+                                            "values": [[discordID,j,name,score,kills,deaths,assissts,healing,damage]]})
+                                x = x + 1
+                                j = j + 1
+                            else:
+                                worksheet.batch_update(update)
+                                update.clear()
+                                j = 0
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
