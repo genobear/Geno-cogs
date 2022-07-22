@@ -194,10 +194,10 @@ class bdbaoc(commands.Cog):
                                 update2.clear()
                             else:
                                 codeValidated = False
+                                loopCount = loopCount + 1
                                 await ctx.author.send("Code Invalid")
                         else:
                             await ctx.author.send("Code already in use")
-                        codeValidated = True
                     else:
                         sendError("User has maxed out loops")
                         print("Too many tries")
