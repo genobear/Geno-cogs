@@ -166,7 +166,7 @@ class bdbaoc(commands.Cog):
                 writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
                 #OutPutToUser
                 outMessage = "ashesofcreation.com/r/" + str(refSheet[-1][2])
-                
+
                 await ctx.send(outMessage)
 
                 update = []
@@ -193,6 +193,7 @@ class bdbaoc(commands.Cog):
                             await ctx.send("Code Invalid")
                     else:
                         await ctx.send("Code already in use")
+                    codeValidated = True
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
                 await ctx.send(apologyMessage)
