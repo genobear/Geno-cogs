@@ -65,4 +65,8 @@ class bdbaoc(commands.Cog):
         await ctx.send(file=discord.File(f"{filename}.txt"))
         await ctx.send(file=discord.File(f"{filename2}.txt"))
         await ctx.send(file=discord.File(f"{filename3}.txt"))
-        #await ctx.send(member_names)        
+        #await ctx.send(member_names) 
+
+    @commands.command()
+    async def test(self, ctx):
+        ctx.send(f"Your discord ID is {ctx.User}")       
