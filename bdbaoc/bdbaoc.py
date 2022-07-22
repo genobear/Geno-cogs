@@ -146,7 +146,7 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def requestCode(self, ctx):
+    async def requestCode(self, ctx, code):
         notInSheet = True
         #What Geno needs to get
         discordID = str(ctx.author.id)
@@ -175,10 +175,10 @@ class bdbaoc(commands.Cog):
                 allCodesOnSheet = writeToSheet.col_values(3)
                 #Ask User for generated ref code
                 while codeValidated == False:
-                    print("Please type in your generated code")
-                    code = input()
+                    #print("Please type in your generated code")
+                    #code = input()
                     if code not in allCodesOnSheet:
-                        if await checkCode(code) == True:
+                        if await self.checkCode(code) == True:
                             print("Code Validated")
                             codeValidated = True
                             update2 = []
