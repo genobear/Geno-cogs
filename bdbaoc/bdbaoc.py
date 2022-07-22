@@ -155,7 +155,7 @@ class bdbaoc(commands.Cog):
         discordID = str(ctx.author.id)
         discordUsername = str(ctx.author)
         if discordID == "333347542727262210":
-            await ctx.send("Dot fuck off you greedy fuck.")
+            await ctx.author.send("Dot fuck off you greedy fuck.")
 
         refSheet = client.open('BDB AoC Member Check').worksheet("Referrals ").get_all_values()
 
@@ -168,7 +168,7 @@ class bdbaoc(commands.Cog):
                 #OutPutToUser
                 outMessage = "https://ashesofcreation.com/sign-up/r/" + str(refSheet[-1][2])
 
-                await ctx.send(outMessage)
+                await ctx.author.send(outMessage)
 
                 update = []
                 update.append({'range': 'D' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [[discordUsername]]})
@@ -179,11 +179,11 @@ class bdbaoc(commands.Cog):
                 allCodesOnSheet = writeToSheet.col_values(3)
                 #Ask User for generated ref code
                 while codeValidated == False:
-                    #await ctx.send("Please type in your generated code")
+                    #await ctx.author.send("Please type in your generated code")
                     #code = input()
                     if code not in allCodesOnSheet:
                         if await self.checkCode(code) == True:
-                            await ctx.send("Code Validated")
+                            await ctx.author.send("Code Validated")
                             codeValidated = True
                             update2 = []
                             update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
@@ -191,20 +191,20 @@ class bdbaoc(commands.Cog):
                             update2.clear()
                         else:
                             codeValidated = False
-                            await ctx.send("Code Invalid")
+                            await ctx.author.send("Code Invalid")
                     else:
-                        await ctx.send("Code already in use")
+                        await ctx.author.send("Code already in use")
                     codeValidated = True
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
-                await ctx.send(apologyMessage)
+                await ctx.author.send(apologyMessage)
         else:
             for a, userID in enumerate(refSheet):
                 if userID[1] == discordID:
                     #OutPutUser
-                    await ctx.send(a)
+                    await ctx.author.send(a)
                     message = "You've already been assigned a code. You're code has come frome " + refSheet[a-1][0] +", if you have an issue with this please contact an officer. Here is your code: \n" + refSheet[a-1][2]
-                    await ctx.send(message)
+                    await ctx.author.send(message)
 
         #BlockSecondDiscordRef
         #Spit Out Old One
