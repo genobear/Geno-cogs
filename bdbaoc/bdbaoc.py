@@ -150,6 +150,10 @@ class bdbaoc(commands.Cog):
             driver.close()
             return False
 
+    @client.event
+    async def on_message(message):
+        return message
+
     @commands.command()
     async def requestCode(self, ctx):
         notInSheet = True
@@ -185,7 +189,7 @@ class bdbaoc(commands.Cog):
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
                         await ctx.author.send("Please type in your generated code")
-                        code = await self.bot.wait_for("message", check=MessagePredicate.same_context(ctx.author))
+                        code = await self.on_message()
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
                                 await ctx.author.send("Code Validated")
