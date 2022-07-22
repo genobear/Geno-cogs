@@ -183,7 +183,7 @@ class bdbaoc(commands.Cog):
                 #OutPutToUser
                 outMessage = "https://ashesofcreation.com/sign-up/r/" + str(refSheet[-1][2])
                 await ctx.author.send(
-                    """1. Follow the link below to create an account
+                    f"""1. Follow the link to create an account({outMessage})
 2. Make sure you use the given referal code is applied
 3. Sign up and wait for the success popup
 **PART2**
