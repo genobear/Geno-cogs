@@ -3,6 +3,7 @@ from redbot.core import commands
 from redbot.core.utils.predicates import MessagePredicate
 from discord.ext import tasks
 import discord
+import asyncio
 
 #######################
 ####rootooo stuff####
