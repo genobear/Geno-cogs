@@ -187,10 +187,11 @@ class bdbaoc(commands.Cog):
                     if loopCount < maxAllowLoopCount:
                         await ctx.author.send("Please type in your generated code")
                         
-                        authorid = ctx.author.id
+                        authorid = str(ctx.author.id)
                         def check(m):                            
-                            return  m.author.id == authorid
+                            return  str(m.author.id) == authorid
                         code = await self.bot.wait_for("message", check=check, timeout=300)
+                        code = code.content
 
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
