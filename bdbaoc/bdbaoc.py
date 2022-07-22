@@ -17,10 +17,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+# chrome_options.headless = True # also works
 
 from discord import Webhook, RequestsWebhookAdapter
 
 ############################################
+
+from dotenv import load_dotenv #Use to load secrets. Like webhook URL etc.
 
 #Conect to Database
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +35,20 @@ client = gspread.authorize(creds)
 sheetName = 'BDB AoC Member Check'
 Website = 'https://ashesofcreation.com/sign-up'
 
+load_dotenv() #loads secrets from .env file in root.
+roowebhookurl = os.environ.get('roowebhookurl')
+BDBLOGGERURL = os.environ.get('BDBLOGGERURL')
+
+rooWebHook = Webhook.from_url(
+    str(roowebhookurl),
+    adapter=RequestsWebhookAdapter())
+BDBLOGGER = Webhook.from_url(
+    str(BDBLOGGERURL), 
+    adapter=RequestsWebhookAdapter())
+
+def sendError(Emsg):
+    rooWebHook.send(Emsg)
+    BDBLOGGER.send(Emsg)
 
 
 class bdbaoc(commands.Cog):
@@ -99,8 +118,86 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def test(self, ctx):
-        await ctx.send(f"Your discord ID is {ctx.author.id}")
+        await ctx.send(f"Your discord ID is {ctx.author.id} & username is {ctx.author.username}")
+        await ctx.send(f"ctx.author {ctx.author}")
+        await ctx.send(f"ctx.member {ctx.member}")
+        await ctx.send(f"ctx.author.username {ctx.author.username}")
+
 
     @commands.command()
     async def rootdir(self, ctx):
-        await ctx.send(f"ROOT_DIR is: {ROOT_DIR}")       
+        await ctx.send(f"ROOT_DIR is: {ROOT_DIR}")
+
+    async def checkCode(self, code):
+        driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver', options=chrome_options)
+        driver.get(Website)
+        driver.find_element(By.XPATH, "/html/body/aoc-web-root/aoc-web-sign-up-form/div/div[3]/form/div[7]/div/aoc-web-form-field-input-wrap/div/input").send_keys(code)
+        time.sleep(2)
+        driver.find_element(By.XPATH, "/html/body/aoc-web-root/aoc-web-sign-up-form/div/div[3]/form/div[7]/div/span/aoc-web-button-wrap/div/div/div").click()
+
+        try:
+            driver.find_element(By.XPATH, "//*[contains(text(), 'Code applied')]")
+            driver.close()
+            return True
+        except:
+            driver.close()
+            return False
+
+    @commands.command()
+    async def requestCode(self, ctx, discordID, discordUsername):
+        notInSheet = True
+        #What Geno needs to get
+        discordID
+        discordUsername
+        if discordID == "333347542727262210":
+            print("Dot fuck off you greedy fuck.")
+
+        refSheet = client.open('BDB AoC Member Check').worksheet("Referrals ").get_all_values()
+
+        for x in refSheet:
+            if discordID in x:
+                notInSheet = False
+        if notInSheet:
+            if 'Awaiting Hand Out' in refSheet[-1]:
+                writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
+                #OutPutToUser
+                outMessage = ""
+                print(refSheet[-1][2])
+
+                update = []
+                update.append({'range': 'D' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [[discordUsername]]})
+                update.append({'range': 'A' + str(len(refSheet) + 1) + ':' + 'B' + str(len(refSheet) + 1), "values": [[discordUsername, discordID]]})
+                writeToSheet.batch_update(update)
+                update.clear()
+                codeValidated = False
+                allCodesOnSheet = writeToSheet.col_values(3)
+                #Ask User for generated ref code
+                while codeValidated == False:
+                    print("Please type in your generated code")
+                    code = input()
+                    if code not in allCodesOnSheet:
+                        if await checkCode(code) == True:
+                            print("Code Validated")
+                            codeValidated = True
+                            update2 = []
+                            update.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
+                            writeToSheet.batch_update(update2)
+                            update2.clear()
+                        else:
+                            codeValidated = False
+                            print("Code Invalid")
+                    else:
+                        print("Code already in use")
+            else:
+                apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
+                print(apologyMessage)
+        else:
+            for a, userID in enumerate(refSheet):
+                if userID[1] == discordID:
+                    #OutPutUser
+                    print(a)
+                    message = "You've already been assigned a code. You're code has come frome " + refSheet[a-1][0] +", if you have an issue with this please contact an officer. Here is your code: \n" + refSheet[a-1][2]
+                    print(message)
+
+        #BlockSecondDiscordRef
+        #Spit Out Old One
