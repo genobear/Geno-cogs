@@ -177,24 +177,30 @@ class bdbaoc(commands.Cog):
                 update.clear()
                 codeValidated = False
                 allCodesOnSheet = writeToSheet.col_values(3)
+                loopCount = 0
+                maxAllowLoopCount = 15
                 #Ask User for generated ref code
                 while codeValidated == False:
-                    #await ctx.author.send("Please type in your generated code")
-                    #code = input()
-                    if code not in allCodesOnSheet:
-                        if await self.checkCode(code) == True:
-                            await ctx.author.send("Code Validated")
-                            codeValidated = True
-                            update2 = []
-                            update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
-                            writeToSheet.batch_update(update2)
-                            update2.clear()
+                    if loopCount < maxAllowLoopCount:
+                        #await ctx.author.send("Please type in your generated code")
+                        #code = input()
+                        if code not in allCodesOnSheet:
+                            if await self.checkCode(code) == True:
+                                await ctx.author.send("Code Validated")
+                                codeValidated = True
+                                update2 = []
+                                update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
+                                writeToSheet.batch_update(update2)
+                                update2.clear()
+                            else:
+                                codeValidated = False
+                                await ctx.author.send("Code Invalid")
                         else:
-                            codeValidated = False
-                            await ctx.author.send("Code Invalid")
+                            await ctx.author.send("Code already in use")
+                        codeValidated = True
                     else:
-                        await ctx.author.send("Code already in use")
-                    codeValidated = True
+                        sendError("User has maxed out loops")
+                        print("Too many tries")
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
                 await ctx.author.send(apologyMessage)
