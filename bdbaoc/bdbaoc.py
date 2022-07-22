@@ -37,8 +37,8 @@ sheetName = 'BDB AoC Member Check'
 Website = 'https://ashesofcreation.com/sign-up'
 
 load_dotenv(dotenv_path) #loads secrets from .env file in root.
-roowebhookurl = os.environ.get('roowebhookurl')
-BDBLOGGERURL = os.environ.get('BDBLOGGERURL')
+roowebhookurl = os.environ.get('roowebhook')
+BDBLOGGERURL = os.environ.get('BDBLOGGER')
 
 # rooWebHook = Webhook.from_url(
 #     str(roowebhookurl),
