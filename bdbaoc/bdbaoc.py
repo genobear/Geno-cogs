@@ -1,5 +1,6 @@
 #core redbot/discord stuff
 from redbot.core import commands
+from redbot.core.utils.predicates import MessagePredicate
 from discord.ext import tasks
 import discord
 
@@ -17,6 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
@@ -182,8 +184,8 @@ class bdbaoc(commands.Cog):
                 #Ask User for generated ref code
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
-                        #await ctx.author.send("Please type in your generated code")
-                        #code = input()
+                        await ctx.author.send("Please type in your generated code")
+                        code = await self.bot.wait_for("message", check=MessagePredicate.same_context(ctx))
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
                                 await ctx.author.send("Code Validated")
