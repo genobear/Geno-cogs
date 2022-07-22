@@ -238,7 +238,6 @@ class bdbaoc(commands.Cog):
             for a, userID in enumerate(refSheet):
                 if userID[1] == discordID:
                     #OutPutUser
-                    await ctx.author.send(a)
                     message = "You've already been assigned a code. You're code has come frome " + refSheet[a-1][0] +", if you have an issue with this please contact an officer. Here is your code: \n" + refSheet[a-1][2]
                     await ctx.author.send(message)
 
