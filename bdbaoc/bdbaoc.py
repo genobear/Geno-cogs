@@ -151,8 +151,9 @@ class bdbaoc(commands.Cog):
             return False
 
     @client.event
-    async def on_message(message):
-        return message
+    async def on_message(message, ID):
+        if ctx.author.id == ID:
+            return message
 
     @commands.command()
     async def requestCode(self, ctx):
@@ -189,7 +190,7 @@ class bdbaoc(commands.Cog):
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
                         await ctx.author.send("Please type in your generated code")
-                        code = await self.on_message()
+                        code = await self.on_message(ctx.author.id)
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
                                 await ctx.author.send("Code Validated")
