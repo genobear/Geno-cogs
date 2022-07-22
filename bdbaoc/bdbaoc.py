@@ -150,13 +150,13 @@ class bdbaoc(commands.Cog):
             driver.close()
             return False
 
-    @client.event
-    async def on_message(message, ID):
-        if message.author.id == ID:
-            return message.content
-
     @commands.command()
     async def requestCode(self, ctx):
+        @commands.Cog.listener()
+        async def on_message(message, ID):
+            if message.author.id == ID:
+                return message.content
+
         notInSheet = True
         #What Geno needs to get
         discordID = str(ctx.author.id)
