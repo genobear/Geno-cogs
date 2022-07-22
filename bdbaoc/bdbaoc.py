@@ -192,7 +192,6 @@ After you have created your account
 2. Click generate referral code
 3. Wait for a new box to pup up with your code. BE PATIENT, this can take a while"""
                     )
-                await ctx.author.send(outMessage)
 
                 update = []
                 update.append({'range': 'D' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [[discordUsername]]})
