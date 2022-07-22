@@ -69,4 +69,4 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def test(self, ctx):
-        ctx.send(f"Your discord ID is {ctx.User}")       
+        ctx.send(f"Your discord ID is {ctx.author.id}")       
