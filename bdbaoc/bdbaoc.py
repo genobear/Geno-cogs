@@ -165,8 +165,9 @@ class bdbaoc(commands.Cog):
             if 'Awaiting Hand Out' in refSheet[-1]:
                 writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
                 #OutPutToUser
-                outMessage = ""
-                await ctx.send(refSheet[-1][2])
+                outMessage = "ashesofcreation.com/r/" + str(refSheet[-1][2])
+                
+                await ctx.send(outMessage)
 
                 update = []
                 update.append({'range': 'D' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [[discordUsername]]})
@@ -184,7 +185,7 @@ class bdbaoc(commands.Cog):
                             await ctx.send("Code Validated")
                             codeValidated = True
                             update2 = []
-                            update.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
+                            update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
                             writeToSheet.batch_update(update2)
                             update2.clear()
                         else:
