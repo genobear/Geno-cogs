@@ -194,9 +194,10 @@ class bdbaoc(commands.Cog):
                         try:    
                             code = await self.bot.wait_for("message", check=check, timeout=5.0)
                         except asyncio.TimeoutError:
-                            ctx.author.send("Timeout try again")                            
+                            await ctx.author.send("Timeout try again")
+                            loopCount = loopCount + 1                            
                         else:
-                            ctx.author.send("Checking code...")
+                            await ctx.author.send("Checking code...")
                             code = code.content
 
                             if code not in allCodesOnSheet:
