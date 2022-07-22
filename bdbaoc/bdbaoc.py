@@ -149,8 +149,8 @@ class bdbaoc(commands.Cog):
     async def requestCode(self, ctx):
         notInSheet = True
         #What Geno needs to get
-        discordID = ctx.author.id
-        discordUsername = ctx.author
+        discordID = str(ctx.author.id)
+        discordUsername = str(ctx.author)
         if discordID == "333347542727262210":
             print("Dot fuck off you greedy fuck.")
 
