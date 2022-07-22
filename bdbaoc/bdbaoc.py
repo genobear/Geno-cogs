@@ -165,7 +165,7 @@ class bdbaoc(commands.Cog):
             if 'Awaiting Hand Out' in refSheet[-1]:
                 writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
                 #OutPutToUser
-                outMessage = "ashesofcreation.com/r/" + str(refSheet[-1][2])
+                outMessage = "https://ashesofcreation.com/sign-up/r/" + str(refSheet[-1][2])
 
                 await ctx.send(outMessage)
 
