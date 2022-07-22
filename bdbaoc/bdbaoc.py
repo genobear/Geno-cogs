@@ -190,7 +190,12 @@ class bdbaoc(commands.Cog):
                         authorid = str(ctx.author.id)
                         def check(m):                            
                             return  str(m.author.id) == authorid
-                        code = await self.bot.wait_for("message", check=check, timeout=300)
+                        try:    
+                            code = await self.bot.wait_for("message", check=check, timeout=300)
+                        except:
+                            ctx.author.send("Timeout try again")
+                        else:
+                            ctx.author.send("Checking code...")
                         code = code.content
 
                         if code not in allCodesOnSheet:
