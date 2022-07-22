@@ -203,10 +203,10 @@ class bdbaoc(commands.Cog):
                         def check(m):                            
                             return  str(m.author.id) == authorid
                         try:    
-                            code = await self.bot.wait_for("message", check=check, timeout=5.0)
+                            code = await self.bot.wait_for("message", check=check, timeout=10.0)
                         except asyncio.TimeoutError:
-                            await ctx.author.send("Timeout try again")
-                            loopCount = loopCount + 1                            
+                            await ctx.author.send("Timeout, use command again!")
+                            return                            
                         else:
                             await ctx.author.send("Checking code...")
                             code = code.content
