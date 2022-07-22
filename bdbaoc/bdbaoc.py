@@ -29,13 +29,14 @@ from dotenv import load_dotenv #Use to load secrets. Like webhook URL etc.
 
 #Conect to Database
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+dotenv_path = os.path.dirname(os.path.abspath(__file__), '.env')
 scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope)
 client = gspread.authorize(creds)
 sheetName = 'BDB AoC Member Check'
 Website = 'https://ashesofcreation.com/sign-up'
 
-load_dotenv() #loads secrets from .env file in root.
+load_dotenv(dotenv_path) #loads secrets from .env file in root.
 roowebhookurl = os.environ.get('roowebhookurl')
 BDBLOGGERURL = os.environ.get('BDBLOGGERURL')
 
