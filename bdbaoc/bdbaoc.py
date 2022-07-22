@@ -151,7 +151,7 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def requestCode(self, ctx, code):
+    async def requestCode(self, ctx):
         notInSheet = True
         #What Geno needs to get
         discordID = str(ctx.author.id)
