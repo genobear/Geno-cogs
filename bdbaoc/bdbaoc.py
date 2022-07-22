@@ -199,8 +199,9 @@ class bdbaoc(commands.Cog):
                         else:
                             await ctx.author.send("Code already in use")
                     else:
+                        codeValidated = True
                         sendError("User has maxed out loops")
-                        print("Too many tries")
+                        await ctx.author.send("Too many tries")
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
                 await ctx.author.send(apologyMessage)
