@@ -152,7 +152,7 @@ class bdbaoc(commands.Cog):
         discordID = str(ctx.author.id)
         discordUsername = str(ctx.author)
         if discordID == "333347542727262210":
-            print("Dot fuck off you greedy fuck.")
+            await ctx.send("Dot fuck off you greedy fuck.")
 
         refSheet = client.open('BDB AoC Member Check').worksheet("Referrals ").get_all_values()
 
@@ -164,7 +164,7 @@ class bdbaoc(commands.Cog):
                 writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
                 #OutPutToUser
                 outMessage = ""
-                print(refSheet[-1][2])
+                await ctx.send(refSheet[-1][2])
 
                 update = []
                 update.append({'range': 'D' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [[discordUsername]]})
@@ -175,11 +175,11 @@ class bdbaoc(commands.Cog):
                 allCodesOnSheet = writeToSheet.col_values(3)
                 #Ask User for generated ref code
                 while codeValidated == False:
-                    #print("Please type in your generated code")
+                    #await ctx.send("Please type in your generated code")
                     #code = input()
                     if code not in allCodesOnSheet:
                         if await self.checkCode(code) == True:
-                            print("Code Validated")
+                            await ctx.send("Code Validated")
                             codeValidated = True
                             update2 = []
                             update.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
@@ -187,19 +187,19 @@ class bdbaoc(commands.Cog):
                             update2.clear()
                         else:
                             codeValidated = False
-                            print("Code Invalid")
+                            await ctx.send("Code Invalid")
                     else:
-                        print("Code already in use")
+                        await ctx.send("Code already in use")
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
-                print(apologyMessage)
+                await ctx.send(apologyMessage)
         else:
             for a, userID in enumerate(refSheet):
                 if userID[1] == discordID:
                     #OutPutUser
-                    print(a)
+                    await ctx.send(a)
                     message = "You've already been assigned a code. You're code has come frome " + refSheet[a-1][0] +", if you have an issue with this please contact an officer. Here is your code: \n" + refSheet[a-1][2]
-                    print(message)
+                    await ctx.send(message)
 
         #BlockSecondDiscordRef
         #Spit Out Old One
