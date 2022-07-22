@@ -103,4 +103,4 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def rootdir(self, ctx):
-        await ctx.send(f"ROOT DIR is: {ROOTDIR}")       
+        await ctx.send(f"ROOT_DIR is: {ROOT_DIR}")       
