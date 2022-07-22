@@ -152,10 +152,6 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def requestCode(self, ctx):
-        @commands.Cog.listener()
-        async def on_message(message, ID):
-            if message.author.id == ID:
-                return message.content
 
         notInSheet = True
         #What Geno needs to get
@@ -185,12 +181,17 @@ class bdbaoc(commands.Cog):
                 codeValidated = False
                 allCodesOnSheet = writeToSheet.col_values(3)
                 loopCount = 0
-                maxAllowLoopCount = 15
+                maxAllowLoopCount = 3
                 #Ask User for generated ref code
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
                         await ctx.author.send("Please type in your generated code")
-                        code = await on_message(code, ctx.author.id)
+                        
+                        authorid = ctx.author.id
+                        def check(m):                            
+                            return  m.author.id == authorid
+                        code = await self.bot.wait_for("message", check=check, timeout=300)
+
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
                                 await ctx.author.send("Code Validated")
