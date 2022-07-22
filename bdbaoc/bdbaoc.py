@@ -123,6 +123,7 @@ class bdbaoc(commands.Cog):
         await ctx.send(f"ctx.author {ctx.author}")
         await ctx.send(f"roowebhookurl:{roowebhookurl}")
         await ctx.send(f"BDBLOGGERURL:{BDBLOGGERURL}")
+        await ctx.send(f"dotenvpath: {dotenv_path}")
 
 
     @commands.command()
