@@ -153,7 +153,7 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def getcode(self, ctx):
-        ctx.send("Check your DM's!")
+        await ctx.send("Check your DM's!")
         def clearLastEntry():
             refSheet = client.open('BDB AoC Member Check').worksheet("Referrals ").get_all_values()
             writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
