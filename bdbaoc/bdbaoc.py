@@ -1,6 +1,36 @@
+#core redbot/discord stuff
 from redbot.core import commands
 from discord.ext import tasks
 import discord
+
+#######################
+####rootooo stuff####
+#######################
+import os
+import time
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+from discord import Webhook, RequestsWebhookAdapter
+
+############################################
+
+#Conect to Database
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope)
+client = gspread.authorize(creds)
+sheetName = 'BDB AoC Member Check'
+Website = 'https://ashesofcreation.com/sign-up'
+
+
 
 class bdbaoc(commands.Cog):
     "Version 2 of the great BDB cog."
@@ -69,4 +99,8 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def test(self, ctx):
-        await ctx.send(f"Your discord ID is {ctx.author.id}")       
+        await ctx.send(f"Your discord ID is {ctx.author.id}")
+
+    @commands.command()
+    async def rootdir(self, ctx):
+        await ctx.send(f"ROOT DIR is: {ROOTDIR}")       
