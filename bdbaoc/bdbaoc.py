@@ -20,6 +20,7 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.addArguments("--no-sandbox");
 chrome_options.addArguments("--disable-dev-shm-usage");
+chrome_options.add_argument("--headless")
 # chrome_options.headless = True # also works
 
 from discord import Webhook, RequestsWebhookAdapter
