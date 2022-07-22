@@ -1,5 +1,5 @@
-from .bdb import bdb
+from .bdbaoc import bdbaoc
 
 
 def setup(bot):
-    bot.add_cog(bdb(bot))
+    bot.add_cog(bdbaoc(bot))
