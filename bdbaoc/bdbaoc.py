@@ -192,7 +192,7 @@ class bdbaoc(commands.Cog):
                             return  str(m.author.id) == authorid
                         try:    
                             code = await self.bot.wait_for("message", check=check, timeout=5.0)
-                        except:
+                        except asyncio.TimeoutError:
                             ctx.author.send("Timeout try again")                            
                         else:
                             ctx.author.send("Checking code...")
