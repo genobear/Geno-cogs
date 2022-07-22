@@ -39,16 +39,16 @@ load_dotenv() #loads secrets from .env file in root.
 roowebhookurl = os.environ.get('roowebhookurl')
 BDBLOGGERURL = os.environ.get('BDBLOGGERURL')
 
-rooWebHook = Webhook.from_url(
-    str(roowebhookurl),
-    adapter=RequestsWebhookAdapter())
-BDBLOGGER = Webhook.from_url(
-    str(BDBLOGGERURL), 
-    adapter=RequestsWebhookAdapter())
+# rooWebHook = Webhook.from_url(
+#     str(roowebhookurl),
+#     adapter=RequestsWebhookAdapter())
+# BDBLOGGER = Webhook.from_url(
+#     str(BDBLOGGERURL), 
+#     adapter=RequestsWebhookAdapter())
 
-def sendError(Emsg):
-    rooWebHook.send(Emsg)
-    BDBLOGGER.send(Emsg)
+# def sendError(Emsg):
+#     rooWebHook.send(Emsg)
+#     BDBLOGGER.send(Emsg)
 
 
 class bdbaoc(commands.Cog):
