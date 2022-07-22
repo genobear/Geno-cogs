@@ -29,7 +29,7 @@ from dotenv import load_dotenv #Use to load secrets. Like webhook URL etc.
 
 #Conect to Database
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-dotenv_path = os.path.dirname(os.path.abspath(__file__), '.env')
+dotenv_path = os.path.join(ROOT_DIR, '.env')
 scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(ROOT_DIR, 'client2.json'), scope)
 client = gspread.authorize(creds)
