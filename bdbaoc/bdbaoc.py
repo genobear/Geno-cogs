@@ -191,27 +191,27 @@ class bdbaoc(commands.Cog):
                         def check(m):                            
                             return  str(m.author.id) == authorid
                         try:    
-                            code = await self.bot.wait_for("message", check=check, timeout=300)
+                            code = await self.bot.wait_for("message", check=check, timeout=5.0)
                         except:
-                            ctx.author.send("Timeout try again")
+                            ctx.author.send("Timeout try again")                            
                         else:
                             ctx.author.send("Checking code...")
-                        code = code.content
+                            code = code.content
 
-                        if code not in allCodesOnSheet:
-                            if await self.checkCode(code) == True:
-                                await ctx.author.send("Code Validated")
-                                codeValidated = True
-                                update2 = []
-                                update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
-                                writeToSheet.batch_update(update2)
-                                update2.clear()
+                            if code not in allCodesOnSheet:
+                                if await self.checkCode(code) == True:
+                                    await ctx.author.send("Code Validated")
+                                    codeValidated = True
+                                    update2 = []
+                                    update2.append({'range': 'C' + str(len(refSheet) + 1) + ':' + 'D' + str(len(refSheet) + 1),"values": [[code, "Awaiting Hand Out"]]})
+                                    writeToSheet.batch_update(update2)
+                                    update2.clear()
+                                else:
+                                    codeValidated = False
+                                    loopCount = loopCount + 1
+                                    await ctx.author.send("Code Invalid")
                             else:
-                                codeValidated = False
-                                loopCount = loopCount + 1
-                                await ctx.author.send("Code Invalid")
-                        else:
-                            await ctx.author.send("Code already in use")
+                                await ctx.author.send("Code already in use")
                     else:
                         codeValidated = True
                         sendError("User has maxed out loops")
