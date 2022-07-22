@@ -154,6 +154,17 @@ class bdbaoc(commands.Cog):
     @commands.command()
     async def requestCode(self, ctx):
 
+        def clearLastEntry():
+            refSheet = client.open('BDB AoC Member Check').worksheet("Referrals ").get_all_values()
+            writeToSheet = client.open('BDB AoC Member Check').worksheet("Referrals ")
+            update = []
+            update.append(
+                {'range': 'A' + str(len(refSheet)) + ':' + 'D' + str(len(refSheet)), "values": [["", "", "", ""]]})
+            update.append({'range': 'D' + str(len(refSheet) - 1) + ':' + 'D' + str(len(refSheet) - 1),
+                           "values": [["Awaiting Hand Out"]]})
+            writeToSheet.batch_update(update)
+            update.clear()
+
         notInSheet = True
         #What Geno needs to get
         discordID = str(ctx.author.id)
@@ -217,6 +228,7 @@ class bdbaoc(commands.Cog):
                     else:
                         codeValidated = True
                         sendError("User has maxed out loops")
+                        clearLastEntry()
                         await ctx.author.send("Too many tries")
             else:
                 apologyMessage = "Sorry no codes available currently waiting for " + refSheet[-1][0] + " to provide their code. If this continues to be a problem please contact an officer."
