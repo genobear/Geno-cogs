@@ -184,13 +184,13 @@ class bdbaoc(commands.Cog):
                 outMessage = "https://ashesofcreation.com/sign-up/r/" + str(refSheet[-1][2])
                 await ctx.author.send(
                     """1. Follow the link below to create an account
-                    2. Make sure you use the given referal code is applied
-                    3. Sign up and wait for the success popup
-                    **PART2**
-                    After you have created your account
-                    1. To get your code https://ashesofcreation.com/settings/referrals
-                    2. Click generate referral code
-                    3. Wait for a new box to pup up with your code. BE PATIENT, this can take a while"""
+2. Make sure you use the given referal code is applied
+3. Sign up and wait for the success popup
+**PART2**
+After you have created your account
+1. To get your code https://ashesofcreation.com/settings/referrals
+2. Click generate referral code
+3. Wait for a new box to pup up with your code. BE PATIENT, this can take a while"""
                     )
                 await ctx.author.send(outMessage)
 
