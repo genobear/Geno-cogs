@@ -120,8 +120,8 @@ class bdbaoc(commands.Cog):
     async def test(self, ctx):
         await ctx.send(f"Your discord ID is {ctx.author.id}")
         await ctx.send(f"ctx.author {ctx.author}")
-        await ctx.send(f"ctx.member {ctx.member}")
-        await ctx.send(f"ctx.author.username {ctx.author.username}")
+        await ctx.send(f"roowebhookurl:{roowebhookurl}")
+        await ctx.send(f"BDBLOGGERURL:{BDBLOGGERURL}")
 
 
     @commands.command()
@@ -144,11 +144,11 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def requestCode(self, ctx, discordID, discordUsername):
+    async def requestCode(self, ctx):
         notInSheet = True
         #What Geno needs to get
-        discordID
-        discordUsername
+        discordID = ctx.author.id
+        discordUsername = ctx.author
         if discordID == "333347542727262210":
             print("Dot fuck off you greedy fuck.")
 
