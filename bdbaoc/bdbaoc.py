@@ -185,7 +185,7 @@ class bdbaoc(commands.Cog):
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
                         await ctx.author.send("Please type in your generated code")
-                        code = await self.bot.wait_for("message", check=MessagePredicate.same_context(ctx))
+                        code = await self.bot.wait_for("message", check=MessagePredicate.same_context(ctx.author))
                         if code not in allCodesOnSheet:
                             if await self.checkCode(code) == True:
                                 await ctx.author.send("Code Validated")
