@@ -197,13 +197,13 @@ class bdbaoc(commands.Cog):
                 #Ask User for generated ref code
                 while codeValidated == False:
                     if loopCount < maxAllowLoopCount:
-                        await ctx.author.send("Please type in your generated code")
+                        await ctx.author.send("Please type in your generated code, you have 5 minutes.")
                         
                         authorid = str(ctx.author.id)
                         def check(m):                            
                             return  str(m.author.id) == authorid
                         try:    
-                            code = await self.bot.wait_for("message", check=check, timeout=10.0)
+                            code = await self.bot.wait_for("message", check=check, timeout=300.0)
                         except asyncio.TimeoutError:
                             await ctx.author.send("Timeout, use command again!")
                             clearLastEntry()
