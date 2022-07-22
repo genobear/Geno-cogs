@@ -131,7 +131,7 @@ class bdbaoc(commands.Cog):
         await ctx.send(f"ROOT_DIR is: {ROOT_DIR}")
 
     async def checkCode(self, code):
-        driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver', options=chrome_options)
+        driver = webdriver.Chrome('/usr/bin/chromedriver', options=chrome_options)
         driver.get(Website)
         driver.find_element(By.XPATH, "/html/body/aoc-web-root/aoc-web-sign-up-form/div/div[3]/form/div[7]/div/aoc-web-form-field-input-wrap/div/input").send_keys(code)
         time.sleep(2)
