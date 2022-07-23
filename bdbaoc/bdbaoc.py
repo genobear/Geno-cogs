@@ -165,8 +165,8 @@ class bdbaoc(commands.Cog):
             for a in sheetDetails:
                 if a[1] == arg:
                     #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
-                    response = "```" + (tabulate([["Servers Found on:","Joined at:","No. Servers:","Known Usernames:","Date Found:","Known Nicknames: ","Date Found:"],
-                            [a[2],a[3],a[4],a[5],a[6],a[7],a[8]]],headers='firstrow',tablefmt='psql')) + "```"
+                    response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
+                            [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
             response = "User not in database"
         await ctx.send("%s" % response)
