@@ -143,7 +143,7 @@ class bdbaoc(commands.Cog):
         driver.implicitly_wait(20)
         driver.get(Website)
         driver.find_element(By.XPATH, "/html/body/aoc-web-root/aoc-web-sign-up-form/div/div[3]/form/div[7]/div/aoc-web-form-field-input-wrap/div/input").send_keys(code)
-        time.sleep(2)
+        time.sleep(4)
         driver.find_element(By.XPATH, "/html/body/aoc-web-root/aoc-web-sign-up-form/div/div[3]/form/div[7]/div/span/aoc-web-button-wrap/div/div/div").click()
 
         try:
