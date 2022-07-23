@@ -205,7 +205,7 @@ class bdbaoc(commands.Cog):
                 await ctx.author.send(
                     f"""**PART 1**
 1. Follow the link to create an account({outMessage})
-2. Make sure you use the given referal code is applied
+2. Make sure the given referal code is applied
 3. Sign up and wait for the success popup
 **PART2**
 After you have created your account
