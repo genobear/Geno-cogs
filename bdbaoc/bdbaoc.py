@@ -5,6 +5,9 @@ from discord.ext import tasks
 import discord
 import asyncio
 
+#scan
+from tabulate import tabulate
+
 #######################
 ####rootooo stuff####
 #######################
@@ -150,6 +153,23 @@ class bdbaoc(commands.Cog):
         except:
             driver.close()
             return False
+
+    @commands.command()
+    async def scan(self, ctx, arg):
+        """This does stuff!"""
+        # Your code will go here
+        sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
+        sheetDetails = sheet.get_all_values()
+        IDColumn = sheet.col_values(2)
+        if arg in IDColumn:
+            for a in sheetDetails:
+                if a[1] == arg:
+                    #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
+                    response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Names:"],
+                            [a[2],a[4],a[5],a[6],a[7],a[8]]],headers='firstrow',tablefmt='psql')) + "```"
+        else:
+            response = "User not in database"
+        await ctx.send("%s" % response)
 
     @commands.command()
     async def getcode(self, ctx):
