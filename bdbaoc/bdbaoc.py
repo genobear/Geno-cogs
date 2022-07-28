@@ -173,7 +173,16 @@ class bdbaoc(commands.Cog):
 
     @commands.command()
     async def embedtest(self, ctx, arg):
-        embed = discord.Embed(title="Sample Embed", url="https://realdrewdata.medium.com/", description="This is an embed that will show how to build an embed and the different components", color=discord.Color.blue())
+        embed = discord.Embed(
+            title="Scan Results",
+            url="https://docs.google.com/spreadsheets/d/1hph6Xpfp9zngJBMzi24MChRK5Alz5Qt4Uz1nQ8L_m84/edit#gid=0",
+            description="This is an embed that will show how to build an embed and the different components",
+            color=discord.Color.random())
+        embed.set_thumbnail(url="https://cdn.discordapp.com/avatars/839574978088796210/296b1a22e987d97431902d0e1db2bae2.png")
+        embed.add_field(name="Servers Found on:", value=f"Found on Value", inline="True")
+        embed.add_field(name="Joined at:", value=f"Joined at Value", inline="True")
+        embed.add_field(name="Known Usernames:", value=f"Known Usernames Value", inline="False")
+        embed.add_field(name="Known Nicknames:", value=f"Known Nicknames Value", inline="True")
         await ctx.send(embed=embed)
         
     @commands.command()
