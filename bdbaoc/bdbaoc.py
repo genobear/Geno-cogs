@@ -159,6 +159,10 @@ class bdbaoc(commands.Cog):
     async def scan(self, ctx, *, member: discord.Member):
         """This does stuff!"""
         # Your code will go here
+        foundon = None
+        joinedat = None
+        usernames = None
+        nicks = None
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
@@ -177,10 +181,7 @@ class bdbaoc(commands.Cog):
 
         else:
             resultfound = False
-            foundon = None
-            joinedat = None
-            usernames = None
-            nicks = None   
+   
         embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
         await ctx.send(embed=embed)
 
