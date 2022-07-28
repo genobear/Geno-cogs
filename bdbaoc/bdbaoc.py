@@ -162,8 +162,6 @@ class bdbaoc(commands.Cog):
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
-        await ctx.send(member.id)
-        await ctx.send(str(member.id))
         if str(member.id) in IDColumn:
             resultfound = True
             for a in sheetDetails:
@@ -174,7 +172,6 @@ class bdbaoc(commands.Cog):
         else:
             resultfound = False
         embed = await scan_embed(ctx,member,resultfound)
-        await ctx.send(str(resultfound))
         await ctx.send(embed=embed)
 
     @commands.command()
