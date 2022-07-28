@@ -177,6 +177,10 @@ class bdbaoc(commands.Cog):
 
         else:
             resultfound = False
+            foundon = None
+            joinedat = None
+            usernames = None
+            nicks = None   
         embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
         await ctx.send(embed=embed)
 
