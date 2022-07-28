@@ -32,8 +32,9 @@ chrome_options.add_argument("--headless")
 from discord import Webhook, RequestsWebhookAdapter
 
 ############################################
-
+#geno shit
 from dotenv import load_dotenv #Use to load secrets. Like webhook URL etc.
+from .embeds import scan_embed
 
 #Conect to Database
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -155,21 +156,22 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def scan(self, ctx, id):
+    async def scan(self, ctx, member: discord.Member):
         """This does stuff!"""
         # Your code will go here
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
-        if id in IDColumn:
+        if member in IDColumn:
+            resultfound = True
             for a in sheetDetails:
-                if a[1] == id:
+                if a[1] == member:
                     #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
                     response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
             response = "User not in database"
-        await ctx.send("%s" % response)
+        await ctx.send(embed=scan_embed(ctx,member,resultfound))
 
     @commands.command()
     async def embedtest(self, ctx, arg):
@@ -180,9 +182,10 @@ class bdbaoc(commands.Cog):
             color=discord.Color.random())
         embed.set_thumbnail(url="https://cdn.discordapp.com/avatars/839574978088796210/296b1a22e987d97431902d0e1db2bae2.png")
         embed.add_field(name="Servers Found on:", value=f"Found on Value", inline="True")
-        embed.add_field(name="Joined at:", value=f"Joined at Value", inline="True")
+        embed.add_field(name="Joined at:", value=f"Joined at Value", inline="False")
         embed.add_field(name="Known Usernames:", value=f"Known Usernames Value", inline="False")
         embed.add_field(name="Known Nicknames:", value=f"Known Nicknames Value", inline="True")
+        embed.set_footer(text="Powered by Backdoor Bandito")
         await ctx.send(embed=embed)
         
     @commands.command()
