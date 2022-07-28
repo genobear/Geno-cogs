@@ -8,11 +8,11 @@ async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,join
                 description="Results Below",
                 color=discord.Color.random())
     embedok.set_thumbnail(url="https://cdn.discordapp.com/avatars/839574978088796210/296b1a22e987d97431902d0e1db2bae2.png")
-    embedok.add_field(name="Servers Found on:", value=f"{foundon}", inline="True")
-    embedok.add_field(name="Joined at:", value=f"{joinedat}", inline="True")
-    embedok.add_field(name="-",value="-", inline="false")
-    embedok.add_field(name="Known Usernames:", value=f"{usernames}", inline="True")
-    embedok.add_field(name="Known Nicknames:", value=f"{nicks}", inline="True")
+    embedok.add_field(name="Servers Found on:", value=f"{foundon}.", inline="True")
+    embedok.add_field(name="Joined at:", value=f"{joinedat}.", inline="True")
+    embedok.add_field(name="-", value="-", inline="false")
+    embedok.add_field(name="Known Usernames:", value=f"{usernames}.", inline="True")
+    embedok.add_field(name="Known Nicknames:", value=f"{nicks}.", inline="True")
     embedok.set_footer(text="Powered by Backdoor Bandito")
 
     embednok = discord.Embed(
