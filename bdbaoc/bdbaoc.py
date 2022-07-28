@@ -179,6 +179,7 @@ class bdbaoc(commands.Cog):
         
         await ctx.send(embed=embed)
 
+    @commands.Cog.listener()
     async def scan_on_join(self, member):
             """This does stuff!"""
             # Your code will go here
