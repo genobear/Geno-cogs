@@ -54,7 +54,7 @@ BDBLOGGER = Webhook.from_url(
     str(BDBLOGGERURL), 
     adapter=RequestsWebhookAdapter())
 
-def sendError(Emsg):
+async def sendError(Emsg):
     rooWebHook.send(Emsg)
     BDBLOGGER.send(Emsg)
 
@@ -182,7 +182,7 @@ class bdbaoc(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
             """This does stuff!"""
-            sendError(f"on member join: {str(member.id)}")
+            awawit sendError(f"on member join: {str(member.id)}")
             # Your code will go here
             foundon = None
             joinedat = None
