@@ -1,7 +1,7 @@
 import discord
 
 
-async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,joinedat,usernames,nicks)-> discord.Embed:
+async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,joinedat,usernames=None,nicks=None)-> discord.Embed:
     if usernames == None:
         usernames = "None"
     if nicks == None:
