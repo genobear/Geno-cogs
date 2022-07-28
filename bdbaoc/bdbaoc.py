@@ -175,14 +175,14 @@ class bdbaoc(commands.Cog):
                     joinedat=a[3]
                     usernames=a[5]
                     nicks=a[7]
-                    
+                    embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
                     response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
 
         else:
             resultfound = False
-   
-        embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
+            embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
+        
         await ctx.send(embed=embed)
 
     @commands.command()
