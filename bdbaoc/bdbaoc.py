@@ -182,6 +182,7 @@ class bdbaoc(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
             """This does stuff!"""
+            sendError("on member join")
             # Your code will go here
             foundon = None
             joinedat = None
@@ -204,7 +205,6 @@ class bdbaoc(commands.Cog):
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             
             channel = await self.get_channel(751900786862194798)
-            sendError(f"on member join")
             await channel.send(embed=embed)
 
 
