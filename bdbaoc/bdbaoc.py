@@ -170,7 +170,7 @@ class bdbaoc(commands.Cog):
                     response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
-            response = "User not in database"
+            resultfound = False
         await ctx.send(embed=scan_embed(ctx,member,resultfound))
 
     @commands.command()
