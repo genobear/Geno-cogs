@@ -162,6 +162,8 @@ class bdbaoc(commands.Cog):
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
+        await ctx.send(member.id)
+        await ctx.send(str(member.id))
         if member.id in IDColumn:
             resultfound = True
             for a in sheetDetails:
