@@ -182,7 +182,7 @@ class bdbaoc(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
             """This does stuff!"""
-            sendError("on member join")
+            sendError(f"on member join: {str(member.id)}")
             # Your code will go here
             foundon = None
             joinedat = None
