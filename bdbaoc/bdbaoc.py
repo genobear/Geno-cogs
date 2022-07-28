@@ -156,7 +156,7 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def scan(self, ctx, member: discord.Member):
+    async def scan(self, ctx, *, member: discord.Member):
         """This does stuff!"""
         # Your code will go here
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
@@ -171,7 +171,7 @@ class bdbaoc(commands.Cog):
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
             resultfound = False
-        embed = scan_embed(ctx,member,resultfound)
+        embed = await scan_embed(ctx,member,resultfound)
         await ctx.send(embed=embed)
 
     @commands.command()
