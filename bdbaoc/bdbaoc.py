@@ -5,8 +5,6 @@ from discord.ext import tasks
 import discord
 import asyncio
 
-#scan
-from tabulate import tabulate
 
 #######################
 ####rootooo stuff####
@@ -170,15 +168,11 @@ class bdbaoc(commands.Cog):
             resultfound = True
             for a in sheetDetails:
                 if a[1] == str(member.id):
-                    #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
                     foundon=a[2]
                     joinedat=a[3]
                     usernames=a[5]
                     nicks=a[7]
                     embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
-                    response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
-                            [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
-
         else:
             resultfound = False
             embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
@@ -186,7 +180,7 @@ class bdbaoc(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def embedtest(self, ctx, arg):
+    async def embedtest(self, ctx):
         embed = discord.Embed(
             title="Scan Results",
             url="https://docs.google.com/spreadsheets/d/1hph6Xpfp9zngJBMzi24MChRK5Alz5Qt4Uz1nQ8L_m84/edit#gid=0",
