@@ -1,7 +1,7 @@
 import discord
 
 
-async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,joinedat,usernames=None,nicks=None)-> discord.Embed:
+async def scan_embed(member: discord.Member, resultfound: bool,foundon,joinedat,usernames=None,nicks=None)-> discord.Embed:
     if usernames is "" or None:
         usernames = "-"
     if nicks is "" or None:
@@ -34,3 +34,11 @@ async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,join
         return embedok
     else:
         return embednok
+
+
+async def apply_embed(ctx) -> discord.Embed:
+    embed = discord.Embed(
+                title="Scan Results",
+                url="https://docs.google.com/spreadsheets/d/1hph6Xpfp9zngJBMzi24MChRK5Alz5Qt4Uz1nQ8L_m84/edit#gid=0",
+                color=discord.Color.random())
+    return embed

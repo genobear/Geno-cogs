@@ -172,12 +172,39 @@ class bdbaoc(commands.Cog):
                     joinedat=a[3]
                     usernames=a[5]
                     nicks=a[7]
-                    embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
+                    embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
         else:
             resultfound = False
-            embed = await scan_embed(ctx,member,resultfound,foundon,joinedat,usernames,nicks)
+            embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
         
         await ctx.send(embed=embed)
+
+    async def scan_on_join(self, member):
+            """This does stuff!"""
+            # Your code will go here
+            foundon = None
+            joinedat = None
+            usernames = None
+            nicks = None
+            sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
+            sheetDetails = sheet.get_all_values()
+            IDColumn = sheet.col_values(2)
+            if str(member.id) in IDColumn:
+                resultfound = True
+                for a in sheetDetails:
+                    if a[1] == str(member.id):
+                        foundon=a[2]
+                        joinedat=a[3]
+                        usernames=a[5]
+                        nicks=a[7]
+                        embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
+            else:
+                resultfound = False
+                embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
+            server = member.server
+            channel = server.get_channel("751900786862194798")
+            await self.bot.send_message(channel, embed=embed)
+
 
     @commands.command()
     async def embedtest(self, ctx):

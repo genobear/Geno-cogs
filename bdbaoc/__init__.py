@@ -2,4 +2,7 @@ from .bdbaoc import bdbaoc
 
 
 def setup(bot):
-    bot.add_cog(bdbaoc(bot))
+    n = bdbaoc(bot)
+    bot.add_listener(n.scan_on_join,"on_member_join")
+    bot.add_cog(n)
+    
