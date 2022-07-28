@@ -169,7 +169,7 @@ class bdbaoc(commands.Cog):
         if str(member.id) in IDColumn:
             resultfound = True
             for a in sheetDetails:
-                if a[1] == member:
+                if a[1] == str(member.id):
                     #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
                     foundon=a[2]
                     joinedat=a[3]
