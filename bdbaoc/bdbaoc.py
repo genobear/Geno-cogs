@@ -180,7 +180,7 @@ class bdbaoc(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.Cog.listener()
-    async def scan_on_join(self, member):
+    async def on_member_join(self, member):
             """This does stuff!"""
             # Your code will go here
             foundon = None
@@ -203,7 +203,7 @@ class bdbaoc(commands.Cog):
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             
-            channel = self.get_channel(751900786862194798)
+            channel = bot.get_channel(751900786862194798)
             await channel.send(embed=embed)
 
 
