@@ -162,7 +162,7 @@ class bdbaoc(commands.Cog):
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
-        if member in IDColumn:
+        if member.id in IDColumn:
             resultfound = True
             for a in sheetDetails:
                 if a[1] == member:
