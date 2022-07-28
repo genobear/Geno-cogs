@@ -171,7 +171,8 @@ class bdbaoc(commands.Cog):
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
         else:
             resultfound = False
-        await ctx.send(embed=scan_embed(ctx,member,resultfound))
+        embed = scan_embed(ctx,member,resultfound)
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def embedtest(self, ctx, arg):
