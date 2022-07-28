@@ -2,9 +2,9 @@ import discord
 
 
 async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,joinedat,usernames=None,nicks=None)-> discord.Embed:
-    if usernames == None:
+    if usernames is "" or None:
         usernames = "None"
-    if nicks == None:
+    if nicks is "" or None:
         nicks = "None"
     embedok = discord.Embed(
                 title="Scan Results",
