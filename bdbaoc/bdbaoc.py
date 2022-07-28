@@ -172,7 +172,7 @@ class bdbaoc(commands.Cog):
         else:
             resultfound = False
         embed = await scan_embed(ctx,member,resultfound)
-        await ctx.sent(str(resultfound))
+        await ctx.send(str(resultfound))
         await ctx.send(embed=embed)
 
     @commands.command()
