@@ -2,6 +2,10 @@ import discord
 
 
 async def scan_embed(ctx, member: discord.Member, resultfound: bool,foundon,joinedat,usernames,nicks)-> discord.Embed:
+    if usernames == None:
+        usernames = "None"
+    if nicks == None:
+        nicks = "None"
     embedok = discord.Embed(
                 title="Scan Results",
                 url="https://docs.google.com/spreadsheets/d/1hph6Xpfp9zngJBMzi24MChRK5Alz5Qt4Uz1nQ8L_m84/edit#gid=0",
