@@ -186,7 +186,7 @@ class bdbaoc(commands.Cog):
             color=discord.Color.random())
         embed.set_thumbnail(url="https://cdn.discordapp.com/avatars/839574978088796210/296b1a22e987d97431902d0e1db2bae2.png")
         embed.add_field(name="Servers Found on:", value=f"Found on Value", inline="True")
-        embed.add_field(name="Joined at:", value=f"Joined at Value", inline="False")
+        embed.add_field(name="Joined at:", value=f"Joined at Value", inline="True")
         embed.add_field(name="Known Usernames:", value=f"Known Usernames Value", inline="False")
         embed.add_field(name="Known Nicknames:", value=f"Known Nicknames Value", inline="True")
         embed.set_footer(text="Powered by Backdoor Bandito")
