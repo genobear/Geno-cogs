@@ -203,7 +203,7 @@ class bdbaoc(commands.Cog):
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             
-            channel = self.get_channel("751900786862194798")
+            channel = self.get_channel(751900786862194798)
             await channel.send(embed=embed)
 
 
