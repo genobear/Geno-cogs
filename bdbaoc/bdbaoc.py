@@ -164,7 +164,7 @@ class bdbaoc(commands.Cog):
         IDColumn = sheet.col_values(2)
         await ctx.send(member.id)
         await ctx.send(str(member.id))
-        if member.id in IDColumn:
+        if str(member.id) in IDColumn:
             resultfound = True
             for a in sheetDetails:
                 if a[1] == member:
