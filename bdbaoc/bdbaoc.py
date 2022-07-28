@@ -155,15 +155,15 @@ class bdbaoc(commands.Cog):
             return False
 
     @commands.command()
-    async def scan(self, ctx, arg):
+    async def scan(self, ctx, id):
         """This does stuff!"""
         # Your code will go here
         sheet = client.open('BDB AoC Member Check').worksheet("New User Data List")
         sheetDetails = sheet.get_all_values()
         IDColumn = sheet.col_values(2)
-        if arg in IDColumn:
+        if id in IDColumn:
             for a in sheetDetails:
-                if a[1] == arg:
+                if a[1] == id:
                     #response = ("User " + str(a[0]) + " is in these discords :\n" + a[2])
                     response = "```" + (tabulate([["Servers Found on:","Joined at:","Known Usernames:","Known Nicknames: "],
                             [a[2],a[3],a[5],a[7]]],headers='firstrow',tablefmt='psql')) + "```"
@@ -171,6 +171,11 @@ class bdbaoc(commands.Cog):
             response = "User not in database"
         await ctx.send("%s" % response)
 
+    @commands.command()
+    async def embedtest(self, ctx, arg):
+        embed = discord.Embed(title="Sample Embed", url="https://realdrewdata.medium.com/", description="This is an embed that will show how to build an embed and the different components", color=discord.Color.blue())
+        await ctx.send(embed=embed)
+        
     @commands.command()
     async def getcode(self, ctx):
         await ctx.send("Check your DM's!")
@@ -229,7 +234,8 @@ After you have created your account
                         await ctx.author.send("Please type in your generated code, you have 5 minutes.")
                         
                         authorid = str(ctx.author.id)
-                        def check(m):                            
+                        def check(m):
+                                                   
                             return  str(m.author.id) == authorid
                         try:    
                             code = await self.bot.wait_for("message", check=check, timeout=300.0)
