@@ -183,7 +183,7 @@ class bdbaoc(commands.Cog):
     async def on_member_join(self, member):
             """This does stuff!"""
             await sendError(f"on member join: {str(member.id)}")
-            server = member.server
+            server = member.guild
             if server == None:
                 print("Server is None. Private Message or some new fangled Discord thing?.. Anyways there be an error, the user was {}".format(member.name))
                 return
