@@ -205,7 +205,8 @@ class bdbaoc(commands.Cog):
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             await sendError(embed=embed)
             server = member.server
-            channel = server.get_channel(751900786862194798)
+            await sendError("before get channel")
+            channel = server.get_channel(740319045320048784) #welcome=740319045320048784, genotest=751900786862194798
             await sendError(f"afer get channel")
             await sendError(f"afer get channel{str(channel)}")
             await channel.send(embed=embed)
