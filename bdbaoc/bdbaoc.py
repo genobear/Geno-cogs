@@ -215,7 +215,7 @@ class bdbaoc(commands.Cog):
             if channel is None:
                 print('bdbaoc.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
                 return
-            await self.bot.send_message(channel, "IT WORKS!")
+            await channel.send("IT WORKS!")
             await sendError(f"end")
             
             #await channel.message.send(embed=embed)
