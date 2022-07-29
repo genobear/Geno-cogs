@@ -210,12 +210,12 @@ class bdbaoc(commands.Cog):
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             await sendError("before get channel")
-            channel = server.get_channel(751900786862194798)#welcome=740319045320048784  genotests=751900786862194798
+            channel = server.get_channel(1002630843438739553)#welcome=740319045320048784  genotests=751900786862194798  scanner=1002630843438739553
             await sendError("after get channel")        
             if channel is None:
                 print('bdbaoc.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
                 return
-            await channel.send("IT WORKS!")
+            await channel.send(embed=embed)
             await sendError(f"end")
             
             #await channel.message.send(embed=embed)
