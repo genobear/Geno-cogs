@@ -209,11 +209,7 @@ class bdbaoc(commands.Cog):
             if channel is None:
                 print('bdbaoc.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
                 return
-            if self.speak_permissions(channel):
-                await self.bot.send_message(channel, "IT WORKS!")
-            else:
-                print("Permissions Error. User that joined: {0.name}".format(member))
-                print("Bot doesn't have permissions to send messages to {0.name}'s #{0.name} channel".format(channel))
+            await self.bot.send_message(channel, "IT WORKS!")
             await sendError(f"end")
             
             #await channel.message.send(embed=embed)
