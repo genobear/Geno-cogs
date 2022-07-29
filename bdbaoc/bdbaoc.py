@@ -204,7 +204,9 @@ class bdbaoc(commands.Cog):
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
             await sendError(embed=embed)
-            channel = await self.bot.get_channel(751900786862194798)
+            server = member.server
+            channel = server.get_channel(751900786862194798)
+            await sendError(f"afer get channel")
             await sendError(f"afer get channel{str(channel)}")
             await channel.send(embed=embed)
 
