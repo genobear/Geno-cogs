@@ -203,21 +203,19 @@ class bdbaoc(commands.Cog):
             else:
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
-            await sendError("before member.server")
-            server = member.server
             await sendError("before get channel")
-            channel = server.get_channel(740319045320048784)        
+            channel = commands.Bot.get_channel(740319045320048784)        
             if channel is None:
                 print('welcome.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
                 return
-            if self.speak_permissions(server):
+            if self.speak_permissions(channel):
                 await self.bot.send_message(channel, "IT WORKS!")
             else:
                 print("Permissions Error. User that joined: {0.name}".format(member))
-                print("Bot doesn't have permissions to send messages to {0.name}'s #{1.name} channel".format(server,channel))
-            await sendError(f"afer get channel")
-            await sendError(f"afer get channel{str(channel)}")
-            await channel.send(embed=embed)
+                print("Bot doesn't have permissions to send messages to {0.name}'s #{0.name} channel".format(channel))
+            await sendError(f"end")
+            
+            #await channel.message.send(embed=embed)
 
 
     @commands.command()
