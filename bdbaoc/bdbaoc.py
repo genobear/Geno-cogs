@@ -181,15 +181,11 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-            """This does stuff!"""
-            await sendError(f"on member join: {str(member.id)}")
+            """This does stuff on member join!"""
             server = member.guild
             if server == None:
-                print("Server is None. Private Message or some new fangled Discord thing?.. Anyways there be an error, the user was {}".format(member.name))
+                await sendError("Server is None. Private Message or some new fangled Discord thing?.. Anyways there be an error, the user was {}".format(member.name))
                 return
-            # Your code will go here
-            await sendError(f"server isnt none its")
-            await sendError(f"server isnt none its {server.id}")
             foundon = None
             joinedat = None
             usernames = None
@@ -209,14 +205,11 @@ class bdbaoc(commands.Cog):
             else:
                 resultfound = False
                 embed = await scan_embed(member,resultfound,foundon,joinedat,usernames,nicks)
-            await sendError("before get channel")
-            channel = server.get_channel(1002630843438739553)#welcome=740319045320048784  genotests=751900786862194798  scanner=1002630843438739553
-            await sendError("after get channel")        
+            channel = server.get_channel(1002630843438739553)#welcome=740319045320048784  genotests=751900786862194798  scanner=1002630843438739553       
             if channel is None:
-                print('bdbaoc.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
+                await sendError('bdbaoc.py: Channel not found. It was most likely deleted. User joined: {}'.format(member.name))
                 return
             await channel.send(embed=embed)
-            await sendError(f"end")
             
             #await channel.message.send(embed=embed)
 
