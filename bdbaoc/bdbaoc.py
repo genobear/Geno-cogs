@@ -287,9 +287,9 @@ After you have created your account
                         await ctx.author.send("Please type in your generated code, you have 5 minutes.")
                         
                         authorid = str(ctx.author.id)
-                        def check(m):
-                                                   
+                        def check(m):                                                   
                             return  str(m.author.id) == authorid
+                            
                         try:    
                             code = await self.bot.wait_for("message", check=check, timeout=300.0)
                         except asyncio.TimeoutError:
