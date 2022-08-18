@@ -213,6 +213,12 @@ class bdbaoc(commands.Cog):
             
             #await channel.message.send(embed=embed)
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.embed:
+            await message.channel.send("This is an embed")
+        else:
+            await message.channel.send("Not an embed")   
 
     @commands.command()
     async def embedtest(self, ctx):
@@ -328,6 +334,3 @@ After you have created your account
                     #OutPutUser
                     message = "You've already been assigned a code. You're code has come frome " + refSheet[a-1][0] +", if you have an issue with this please contact an officer. Here is your code: \n" + refSheet[a-1][2]
                     await ctx.author.send(message)
-
-        #BlockSecondDiscordRef
-        #Spit Out Old One
