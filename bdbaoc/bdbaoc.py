@@ -235,10 +235,8 @@ class bdbaoc(commands.Cog):
                 description = embed.description
                 if 'Gift: 🟣 Epic' in description:
                     gift = epic
-                    await message.channel.send(gift)
                 if 'Gift: 🟠 Legendary' in description:
                     gift = legendary
-                    await message.channel.send(gift)
                 if 'Card: Seria' in description:
                     card = seriarole
                 if 'Card: Sian' in description:
@@ -259,7 +257,7 @@ class bdbaoc(commands.Cog):
                     return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
-                    await message.channel.send(f"card == None <@&{card}><@&{gift}>")
+                    await message.channel.send(f"<@&{gift}>")
                 else:
                     await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
