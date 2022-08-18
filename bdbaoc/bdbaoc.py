@@ -225,38 +225,41 @@ class bdbaoc(commands.Cog):
         legendary = 949444728158572584
         epic = 949444553654534184
 
-        description = str(message.embeds[0].description)
-
-        if 'Gift: 🟣 Epic' in description:
-            gift = epic
-        else:
-            gift = "No gift"
-    
-        if 'Gift: 🟠 Legendary' in description:
-            gift = legendary
-        else: 
-            "No gift"    
-
-        if 'Card: Seria' in description:
-            card = seriarole
-        
-        if 'Card: Sian' in description:
-            card = sianrole
-
-        if 'Card: Madnick' in description:
-            card = madnickrole
-        if 'Card: Mokamoka' in description:
-            card = mokamokarole
-        if 'Card: Wei' in description:
-            card = weirole            
-        if 'Card: Kaysarr' in description:
-            card = kaysarrrole
-        if 'Card: Thar' in description:
-            card =  tharrole           
+           
         if message.author == self.bot.user:
             return
         if message.embeds:
-            await message.channel.send(message.embeds[0].description)
+            for embed in message.embeds:
+                description = embed.description
+                await message.channel.send(description)
+                if 'Gift: 🟣 Epic' in description:
+                    gift = epic
+                else:
+                    gift = "No gift"
+            
+                if 'Gift: 🟠 Legendary' in description:
+                    gift = legendary
+                else: 
+                    "No gift"    
+
+                if 'Card: Seria' in description:
+                    card = seriarole
+                
+                if 'Card: Sian' in description:
+                    card = sianrole
+
+                if 'Card: Madnick' in description:
+                    card = madnickrole
+                if 'Card: Mokamoka' in description:
+                    card = mokamokarole
+                if 'Card: Wei' in description:
+                    card = weirole            
+                if 'Card: Kaysarr' in description:
+                    card = kaysarrrole
+                if 'Card: Thar' in description:
+                    card =  tharrole
+
+                await message.channel.send(message.embeds[0].description)
             # await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
             return   
