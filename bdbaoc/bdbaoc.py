@@ -253,7 +253,6 @@ class bdbaoc(commands.Cog):
                     card =  tharrole
 
                 if gift == None and card == None:
-                    await message.channel.send("Nothing found in this embed")
                     return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
