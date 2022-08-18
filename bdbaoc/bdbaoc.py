@@ -235,9 +235,9 @@ class bdbaoc(commands.Cog):
                 description = embed.description
                 await message.channel.send(description)
                 if 'Gift: :purple_circle: Epic' in description:
-                    gift = epic            
+                    gift = 949444553654534184            
                 if 'Gift: 🟠 Legendary' in description:
-                    gift = legendary
+                    gift = 949444728158572584
                 if 'Card: Seria' in description:
                     card = seriarole
                 if 'Card: Sian' in description:
