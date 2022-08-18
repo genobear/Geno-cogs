@@ -215,10 +215,23 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        seriarole = 949444553654534184
+        sianrole = 949444808806653962
+        madnickrole = 949444850770661408
+        mokamokarole = 949444915987886141
+        weirole = 949444982958333952
+        kaysarrrole = 953689778413518890
+        tharrole = 977824460306513921
+        legendary = 949444728158572584
+        epic = 949444553654534184
+
+
+
         if message.author == self.bot.user:
             return
         if message.embeds:
-            await message.channel.send("This is an embed")
+
+            await message.channel.send(f"{message.embed[0].description}")
         else:
             return   
 
