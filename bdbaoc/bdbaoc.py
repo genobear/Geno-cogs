@@ -215,7 +215,7 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.embed:
+        if message.embeds:
             await message.channel.send("This is an embed")
         else:
             await message.channel.send("Not an embed")   
