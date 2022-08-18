@@ -230,21 +230,21 @@ class bdbaoc(commands.Cog):
         if 'Gift: 🟠 Legendary' in message.embeds[0].description:
             gift = legendary
 
-        if 'Card: Seria' in message.embeds[0].descirption:
+        if 'Card: Seria' in message.embeds[0].description:
             card = seriarole
         
-        if 'Card: Sian' in message.embeds[0].descirption:
+        if 'Card: Sian' in message.embeds[0].description:
             card = sianrole
 
-        if 'Card: Madnick' in message.embeds[0].descirption:
+        if 'Card: Madnick' in message.embeds[0].description:
             card = madnickrole
-        if 'Card: Mokamoka' in message.embeds[0].descirption:
+        if 'Card: Mokamoka' in message.embeds[0].description:
             card = mokamokarole
-        if 'Card: Wei' in message.embeds[0].descirption:
+        if 'Card: Wei' in message.embeds[0].description:
             card = weirole            
-        if 'Card: Kaysarr' in message.embeds[0].descirption:
+        if 'Card: Kaysarr' in message.embeds[0].description:
             card = kaysarrrole
-        if 'Card: Thar' in message.embeds[0].descirption:
+        if 'Card: Thar' in message.embeds[0].description:
             card =  tharrole           
         if message.author == self.bot.user:
             return
