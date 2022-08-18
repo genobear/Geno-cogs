@@ -213,12 +213,14 @@ class bdbaoc(commands.Cog):
             
             #await channel.message.send(embed=embed)
 
-    # @commands.Cog.listener()
-    # async def on_message(self, message):
-    #     if message.embeds:
-    #         await message.channel.send("This is an embed")
-    #     else:
-    #         await message.channel.send("Not an embed")   
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author == self.bot.user:
+            return
+        if message.embeds:
+            await message.channel.send("This is an embed")
+        else:
+            return   
 
     @commands.command()
     async def embedtest(self, ctx):
