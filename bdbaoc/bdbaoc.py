@@ -235,21 +235,21 @@ class bdbaoc(commands.Cog):
                 description = embed.description
                 if 'Gift: 🟣 Epic' in description:
                     gift = epic
-                if 'Gift: 🟠 Legendary' in description:
+                elif 'Gift: 🟠 Legendary' in description:
                     gift = legendary
                 if 'Card: Seria' in description:
                     card = seriarole
-                if 'Card: Sian' in description:
+                elif 'Card: Sian' in description:
                     card = sianrole
-                if 'Card: Madnick' in description:
+                elif 'Card: Madnick' in description:
                     card = madnickrole
-                if 'Card: Mokamoka' in description:
+                elif 'Card: Mokamoka' in description:
                     card = mokamokarole
-                if 'Card: Wei' in description:
+                elif 'Card: Wei' in description:
                     card = weirole            
-                if 'Card: Kaysarr' in description:
+                elif 'Card: Kaysarr' in description:
                     card = kaysarrrole
-                if 'Card: Thar' in description:
+                elif 'Card: Thar' in description:
                     card =  tharrole
 
                 if gift == None and card == None:
@@ -260,7 +260,7 @@ class bdbaoc(commands.Cog):
                 else:
                     await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
-            return   
+            return
 
     @commands.command()
     async def embedtest(self, ctx):
