@@ -233,11 +233,11 @@ class bdbaoc(commands.Cog):
         if message.embeds:
             for embed in message.embeds:
                 description = embed.description
-                if 'Gift: :purple_circle: Epic' in description:
-                    gift = 949444553654534184
+                if 'Gift: 🟣 Epic' in description:
+                    gift = epic
                     await message.channel.send(gift)
                 if 'Gift: 🟠 Legendary' in description:
-                    gift = 949444728158572584
+                    gift = legendary
                     await message.channel.send(gift)
                 if 'Card: Seria' in description:
                     card = seriarole
@@ -254,7 +254,7 @@ class bdbaoc(commands.Cog):
                 if 'Card: Thar' in description:
                     card =  tharrole
 
-                if gift and card == None:
+                if gift == None and card == None:
                     await message.channel.send("Nothing found in this embed")
                     return
                 # await message.channel.send(message.embeds[0].description)
