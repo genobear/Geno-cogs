@@ -236,7 +236,7 @@ class bdbaoc(commands.Cog):
                 await message.channel.send(description)
                 if 'Gift: :purple_circle: Epic' in description:
                     gift = 949444553654534184            
-                if 'Gift: 🟠 Legendary' in description:
+                if 'Gift: :orange_circle: Legendary' in description:
                     gift = 949444728158572584
                 if 'Card: Seria' in description:
                     card = seriarole
