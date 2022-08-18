@@ -233,7 +233,6 @@ class bdbaoc(commands.Cog):
         if message.embeds:
             for embed in message.embeds:
                 description = embed.description
-                await message.channel.send(description)
                 if 'Gift: :purple_circle: Epic' in description:
                     gift = 949444553654534184
                     await message.channel.send(gift)
