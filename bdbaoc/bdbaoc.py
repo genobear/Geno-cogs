@@ -234,22 +234,14 @@ class bdbaoc(commands.Cog):
             for embed in message.embeds:
                 description = embed.description
                 await message.channel.send(description)
-                if 'Gift: 🟣 Epic' in description:
-                    gift = epic
-                else:
-                    gift = "No gift"
-            
+                if 'Gift: :purple_circle: Epic' in description:
+                    gift = epic            
                 if 'Gift: 🟠 Legendary' in description:
                     gift = legendary
-                else: 
-                    "No gift"    
-
                 if 'Card: Seria' in description:
                     card = seriarole
-                
                 if 'Card: Sian' in description:
                     card = sianrole
-
                 if 'Card: Madnick' in description:
                     card = madnickrole
                 if 'Card: Mokamoka' in description:
