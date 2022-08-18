@@ -259,8 +259,8 @@ class bdbaoc(commands.Cog):
                 if 'Card: Thar' in description:
                     card =  tharrole
 
-                await message.channel.send(message.embeds[0].description)
-            # await message.channel.send(f"<@&{card}><@&{gift}>")
+                # await message.channel.send(message.embeds[0].description)
+                await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
             return   
 
