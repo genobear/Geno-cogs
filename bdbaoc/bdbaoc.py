@@ -261,7 +261,7 @@ class bdbaoc(commands.Cog):
                 if 'Card: Thar' in description:
                     card =  tharrole
 
-                if gift & card == None:
+                if gift and card == None:
                     await message.channel.send("Nothing found in this embed")
                     return
                 # await message.channel.send(message.embeds[0].description)
