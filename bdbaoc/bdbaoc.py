@@ -231,7 +231,7 @@ class bdbaoc(commands.Cog):
             return
         if message.embeds:
 
-            await message.channel.send(f"{message.embed[0].description}")
+            await message.channel.send(f"{message.embeds[0].description}")
         else:
             return   
 
