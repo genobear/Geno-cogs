@@ -226,7 +226,7 @@ class bdbaoc(commands.Cog):
         epic = 949444553654534184
 
         card = None
-        gift = "No Gift Found"
+        gift = None
            
         if message.author == self.bot.user:
             return
@@ -261,6 +261,9 @@ class bdbaoc(commands.Cog):
                 if 'Card: Thar' in description:
                     card =  tharrole
 
+                if gift & card == None:
+                    await message.channel.send("Nothing found in this embed")
+                    return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
                     await message.channel.send(f"<@&{gift}>")
