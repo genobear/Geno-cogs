@@ -225,6 +225,8 @@ class bdbaoc(commands.Cog):
         legendary = 949444728158572584
         epic = 949444553654534184
 
+        card = None
+        gift = "No Gift Found"
            
         if message.author == self.bot.user:
             return
@@ -260,7 +262,10 @@ class bdbaoc(commands.Cog):
                     card =  tharrole
 
                 # await message.channel.send(message.embeds[0].description)
-                await message.channel.send(f"<@&{card}><@&{gift}>")
+                if card == None:
+                    await message.channel.send(f"<@&{gift}>")
+                else:
+                    await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
             return   
 
