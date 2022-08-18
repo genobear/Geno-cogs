@@ -215,7 +215,7 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        seriarole = 949444553654534184
+        seriarole = 949444637481926716
         sianrole = 949444808806653962
         madnickrole = 949444850770661408
         mokamokarole = 949444915987886141
