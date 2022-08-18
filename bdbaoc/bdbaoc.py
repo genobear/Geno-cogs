@@ -249,7 +249,8 @@ class bdbaoc(commands.Cog):
         if message.author == self.bot.user:
             return
         if message.embeds:
-            await message.channel.send(f"<@&{card}><@&{gift}>")
+            await message.channel.send(message.embeds[0].description)
+            # await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
             return   
 
