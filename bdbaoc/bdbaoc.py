@@ -225,26 +225,33 @@ class bdbaoc(commands.Cog):
         legendary = 949444728158572584
         epic = 949444553654534184
 
-        if 'Gift: 🟣 Epic' in message.embeds[0].description:
-            gift = epic
-        if 'Gift: 🟠 Legendary' in message.embeds[0].description:
-            gift = legendary
+        description = str(message.embeds[0].description)
 
-        if 'Card: Seria' in message.embeds[0].description:
+        if 'Gift: 🟣 Epic' in description:
+            gift = epic
+        else:
+            gift = "No gift"
+    
+        if 'Gift: 🟠 Legendary' in description:
+            gift = legendary
+        else: 
+            "No gift"    
+
+        if 'Card: Seria' in description:
             card = seriarole
         
-        if 'Card: Sian' in message.embeds[0].description:
+        if 'Card: Sian' in description:
             card = sianrole
 
-        if 'Card: Madnick' in message.embeds[0].description:
+        if 'Card: Madnick' in description:
             card = madnickrole
-        if 'Card: Mokamoka' in message.embeds[0].description:
+        if 'Card: Mokamoka' in description:
             card = mokamokarole
-        if 'Card: Wei' in message.embeds[0].description:
+        if 'Card: Wei' in description:
             card = weirole            
-        if 'Card: Kaysarr' in message.embeds[0].description:
+        if 'Card: Kaysarr' in description:
             card = kaysarrrole
-        if 'Card: Thar' in message.embeds[0].description:
+        if 'Card: Thar' in description:
             card =  tharrole           
         if message.author == self.bot.user:
             return
