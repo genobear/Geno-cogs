@@ -258,7 +258,7 @@ class bdbaoc(commands.Cog):
                     return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
-                    await message.channel.send(f"<@&{gift}>")
+                    await message.channel.send(f"card == None <@&{card}><@&{gift}>")
                 else:
                     await message.channel.send(f"<@&{card}><@&{gift}>")
         else:
