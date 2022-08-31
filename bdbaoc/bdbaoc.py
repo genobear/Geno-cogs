@@ -261,6 +261,8 @@ class bdbaoc(commands.Cog):
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
                     await message.channel.send(f"{gift.mention}", allowed_mentions=allowed_mentions)
+                elif gift == None:
+                    await message.channel.send(f"{card.mention}", allowed_mentions=allowed_mentions)
                 else:
                     await message.channel.send(f"{card.mention}{gift.mention}", allowed_mentions=allowed_mentions)
         else:
