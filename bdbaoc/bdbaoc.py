@@ -224,6 +224,7 @@ class bdbaoc(commands.Cog):
         tharrole = 977824460306513921
         legendary = 949444728158572584
         epic = 949444553654534184
+        weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
 
         card = None
         gift = None
