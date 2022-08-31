@@ -215,16 +215,18 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        
         allowed_mentions = discord.AllowedMentions(roles = True)
-        seriarole = 949444637481926716
-        sianrole = 949444808806653962
-        madnickrole = 949444850770661408
-        mokamokarole = 949444915987886141
-        weirole = 949444982958333952
-        kaysarrrole = 953689778413518890
-        tharrole = 977824460306513921
-        legendary = 949444728158572584
-        epic = 949444553654534184
+        
+        seriarole = discord.utils.get(message.guild.roles, id=949444637481926716)
+        sianrole = discord.utils.get(message.guild.roles, id=949444808806653962)
+        madnickrole = discord.utils.get(message.guild.roles, id=949444850770661408)
+        mokamokarole = discord.utils.get(message.guild.roles, id=949444915987886141)
+        weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
+        kaysarrrole = discord.utils.get(message.guild.roles, id=953689778413518890)
+        tharrole = discord.utils.get(message.guild.roles, id=977824460306513921)
+        legendary = discord.utils.get(message.guild.roles, id=949444728158572584)
+        epic = discord.utils.get(message.guild.roles, id=949444553654534184)
         weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
 
         card = None
@@ -258,9 +260,9 @@ class bdbaoc(commands.Cog):
                     return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
-                    await message.channel.send(f"<@&{gift}>", allowed_mentions=allowed_mentions)
+                    await message.channel.send(f"{gift.mention}", allowed_mentions=allowed_mentions)
                 else:
-                    await message.channel.send(f"<@&{card.mention}><@&{gift}>", allowed_mentions=allowed_mentions)
+                    await message.channel.send(f"{card.mention}{gift.mention}", allowed_mentions=allowed_mentions)
         else:
             return
 
