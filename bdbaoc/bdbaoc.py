@@ -215,6 +215,7 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        allowed_mentions = discord.AllowedMentions(roles = True)
         seriarole = 949444637481926716
         sianrole = 949444808806653962
         madnickrole = 949444850770661408
@@ -257,9 +258,9 @@ class bdbaoc(commands.Cog):
                     return
                 # await message.channel.send(message.embeds[0].description)
                 if card == None:
-                    await message.channel.send(f"<@&{gift}>")
+                    await message.channel.send(f"<@&{gift}>", allowed_mentions=allowed_mentions)
                 else:
-                    await message.channel.send(f"<@&{card.mention}><@&{gift}>")
+                    await message.channel.send(f"<@&{card.mention}><@&{gift}>", allowed_mentions=allowed_mentions)
         else:
             return
 
