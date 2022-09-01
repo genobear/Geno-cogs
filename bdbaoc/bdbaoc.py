@@ -229,13 +229,13 @@ class bdbaoc(commands.Cog):
         epic = discord.utils.get(message.guild.roles, id=949444553654534184)
         weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
 
-        card = None
-        gift = None
-           
+                           
         if message.author == self.bot.user:
             return
         if message.embeds:
             for embed in message.embeds:
+                card = None
+                gift = None  
                 description = embed.description
                 if 'Gift: 🟣 Epic' in description:
                     gift = epic
