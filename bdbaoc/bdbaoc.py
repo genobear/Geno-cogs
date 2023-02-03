@@ -203,64 +203,7 @@ class bdbaoc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-
-        allowed_mentions = discord.AllowedMentions(roles=True)
-
-        seriarole = discord.utils.get(
-            message.guild.roles, id=949444637481926716)
-        sianrole = discord.utils.get(
-            message.guild.roles, id=949444808806653962)
-        madnickrole = discord.utils.get(
-            message.guild.roles, id=949444850770661408)
-        mokamokarole = discord.utils.get(
-            message.guild.roles, id=949444915987886141)
-        weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
-        kaysarrrole = discord.utils.get(
-            message.guild.roles, id=953689778413518890)
-        tharrole = discord.utils.get(
-            message.guild.roles, id=977824460306513921)
-        legendary = discord.utils.get(
-            message.guild.roles, id=949444728158572584)
-        epic = discord.utils.get(message.guild.roles, id=949444553654534184)
-        weirole = discord.utils.get(message.guild.roles, id=949444982958333952)
-
-        if message.author == self.bot.user:
-            return
-        if message.embeds:
-            for embed in message.embeds:
-                card = None
-                gift = None
-                description = embed.description
-                if 'Gift: 🟣 Epic' in description:
-                    gift = epic
-                elif 'Gift: 🟠 Legendary' in description:
-                    gift = legendary
-                if 'Card: Seria' in description:
-                    card = seriarole
-                elif 'Card: Sian' in description:
-                    card = sianrole
-                elif 'Card: Madnick' in description:
-                    card = madnickrole
-                elif 'Card: Mokamoka' in description:
-                    card = mokamokarole
-                elif 'Card: Wei' in description:
-                    card = weirole
-                elif 'Card: Kaysarr' in description:
-                    card = kaysarrrole
-                elif 'Card: Thar' in description:
-                    card = tharrole
-
-                if gift == None and card == None:
-                    return
-                # await message.channel.send(message.embeds[0].description)
-                if card == None:
-                    await message.channel.send(f"{gift.mention}", allowed_mentions=allowed_mentions)
-                elif gift == None:
-                    await message.channel.send(f"{card.mention}", allowed_mentions=allowed_mentions)
-                else:
-                    await message.channel.send(f"{card.mention}{gift.mention}", allowed_mentions=allowed_mentions)
-        else:
-            return
+        pass
 
     @commands.command()
     async def embedtest(self, ctx):
