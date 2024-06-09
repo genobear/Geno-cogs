@@ -1,7 +1,7 @@
 # core redbot/discord stuff
 from dotenv import load_dotenv  # Use to load secrets. Like webhook URL etc.
 from .embeds import scan_embed
-from discord import Webhook, RequestsWebhookAdapter
+from discord import Webhook, SyncWebhook
 from redbot.core import commands
 from redbot.core.utils.predicates import MessagePredicate
 from discord.ext import tasks
@@ -10,7 +10,7 @@ import asyncio
 
 
 #######################
-####rootooo stuff####
+#### rootooo stuff####
 #######################
 import os
 import time
@@ -49,12 +49,8 @@ load_dotenv(dotenv_path)  # loads secrets from .env file in root.
 roowebhookurl = os.environ.get('rooWebHook')
 BDBLOGGERURL = os.environ.get('BDBLOGGER')
 
-rooWebHook = Webhook.from_url(
-    str(roowebhookurl),
-    adapter=RequestsWebhookAdapter())
-BDBLOGGER = Webhook.from_url(
-    str(BDBLOGGERURL),
-    adapter=RequestsWebhookAdapter())
+rooWebHook = SyncWebhook.from_url(str(roowebhookurl))
+BDBLOGGER = SyncWebhook.from_url(str(BDBLOGGERURL))
 
 
 async def sendError(Emsg):
